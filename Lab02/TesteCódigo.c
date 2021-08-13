@@ -3,44 +3,57 @@
 int main()
 {
 
-    char LISTA[] = {8, 02, 6, 77, 9, 3, 0, 0, 9, 35, 9, 50, 9,30};
+    char LISTA[] = {'N','Y','A','H',' ','H','U','S','T','O','N',0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0};
     int notasCompetidores[8] = {0};
     float notasParticipantes[8];
+    int i = 0, k = 0;
+    char nomes[8][15];
+
+    while(LISTA[i] != 0){
+            nomes[k][i] = LISTA[i];
+            i++;
+    }
+
+    int o = 0;
+     while(LISTA[o] != 0){
+        printf("%c", nomes[k][o]);
+        o++;
+    }
 
     //pega as notas do competidor
-    for (int i = 0; i<14 ; i++)
+    for (int l = 0; l<14 ; l++)
     {
-        if(i%2 != 0) //ta na unidade decimal
+        if(l%2 != 0) //ta na unidade decimal
         {
-            notasCompetidores[(i-1)/2] = (LISTA[i-1])*100+LISTA[i];
+            notasCompetidores[(l-1)/2] = (LISTA[l-1])*100+LISTA[l];
         }
     }
 
     printf("\nAgora vamo ver se deu certo essa merda!\n");
 
     //exibe as 7 notas do infeliz
-    for (int j = 0; j<7; j++)
+    for (int q = 0; q<7; q++)
     {
-        printf("Nota: %d\n", notasCompetidores[j]);
+        printf("Nota: %d\t", notasCompetidores[q]);
     }
 
     //ordena em ordem decrescente
-    for (int i = 1; i < 8; i++)
+    for (int m = 1; m < 8; m++)
     {
-        for (int j = 0; j < i; j++)
+        for (int n = 0; n < m; n++)
         {
-            if (notasCompetidores[i] > notasCompetidores[j])
+            if (notasCompetidores[m] > notasCompetidores[n])
             {
-                int temp = notasCompetidores[i];
-                notasCompetidores[i] = notasCompetidores[j];
-                notasCompetidores[j] = temp;
+                int temp = notasCompetidores[m];
+                notasCompetidores[m] = notasCompetidores[n];
+                notasCompetidores[n] = temp;
             }
         }
     }
 
-    for (int j = 0; j<7; j++)
+    for (int p = 0; p<7; p++)
     {
-        printf("\nNota ordenada[%d]: %d\n", j, notasCompetidores[j]);
+        printf("\nNota ordenada[%d]: %d\n", p, notasCompetidores[p]);
     }
 
     for (int indiceSkatista = 0; indiceSkatista<8; indiceSkatista++ )
@@ -68,6 +81,9 @@ int main()
 }
 
 
+void calculaNotas(float vetorNotas[]){
 
+
+}
 
 
