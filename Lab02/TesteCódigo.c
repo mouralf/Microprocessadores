@@ -4,7 +4,8 @@ int main()
 {
 
     char LISTA[] = {7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0};
-    int notasCentesimal[7], notasOrdenadas[7];
+    int notasCentesimal[8] = {0};
+    int notasOrdenadas[7];
     int nota1 = 0, nota2 = 0, nota3 = 0, nota4 = 0;
     int notasParticipantes[8];
 
