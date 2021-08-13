@@ -3,7 +3,7 @@
 int main()
 {
 
-    char LISTA[] = {7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0};
+    char LISTA[] = {8, 02, 6, 77, 9, 3, 0, 0, 9, 35, 9, 50, 9,30};
     int notasCompetidores[8] = {0};
     float notasParticipantes[8];
 
@@ -45,22 +45,29 @@ int main()
 
     for (int indiceSkatista = 0; indiceSkatista<8; indiceSkatista++ )
     {
+        printf("\nCompetidor num %d:\n", indiceSkatista);
         //colocar isso aqui dentro dum for pra armazenar pra cada participante
-        int notaFinal = 0;
+        float notaFinal = 0;
         //soma as 4 melhores notas
         for (int indiceNota = 0; indiceNota<4; indiceNota++)
         {
-            printf("\nNota[%d]: %d", indiceNota, notasCompetidores[indiceNota]);
+            printf("Nota[%d]: %d \t", indiceNota, notasCompetidores[indiceNota]);
             notaFinal+=notasCompetidores[indiceNota];
+            //printf("\nNota final parcial: %f\t", notaFinal);
 
         }
         //atribui a nota de cada participante ao array
         notasParticipantes[indiceSkatista] = (notaFinal)/100;
-        printf("\nNota final [%d]: %f", indiceSkatista, notasParticipantes[indiceSkatista]);
+        //float teste = notaFinal/100;
+        //printf("\n\t\t TESTE: %f\n", teste);
+        printf("\nNota final [%d]: %f\n", indiceSkatista, notasParticipantes[indiceSkatista]);
     }
 
 
     return 0;
 }
+
+
+
 
 
