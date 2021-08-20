@@ -1,0 +1,3 @@
+".\Objects\Luizinho_e_Pedro_Barros_16x2.obj" 
+TO ".\Objects\Lab03" 
+PRINT(".\Listings\Lab03.m51")
