@@ -25,14 +25,13 @@ void main()
 {
 	unsigned char indiceLista = 0; //variável para controlar a posição na lista
   unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  unsigned char xdata nomeCompetidor[8][15]; //matriz para armazenar o índice e o nome do competidor
+  char xdata nomeCompetidor[8][15]; //matriz para armazenar o índice e o nome do competidor
   unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
 	unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j; //variáveis para auxiliar a armazenar notas e nome
-	unsigned int  aux; //variável auxiliar
-	int notaOuro , notaPrata; //variáveis para armazenar as melhores notas do podio
+	unsigned int aux; //variável auxiliar
+	int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
   unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
 	
-
 	
 	for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
 		letrasNome = 0; //para armazenar as letras do nome, será resetado a cada vez que for ler os dados de um competidor
