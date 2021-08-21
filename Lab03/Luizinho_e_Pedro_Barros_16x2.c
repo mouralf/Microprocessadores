@@ -25,24 +25,28 @@ void main()
 {
 	unsigned char indiceLista = 0; //variável para controlar a posição na lista
   unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  char xdata nomeCompetidor[8][15]; //matriz para armazenar o índice e o nome do competidor
+  char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
   unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
 	unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j; //variáveis para auxiliar a armazenar notas e nome
 	unsigned int aux; //variável auxiliar
-	int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
-  unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
+	int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
+  unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
 	
 	
 	for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
 		letrasNome = 0; //para armazenar as letras do nome, será resetado a cada vez que for ler os dados de um competidor
 		
 		/*le o nome do competidor até chegar no 0*/
-		while(LISTA[indiceLista] != 0){
-                nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz adequada
-                letrasNome++; //incrementa as letras do nome
-                indiceLista++; //incrementa o indice da lista
-		} 
+		do{
+			
+			nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz adequada
+    	letrasNome++; //incrementa as letras do nome
+      indiceLista++; //incrementa o indice da lista
+		}while(LISTA[indiceLista-1] != ' ');
 		
+		while(LISTA[indiceLista] != 0){
+			indiceLista++;
+		}
 		indiceLista++;  //incrementa o indice da lista
 
 		indiceNota = 0; //para ser incrementado e pegar as notas
@@ -78,6 +82,9 @@ void main()
 	/* pega as maiores notas para definir o podio */
 	for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
             if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
+							//redefine o bronze para os valores antigos do prata
+							notaBronze = notaPrata;   
+							indiceBronze = indicePrata; 
 							//redefine o prata para os valores antigos do ouro
 							notaPrata = notaOuro;
 							indicePrata= indiceOuro;
@@ -86,21 +93,30 @@ void main()
               indiceOuro = numCompetidor;
 								
             } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga do Prata
+							//redefine o bronze para os valores antigos do prata
+							notaBronze = notaPrata;   
+							indiceBronze = indicePrata; 
 							//redefine os novos valores para o prata
 							notaPrata = notasFinais[numCompetidor];
               indicePrata = numCompetidor;
-
             } 
+						 else if (notasFinais[numCompetidor]>notaBronze){ //se a nota for maior que a nota antiga do Bronze
+							//redefine os novos valores para o bronze
+              notaBronze = notasFinais[numCompetidor];
+              indiceBronze = numCompetidor;
+            }
     }
 		
 		aux = 0;
-		for (k = 0; k<2; k++){ //pega as duas melhores notas para o podio
+		for (k = 0; k<3; k++){ //pega as duas melhores notas para o podio
 			
 			if( k == 0){ //pega o índice do ouro
 				j = indiceOuro;
 			}else if( k == 1){ //pega o índice do prata
 				j = indicePrata;
-			} 
+			} else if (k == 2){ //pega o índice do bronze
+				j = indiceBronze;
+			}
 			
 			letrasNome = 0;
 			//pega o nome de cada competidor do podio
@@ -113,6 +129,7 @@ void main()
 			RESULT[aux+2] = ',';
 			RESULT[aux+3] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
 			aux+=4;
+		  
 		}
 		
 		

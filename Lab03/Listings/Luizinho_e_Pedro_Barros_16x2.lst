@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 12:10:49 PAGE 1   
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 17:07:36 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LUIZINHO_E_PEDRO_BARROS_16X2
@@ -43,13 +43,13 @@ line level    source
   25          {
   26   1        unsigned char indiceLista = 0; //variável para controlar a posição na lista
   27   1        unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  28   1        char xdata nomeCompetidor[8][15]; //matriz para armazenar o índice e o nome do competidor
+  28   1        char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
   29   1        unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
   30   1        unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j; //variáveis para auxiliar a a
              -rmazenar notas e nome
   31   1        unsigned int aux; //variável auxiliar
-  32   1        int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
-  33   1        unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
+  32   1        int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
+  33   1        unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
   34   1        
   35   1        
   36   1        for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
@@ -57,105 +57,122 @@ line level    source
              -competidor
   38   2          
   39   2          /*le o nome do competidor até chegar no 0*/
-  40   2          while(LISTA[indiceLista] != 0){
-  41   3                      nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do no
-             -me na matriz adequada
-  42   3                      letrasNome++; //incrementa as letras do nome
-  43   3                      indiceLista++; //incrementa o indice da lista
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 12:10:49 PAGE 2   
+  40   2          do{
+  41   3            
+  42   3            nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz 
+             -adequada
+  43   3            letrasNome++; //incrementa as letras do nome
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 17:07:36 PAGE 2   
 
-  44   3          } 
-  45   2          
-  46   2          indiceLista++;  //incrementa o indice da lista
-  47   2      
-  48   2          indiceNota = 0; //para ser incrementado e pegar as notas
-  49   2      
-  50   2          for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
-  51   3            notasTemporarias[indiceNota] = LISTA[indiceLista]*100 + LISTA[indiceLista+1]; //pega as notas temporari
+  44   3            indiceLista++; //incrementa o indice da lista
+  45   3          }while(LISTA[indiceLista-1] != ' ');
+  46   2          
+  47   2          while(LISTA[indiceLista] != 0){
+  48   3            indiceLista++;
+  49   3          }
+  50   2          indiceLista++;  //incrementa o indice da lista
+  51   2      
+  52   2          indiceNota = 0; //para ser incrementado e pegar as notas
+  53   2      
+  54   2          for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
+  55   3            notasTemporarias[indiceNota] = LISTA[indiceLista]*100 + LISTA[indiceLista+1]; //pega as notas temporari
              -as e armazena
-  52   3            indiceNota++;
-  53   3            indiceLista+=2;
-  54   3            
-  55   3          } //fecha o for que le as notas
-  56   2              
-  57   2      
-  58   2          /*ordena as 7 notas em ordem decrescente*/
-  59   2          for (k = 1; k < 8; k++) {
-  60   3              
-  61   3              for (j = 0; j < 7; j++) {
-  62   4      
-  63   4                  if (notasTemporarias[j] > notasTemporarias[j + 1]) {
-  64   5                      aux = notasTemporarias[j];
-  65   5                      notasTemporarias[j] = notasTemporarias[j + 1];
-  66   5                      notasTemporarias[j + 1] = aux;
-  67   5                  }
-  68   4              }
-  69   3          }
-  70   2          
-  71   2          
-  72   2          
-  73   2          //pega só as 4 maiores notas de cada competidor
-  74   2          notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporari
+  56   3            indiceNota++;
+  57   3            indiceLista+=2;
+  58   3            
+  59   3          } //fecha o for que le as notas
+  60   2              
+  61   2      
+  62   2          /*ordena as 7 notas em ordem decrescente*/
+  63   2          for (k = 1; k < 8; k++) {
+  64   3              
+  65   3              for (j = 0; j < 7; j++) {
+  66   4      
+  67   4                  if (notasTemporarias[j] > notasTemporarias[j + 1]) {
+  68   5                      aux = notasTemporarias[j];
+  69   5                      notasTemporarias[j] = notasTemporarias[j + 1];
+  70   5                      notasTemporarias[j + 1] = aux;
+  71   5                  }
+  72   4              }
+  73   3          }
+  74   2          
+  75   2          
+  76   2          
+  77   2          //pega só as 4 maiores notas de cada competidor
+  78   2          notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporari
              -as[3]);
-  75   2        
-  76   2        }//fecha o for que percorre LISTA[]
-  77   1        
-  78   1        /* pega as maiores notas para definir o podio */
-  79   1        for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
-  80   2                  if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
-  81   3                    //redefine o prata para os valores antigos do ouro
-  82   3                    notaPrata = notaOuro;
-  83   3                    indicePrata= indiceOuro;
-  84   3                    //redefine os novos valores para o ouro
-  85   3                    notaOuro = notasFinais[numCompetidor];
-  86   3                    indiceOuro = numCompetidor;
-  87   3                      
-  88   3                  } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga d
+  79   2        
+  80   2        }//fecha o for que percorre LISTA[]
+  81   1        
+  82   1        /* pega as maiores notas para definir o podio */
+  83   1        for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
+  84   2                  if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
+  85   3                    //redefine o bronze para os valores antigos do prata
+  86   3                    notaBronze = notaPrata;   
+  87   3                    indiceBronze = indicePrata; 
+  88   3                    //redefine o prata para os valores antigos do ouro
+  89   3                    notaPrata = notaOuro;
+  90   3                    indicePrata= indiceOuro;
+  91   3                    //redefine os novos valores para o ouro
+  92   3                    notaOuro = notasFinais[numCompetidor];
+  93   3                    indiceOuro = numCompetidor;
+  94   3                      
+  95   3                  } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga d
              -o Prata
-  89   3                    //redefine os novos valores para o prata
-  90   3                    notaPrata = notasFinais[numCompetidor];
-  91   3                    indicePrata = numCompetidor;
-  92   3      
-  93   3                  } 
-  94   2          }
-  95   1          
-  96   1          aux = 0;
-  97   1          for (k = 0; k<2; k++){ //pega as duas melhores notas para o podio
-  98   2            
-  99   2            if( k == 0){ //pega o índice do ouro
- 100   3              j = indiceOuro;
- 101   3            }else if( k == 1){ //pega o índice do prata
- 102   3              j = indicePrata;
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 12:10:49 PAGE 3   
+  96   3                    //redefine o bronze para os valores antigos do prata
+  97   3                    notaBronze = notaPrata;   
+  98   3                    indiceBronze = indicePrata; 
+  99   3                    //redefine os novos valores para o prata
+ 100   3                    notaPrata = notasFinais[numCompetidor];
+ 101   3                    indicePrata = numCompetidor;
+ 102   3                  } 
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 17:07:36 PAGE 3   
 
- 103   3            } 
- 104   2            
- 105   2            letrasNome = 0;
- 106   2            //pega o nome de cada competidor do podio
- 107   2            while (nomeCompetidor[j][letrasNome] != ' '){
- 108   3              RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio
+ 103   2                   else if (notasFinais[numCompetidor]>notaBronze){ //se a nota for maior que a nota antiga do Bronze
+ 104   3                    //redefine os novos valores para o bronze
+ 105   3                    notaBronze = notasFinais[numCompetidor];
+ 106   3                    indiceBronze = numCompetidor;
+ 107   3                  }
+ 108   2          }
+ 109   1          
+ 110   1          aux = 0;
+ 111   1          for (k = 0; k<3; k++){ //pega as duas melhores notas para o podio
+ 112   2            
+ 113   2            if( k == 0){ //pega o índice do ouro
+ 114   3              j = indiceOuro;
+ 115   3            }else if( k == 1){ //pega o índice do prata
+ 116   3              j = indicePrata;
+ 117   3            } else if (k == 2){ //pega o índice do bronze
+ 118   3              j = indiceBronze;
+ 119   3            }
+ 120   2            
+ 121   2            letrasNome = 0;
+ 122   2            //pega o nome de cada competidor do podio
+ 123   2            while (nomeCompetidor[j][letrasNome] != ' '){
+ 124   3              RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio
              -)
- 109   3              aux++;
- 110   3              letrasNome++;
- 111   3          }
- 112   2            RESULT[aux+1] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
- 113   2            RESULT[aux+2] = ',';
- 114   2            RESULT[aux+3] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na m
+ 125   3              aux++;
+ 126   3              letrasNome++;
+ 127   3          }
+ 128   2            RESULT[aux+1] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
+ 129   2            RESULT[aux+2] = ',';
+ 130   2            RESULT[aux+3] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na m
              -emória
- 115   2            aux+=4;
- 116   2          }
- 117   1          
- 118   1          
- 119   1      while(1) ; // Final do programa 
- 120   1      }
+ 131   2            aux+=4;
+ 132   2            
+ 133   2          }
+ 134   1          
+ 135   1          
+ 136   1      while(1) ; // Final do programa 
+ 137   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    580    ----
+   CODE SIZE        =    622    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    325     120
+   XDATA SIZE       =    325    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      42
+   DATA SIZE        =   ----     109
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
