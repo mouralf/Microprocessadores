@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>Lab03</OutputName>
+          <OutputName>Teste16x2</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -233,7 +233,7 @@
               <RCB>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0xffff</Size>
+                <Size>0x10000</Size>
               </RCB>
               <RXB>
                 <Type>0</Type>
@@ -377,9 +377,9 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>Luizinho_e_Pedro_Barros_16x2.c</FileName>
+              <FileName>Teste16x2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Luizinho_e_Pedro_Barros_16x2.c</FilePath>
+              <FilePath>.\Teste16x2.c</FilePath>
             </File>
           </Files>
         </Group>

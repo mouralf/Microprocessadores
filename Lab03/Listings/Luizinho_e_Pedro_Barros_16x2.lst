@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 18:29:36 PAGE 1   
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LUIZINHO_E_PEDRO_BARROS_16X2
@@ -14,170 +14,327 @@ line level    source
    4          //Pedro Barros Baitelli 00304123
    5          
    6          #include <stdio.h>
-   7          
-   8          char xdata LISTA[] = {
-   9          'N','Y','A','H',' ','H','U','S','T','O','N',0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 
+   7          #include <reg51.h>
+   8          
+   9          sbit DB7 = P1^7;
+  10          sbit DB6 = P1^6;
+  11          sbit DB5 = P1^5;
+  12          sbit DB4 = P1^4;
+  13          sbit RS = P1^3;
+  14          sbit E = P1^2;
+  15          
+  16          sbit clear = P2^4;
+  17          sbit ret = P2^5;          
+  18          sbit left = P2^6;
+  19          sbit right = P2^7;
+  20          
+  21          void returnHome(void);
+  22          void entryModeSet(bit id, bit s);
+  23          void displayOnOffControl(bit display, bit cursor, bit blinking);
+  24          void cursorOrDisplayShift(bit sc, bit rl);
+  25          void functionSet(void);
+  26          void setDdRamAddress(char address);
+  27          
+  28          void sendChar(char c);
+  29          bit getBit(char c, char bitNumber);
+  30          void delay(void);
+  31          
+  32          
+  33          char code LISTA[] = {
+  34          'N','Y','A','H',' ','H','U','S','T','O','N',0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 
              -0,0; 0,0; 0, 0; 0,0
-  10          'J','A','G','G','E','R',' ','E','A','T','O','N',0, 8, 20, 9, 5, 0, 0, 8, 70,9,40, 0, 0, 0, 0, //8,20; 9,05
+  35          'J','A','G','G','E','R',' ','E','A','T','O','N',0, 8, 20, 9, 5, 0, 0, 8, 70,9,40, 0, 0, 0, 0, //8,20; 9,05
              -; 0,0; 8,70; 9,40; 0,0; 0,0
-  11          'G','U','S','T','A','V','O',' ','R','I','B','E','I','R','O',0, 7, 23, 5, 82, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
+  36          'G','U','S','T','A','V','O',' ','R','I','B','E','I','R','O',0, 7, 23, 5, 82, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
              -  //7,23; 5,82; 0,0; 0,0; 0,0; 0,0; 2,0
-  12          'K','E','L','V','I','N',' ','H','O','E','F','L','E','R',0, 8, 98, 8, 84, 8, 99, 0, 0, 0, 0, 7,58, 9,34, //
+  37          'K','E','L','V','I','N',' ','H','O','E','F','L','E','R',0, 8, 98, 8, 84, 8, 99, 0, 0, 0, 0, 7,58, 9,34, //
              -8,98; 8,84; 8,99; 0,0; 0,0; 7,58; 9,34
-  13          'V','I','C','E','N','T',' ','M','I','L','O','U',0, 7, 87, 5, 54, 9, 23, 0, 0, 8, 34, 0,0, 8,70, //7,87; 5,
+  38          'V','I','C','E','N','T',' ','M','I','L','O','U',0, 7, 87, 5, 54, 9, 23, 0, 0, 8, 34, 0,0, 8,70, //7,87; 5,
              -54; 9,23; 0,0; 8,34; 0,0; 8,70
-  14          'A','N','G','E','L','O',' ','N','A','R','V','A','E','Z',0, 7, 1, 6, 9, 9, 0, 0, 0, 0, 0, 8,65, 8,21, //7,0
+  39          'A','N','G','E','L','O',' ','N','A','R','V','A','E','Z',0, 7, 1, 6, 9, 9, 0, 0, 0, 0, 0, 8,65, 8,21, //7,0
              -1; 6,89; 9,00; 0,0; 0,0; 8,65; 8,21
-  15          'A','U','R','E','L','I','A','N',' ','G','R','A','U','D',0, 4, 21, 7, 20, 8, 68, 0, 0, 9, 0, 0, 0, 0, 0, //
+  40          'A','U','R','E','L','I','A','N',' ','G','R','A','U','D',0, 4, 21, 7, 20, 8, 68, 0, 0, 9, 0, 0, 0, 0, 0, //
              -4,21; 7,20; 8,68; 0,0; 9,0; 0,0;
-  16          'Y','U','T','O',' ','H','O','R','I','G','A','M','E',0, 8, 02, 6, 77, 9, 3, 0, 0, 9, 35, 9, 50, 9,30 //8,02
+  41          'Y','U','T','O',' ','H','O','R','I','G','A','M','E',0, 8, 02, 6, 77, 9, 3, 0, 0, 9, 35, 9, 50, 9,30 //8,02
              -; 6,77; 9,03; 0,0; 9,35; 9,50; 9,30
-  17          };
-  18          
-  19          
-  20          char xdata RESULT[100] ;
-  21          
-  22          //AS QUATRO MELHORES NOTAS SÃO SOMADAS PARA DETERMINAR A PONTUAÇÃO
-  23          
-  24          void main()
-  25          {
-  26   1        unsigned char indiceLista = 0; //variável para controlar a posição na lista
-  27   1        unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  28   1        char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
-  29   1        unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
-  30   1        unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j; //variáveis para auxiliar a a
-             -rmazenar notas e nome
-  31   1        unsigned int aux; //variável auxiliar
-  32   1        int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
-  33   1        unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
-  34   1        
-  35   1        
-  36   1        for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
-  37   2          letrasNome = 0; //para armazenar as letras do nome, será resetado a cada vez que for ler os dados de um 
+  42          };
+  43          
+  44          
+  45          //AS QUATRO MELHORES NOTAS SÃO SOMADAS PARA DETERMINAR A PONTUAÇÃO
+  46          
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 2   
+
+  47          void main()
+  48          {
+  49   1        unsigned char indiceLista = 0; //variável para controlar a posição na lista
+  50   1        unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
+  51   1        char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
+  52   1        unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
+  53   1        unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para auxilia
+             -r a armazenar notas e nome
+  54   1        int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
+  55   1        unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
+  56   1        
+  57   1        
+  58   1        for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
+  59   2          letrasNome = 0; //para armazenar as letras do nome, será resetado a cada vez que for ler os dados de um 
              -competidor
-  38   2          
-  39   2          /*le o nome do competidor até chegar no 0*/
-  40   2          do{
-  41   3            
-  42   3            nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz 
+  60   2          
+  61   2          /*le o nome do competidor até chegar no 0*/
+  62   2          do{
+  63   3            
+  64   3            nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz 
              -adequada
-  43   3            letrasNome++; //incrementa as letras do nome
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 18:29:36 PAGE 2   
-
-  44   3            indiceLista++; //incrementa o indice da lista
-  45   3          }while(LISTA[indiceLista-1] != ' ');
-  46   2          
-  47   2          while(LISTA[indiceLista] != 0){
-  48   3            indiceLista++;
-  49   3          }
-  50   2          indiceLista++;  //incrementa o indice da lista
-  51   2      
-  52   2          indiceNota = 0; //para ser incrementado e pegar as notas
-  53   2      
-  54   2          for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
-  55   3            notasTemporarias[indiceNota] = LISTA[indiceLista]*100 + LISTA[indiceLista+1]; //pega as notas temporari
+  65   3            letrasNome++; //incrementa as letras do nome
+  66   3            indiceLista++; //incrementa o indice da lista
+  67   3          }while(LISTA[indiceLista-1] != ' ');
+  68   2          
+  69   2          while(LISTA[indiceLista] != 0){
+  70   3            indiceLista++;
+  71   3          }
+  72   2          indiceLista++;  //incrementa o indice da lista
+  73   2      
+  74   2          indiceNota = 0; //para ser incrementado e pegar as notas
+  75   2      
+  76   2          for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
+  77   3            notasTemporarias[indiceNota] = LISTA[indiceLista]*100 + LISTA[indiceLista+1]; //pega as notas temporari
              -as e armazena
-  56   3            indiceNota++;
-  57   3            indiceLista+=2;
-  58   3            
-  59   3          } //fecha o for que le as notas
-  60   2              
-  61   2      
-  62   2          /*ordena as 7 notas em ordem decrescente*/
-  63   2          for (k = 1; k < 8; k++) {
-  64   3              
-  65   3              for (j = 0; j < 7; j++) {
-  66   4      
-  67   4                  if (notasTemporarias[j] > notasTemporarias[j + 1]) {
-  68   5                      aux = notasTemporarias[j];
-  69   5                      notasTemporarias[j] = notasTemporarias[j + 1];
-  70   5                      notasTemporarias[j + 1] = aux;
-  71   5                  }
-  72   4              }
-  73   3          }
-  74   2          
-  75   2          
-  76   2          
-  77   2          //pega só as 4 maiores notas de cada competidor
-  78   2          notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporari
+  78   3            indiceNota++;
+  79   3            indiceLista+=2;
+  80   3            
+  81   3          } //fecha o for que le as notas
+  82   2              
+  83   2      
+  84   2          /*ordena as 7 notas em ordem decrescente*/
+  85   2          for (k = 1; k < 8; k++) {
+  86   3              
+  87   3              for (j = 0; j < 7; j++) {
+  88   4      
+  89   4                  if (notasTemporarias[j] > notasTemporarias[j + 1]) {
+  90   5                      aux = notasTemporarias[j];
+  91   5                      notasTemporarias[j] = notasTemporarias[j + 1];
+  92   5                      notasTemporarias[j + 1] = aux;
+  93   5                  }
+  94   4              }
+  95   3          }
+  96   2          
+  97   2          
+  98   2          
+  99   2          //pega só as 4 maiores notas de cada competidor
+ 100   2          notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporari
              -as[3]);
-  79   2        
-  80   2        }//fecha o for que percorre LISTA[]
-  81   1        
-  82   1        /* pega as maiores notas para definir o podio */
-  83   1        for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
-  84   2                  if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
-  85   3                    //redefine o bronze para os valores antigos do prata
-  86   3                    notaBronze = notaPrata;   
-  87   3                    indiceBronze = indicePrata; 
-  88   3                    //redefine o prata para os valores antigos do ouro
-  89   3                    notaPrata = notaOuro;
-  90   3                    indicePrata= indiceOuro;
-  91   3                    //redefine os novos valores para o ouro
-  92   3                    notaOuro = notasFinais[numCompetidor];
-  93   3                    indiceOuro = numCompetidor;
-  94   3                      
-  95   3                  } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga d
-             -o Prata
-  96   3                    //redefine o bronze para os valores antigos do prata
-  97   3                    notaBronze = notaPrata;   
-  98   3                    indiceBronze = indicePrata; 
-  99   3                    //redefine os novos valores para o prata
- 100   3                    notaPrata = notasFinais[numCompetidor];
- 101   3                    indicePrata = numCompetidor;
- 102   3                  } 
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 18:29:36 PAGE 3   
+ 101   2        
+ 102   2        }//fecha o for que percorre LISTA[]
+ 103   1        
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 3   
 
- 103   2                   else if (notasFinais[numCompetidor]>notaBronze){ //se a nota for maior que a nota antiga do Bronze
- 104   3                    //redefine os novos valores para o bronze
- 105   3                    notaBronze = notasFinais[numCompetidor];
- 106   3                    indiceBronze = numCompetidor;
- 107   3                  }
- 108   2          }
- 109   1          
- 110   1          aux = 0;
- 111   1          for (k = 0; k<3; k++){ //pega as duas melhores notas para o podio
- 112   2            
- 113   2            if( k == 0){ //pega o índice do ouro
- 114   3              j = indiceOuro;
- 115   3            }else if( k == 1){ //pega o índice do prata
- 116   3              j = indicePrata;
- 117   3            } else if (k == 2){ //pega o índice do bronze
- 118   3              j = indiceBronze;
- 119   3            }
- 120   2            
- 121   2            letrasNome = 0;
- 122   2            //pega o nome de cada competidor do podio
- 123   2            while (nomeCompetidor[j][letrasNome] != ' '){
- 124   3              RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio
-             -)
- 125   3              aux++;
- 126   3              letrasNome++;
- 127   3          }
- 128   2            RESULT[aux+1] = notasFinais[j]/1000; //armazena em RESULT o dígito da dezena
- 129   2            RESULT[aux+2] = (notasFinais[j]/100)%10; //armazena em RESULT o dígito da unidade
- 130   2            RESULT[aux+3] = ',';
- 131   2            RESULT[aux+4] = (notasFinais[j]-(notasFinais[j]/100)*100)/10; ////armazena em RESULT o dígito da dezena
-             - após a vírgula
- 132   2            RESULT[aux+5] = (notasFinais[j]-(notasFinais[j]/100)*100)%10; //armazena em RESULT o dígito da unidade 
+ 104   1        /* pega as maiores notas para definir o podio */
+ 105   1        for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
+ 106   2                  if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
+ 107   3                    //redefine o prata para os valores antigos do ouro
+ 108   3                    notaPrata = notaOuro;
+ 109   3                    indicePrata= indiceOuro;
+ 110   3                    //redefine os novos valores para o ouro
+ 111   3                    notaOuro = notasFinais[numCompetidor];
+ 112   3                    indiceOuro = numCompetidor;
+ 113   3                      
+ 114   3                  } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga d
+             -o Prata
+ 115   3                    //redefine os novos valores para o prata
+ 116   3                    notaPrata = notasFinais[numCompetidor];
+ 117   3                    indicePrata = numCompetidor;
+ 118   3                  } 
+ 119   2          }
+ 120   1          
+ 121   1          //inicialização do display
+ 122   1          functionSet();
+ 123   1          entryModeSet(1, 0); // increment and no shift
+ 124   1          displayOnOffControl(1, 1, 1); // display on, cursor on and blinking on
+ 125   1          
+ 126   1          //aux = 0;
+ 127   1          for (k = 0; k<2; k++){ //pega as duas melhores notas para o podio que será exibido no display
+ 128   2            if( k == 0){ //pega o índice do ouro
+ 129   3              j = indiceOuro;
+ 130   3            }else if( k == 1){ //pega o índice do prata
+ 131   3              j = indicePrata;
+ 132   3            } 
+ 133   2            
+ 134   2            letrasNome = 0;
+ 135   2            //pega o nome de cada competidor do podio
+ 136   2            while (nomeCompetidor[j][letrasNome] != ' '){
+ 137   3              sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)
+ 138   3              letrasNome++;
+ 139   3          }
+ 140   2            sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
+ 141   2            sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
+ 142   2            sendChar(',');
+ 143   2            sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena 
+             -após a vírgula
+ 144   2            sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade 
              -após a virgula
- 133   2            aux+=6;   
- 134   2          }
- 135   1          
- 136   1          
- 137   1      while(1) ; // Final do programa 
- 138   1      }
+ 145   2            //aux+=6;   
+ 146   2          
+ 147   2            //pula pra segunda linha
+ 148   2            setDdRamAddress(0x40); // set address to start of second line
+ 149   2          }
+ 150   1          
+ 151   1          
+ 152   1      while (1) {
+ 153   2          if (ret == 0) {
+ 154   3            returnHome();
+ 155   3          }
+ 156   2          else {  
+ 157   3            if (left == 0 && right == 1) {
+ 158   4              cursorOrDisplayShift(1, 0); // shift display left
+ 159   4            }
+ 160   3            else if (left == 1 && right == 0) {
+ 161   4              cursorOrDisplayShift(1, 1); // shift display right
+ 162   4            } 
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 4   
+
+ 163   3          } 
+ 164   2        }
+ 165   1      }
+*** WARNING C280 IN LINE 54 OF Luizinho_e_Pedro_Barros_16x2.c: 'notaBronze': unreferenced local variable
+*** WARNING C280 IN LINE 55 OF Luizinho_e_Pedro_Barros_16x2.c: 'indiceBronze': unreferenced local variable
+ 166          
+ 167          void returnHome(void) {
+ 168   1        RS = 0;
+ 169   1        DB7 = 0;
+ 170   1        DB6 = 0;
+ 171   1        DB5 = 0;
+ 172   1        DB4 = 0;
+ 173   1        E = 1;
+ 174   1        E = 0;
+ 175   1        DB5 = 1;
+ 176   1        E = 1;
+ 177   1        E = 0;
+ 178   1        delay();
+ 179   1      } 
+ 180          
+ 181          void entryModeSet(bit id, bit s) {
+ 182   1        RS = 0;
+ 183   1        DB7 = 0;
+ 184   1        DB6 = 0;
+ 185   1        DB5 = 0;
+ 186   1        DB4 = 0;
+ 187   1        E = 1;
+ 188   1        E = 0;
+ 189   1        DB6 = 1;
+ 190   1        DB5 = id;
+ 191   1        DB4 = s;
+ 192   1        E = 1;
+ 193   1        E = 0;
+ 194   1        delay();
+ 195   1      }
+ 196          
+ 197          void displayOnOffControl(bit display, bit cursor, bit blinking) {
+ 198   1        DB7 = 0;
+ 199   1        DB6 = 0;
+ 200   1        DB5 = 0;
+ 201   1        DB4 = 0;
+ 202   1        E = 1;
+ 203   1        E = 0;
+ 204   1        DB7 = 1;
+ 205   1        DB6 = display;
+ 206   1        DB5 = cursor;
+ 207   1        DB4 = blinking;
+ 208   1        E = 1;
+ 209   1        E = 0;
+ 210   1        delay();
+ 211   1      }
+ 212          
+ 213          void cursorOrDisplayShift(bit sc, bit rl) {
+ 214   1        RS = 0;
+ 215   1        DB7 = 0;
+ 216   1        DB6 = 0;
+ 217   1        DB5 = 0;
+ 218   1        DB4 = 1;
+ 219   1        E = 1;
+ 220   1        E = 0;
+ 221   1        DB7 = sc;
+ 222   1        DB6 = rl;
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 5   
+
+ 223   1        E = 1;
+ 224   1        E = 0;
+ 225   1        delay();
+ 226   1      }
+ 227          
+ 228          void functionSet(void) {
+ 229   1        // The high nibble for the function set is actually sent twice. Why? See 4-bit operation
+ 230   1        // on pages 39 and 42 of HD44780.pdf.
+ 231   1        DB7 = 0;
+ 232   1        DB6 = 0;
+ 233   1        DB5 = 1;
+ 234   1        DB4 = 0;
+ 235   1        RS = 0;
+ 236   1        E = 1;
+ 237   1        E = 0;
+ 238   1        delay();
+ 239   1        E = 1;
+ 240   1        E = 0;
+ 241   1        DB7 = 1;
+ 242   1        E = 1;
+ 243   1        E = 0;
+ 244   1        delay();
+ 245   1      }
+ 246          
+ 247          void setDdRamAddress(char address) {
+ 248   1        RS = 0;
+ 249   1        DB7 = 1;
+ 250   1        DB6 = getBit(address, 6);
+ 251   1        DB5 = getBit(address, 5);
+ 252   1        DB4 = getBit(address, 4);
+ 253   1        E = 1;
+ 254   1        E = 0;
+ 255   1        DB7 = getBit(address, 3);
+ 256   1        DB6 = getBit(address, 2);
+ 257   1        DB5 = getBit(address, 1);
+ 258   1        DB4 = getBit(address, 0);
+ 259   1        E = 1;
+ 260   1        E = 0;
+ 261   1        delay();
+ 262   1      }
+ 263          
+ 264          void sendChar(char c) {
+ 265   1        DB7 = getBit(c, 7);
+ 266   1        DB6 = getBit(c, 6);
+ 267   1        DB5 = getBit(c, 5);
+ 268   1        DB4 = getBit(c, 4);
+ 269   1        RS = 1;
+ 270   1        E = 1;
+ 271   1        E = 0;
+ 272   1        DB7 = getBit(c, 3);
+ 273   1        DB6 = getBit(c, 2);
+ 274   1        DB5 = getBit(c, 1);
+ 275   1        DB4 = getBit(c, 0);
+ 276   1        E = 1;
+ 277   1        E = 0;
+ 278   1        delay();
+ 279   1      }
+ 280          
+ 281          bit getBit(char c, char bitNumber) {
+ 282   1        return (c >> bitNumber) & 1;
+ 283   1      }
+ 284          
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 6   
+
+ 285          void delay(void) {
+ 286   1        char c;
+ 287   1        for (c = 0; c < 50; c++);
+ 288   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    727    ----
-   CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    325    ----
+   CODE SIZE        =    977    ----
+   CONSTANT SIZE    =    225    ----
+   XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----     109
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =   ----    ----
+   BIT SIZE         =   ----       7
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

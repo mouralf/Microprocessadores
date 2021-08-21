@@ -29,21 +29,11 @@ void sendChar(char c);
 bit getBit(char c, char bitNumber);
 void delay(void);
 
-
-char code LISTA[] = {
-'N','Y','A','H',' ','H','U','S','T','O','N',0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 0,0; 0,0; 0, 0; 0,0
-'J','A','G','G','E','R',' ','E','A','T','O','N',0, 8, 20, 9, 5, 0, 0, 8, 70,9,40, 0, 0, 0, 0, //8,20; 9,05; 0,0; 8,70; 9,40; 0,0; 0,0
-'G','U','S','T','A','V','O',' ','R','I','B','E','I','R','O',0, 7, 23, 5, 82, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,  //7,23; 5,82; 0,0; 0,0; 0,0; 0,0; 2,0
-'K','E','L','V','I','N',' ','H','O','E','F','L','E','R',0, 8, 98, 8, 84, 8, 99, 0, 0, 0, 0, 7,58, 9,34, //8,98; 8,84; 8,99; 0,0; 0,0; 7,58; 9,34
-'V','I','C','E','N','T',' ','M','I','L','O','U',0, 7, 87, 5, 54, 9, 23, 0, 0, 8, 34, 0,0, 8,70, //7,87; 5,54; 9,23; 0,0; 8,34; 0,0; 8,70
-'A','N','G','E','L','O',' ','N','A','R','V','A','E','Z',0, 7, 1, 6, 9, 9, 0, 0, 0, 0, 0, 8,65, 8,21, //7,01; 6,89; 9,00; 0,0; 0,0; 8,65; 8,21
-'A','U','R','E','L','I','A','N',' ','G','R','A','U','D',0, 4, 21, 7, 20, 8, 68, 0, 0, 9, 0, 0, 0, 0, 0, //4,21; 7,20; 8,68; 0,0; 9,0; 0,0;
-'Y','U','T','O',' ','H','O','R','I','G','A','M','E',0, 8, 02, 6, 77, 9, 3, 0, 0, 9, 35, 9, 50, 9,30 //8,02; 6,77; 9,03; 0,0; 9,35; 9,50; 9,30
-};
-
-
 //AS QUATRO MELHORES NOTAS SÃO SOMADAS PARA DETERMINAR A PONTUAÇÃO
-
+	char xdata LISTA[] = {
+	'N','Y','A','H',' ', 0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 0,0; 0,0; 0, 0; 0,0
+	'K','E','L','V','I','N',' ',0, 8, 98, 8, 84, 8, 99, 0, 0, 0, 0, 7,58, 9,34, //8,98; 8,84; 8,99; 0,0; 0,0; 7,58; 9,34
+	};
 void main()
 {
 	unsigned char indiceLista = 0; //variável para controlar a posição na lista
@@ -51,8 +41,8 @@ void main()
   char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
   unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
 	unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para auxiliar a armazenar notas e nome
-	int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
-  unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
+	int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
+  unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
 	
 	
 	for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
@@ -105,17 +95,52 @@ void main()
 	for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
             if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
 							//redefine o prata para os valores antigos do ouro
-							notaPrata = notaOuro;
-							indicePrata= indiceOuro;
-							//redefine os novos valores para o ouro
-							notaOuro = notasFinais[numCompetidor];
-              indiceOuro = numCompetidor;
-								
+							setDdRamAddress(0x40); // set address to start of second line
+							letrasNome = 0;
+							//pega o nome de cada competidor do podio
+							while (nomeCompetidor[j][letrasNome] != ' '){
+								sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)								
+								//aux++;
+								letrasNome++;
+						}
+							sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
+							sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
+							sendChar(',');
+							sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
+							sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
+						
+							returnHome();
+						
+							letrasNome = 0;
+						
+						//pega o nome do ouro
+							while (nomeCompetidor[j][letrasNome] != ' '){
+								sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)								
+								//aux++;
+								letrasNome++;
+						}
+							sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
+							sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
+							sendChar(',');
+							sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
+							sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
+					
+						
             } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga do Prata
-							//redefine os novos valores para o prata
-							notaPrata = notasFinais[numCompetidor];
-              indicePrata = numCompetidor;
+							setDdRamAddress(0x40); // set address to start of second line
+							while (nomeCompetidor[j][letrasNome] != ' '){
+								sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)								
+								//aux++;
+								letrasNome++;
+						}
+							sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
+							sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
+							sendChar(',');
+							sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
+							sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
+						
             } 
+						
     }
 		
 		//inicialização do display
@@ -135,6 +160,7 @@ void main()
 			//pega o nome de cada competidor do podio
 			while (nomeCompetidor[j][letrasNome] != ' '){
 				sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)
+				//aux++;
 				letrasNome++;
 		}
 			sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
@@ -142,6 +168,7 @@ void main()
 			sendChar(',');
 			sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
 			sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
+			//aux+=6;	  
 		
 			//pula pra segunda linha
 			setDdRamAddress(0x40); // set address to start of second line
