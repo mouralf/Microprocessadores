@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 10:32:52 PAGE 1   
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 10:46:41 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LUIZINHO_E_PEDRO_BARROS_16X2
@@ -48,9 +48,8 @@ line level    source
   30   1        unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j; //variáveis para auxiliar a a
              -rmazenar notas e nome
   31   1        unsigned short int  aux; //variável auxiliar
-  32   1        int notaOuro , notaPrata , notaBronze; //variáveis para armazenar as melhores notas do podio
-  33   1        unsigned short int indiceOuro , indicePrata , indiceBronze; //variáveis para armazenar os índices do pód
-             -io
+  32   1        int notaOuro , notaPrata; //variáveis para armazenar as melhores notas do podio
+  33   1        unsigned short int indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
   34   1        
   35   1      
   36   1        
@@ -62,9 +61,9 @@ line level    source
   41   2          while(LISTA[indiceLista] != 0){
   42   3                      nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do no
              -me na matriz adequada
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 10:32:52 PAGE 2   
-
   43   3                      letrasNome++; //incrementa as letras do nome
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 10:46:41 PAGE 2   
+
   44   3                      indiceLista++; //incrementa o indice da lista
   45   3          } 
   46   2          
@@ -126,36 +125,38 @@ line level    source
   99   3            }else if( k == 1){ //pega o índice do prata
  100   3              j = indicePrata;
  101   3            } 
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 10:32:52 PAGE 3   
-
  102   2            
- 103   2            //pega o nome de cada competidor do podio
- 104   2            for(letrasNome = 0; letrasNome<15; letrasNome++){
- 105   3              RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 10:46:41 PAGE 3   
+
+ 103   2            letrasNome = 0;
+ 104   2            //pega o nome de cada competidor do podio
+ 105   2            while (nomeCompetidor[j][letrasNome] != ' '){
+ 106   3            //for(letrasNome = 0; letrasNome<15; letrasNome++){
+ 107   3              RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio
              -)
- 106   3              aux++;
- 107   3          }
- 108   2            //pega a nota de cada competidor do podio
- 109   2            RESULT[aux] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
- 110   2            RESULT[aux+1] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na m
+ 108   3              aux++;
+ 109   3              letrasNome++;
+ 110   3          }
+ 111   2            aux++;
+ 112   2            RESULT[aux] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
+ 113   2            RESULT[aux+1] = ',';
+ 114   2            RESULT[aux+2] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na m
              -emória
- 111   2            aux+=2;
- 112   2          }
- 113   1      while(1) ; // Final do programa 
- 114   1      }
-*** WARNING C280 IN LINE 32 OF Luizinho_e_Pedro_Barros_16x2.c: 'notaBronze': unreferenced local variable
-*** WARNING C280 IN LINE 33 OF Luizinho_e_Pedro_Barros_16x2.c: 'indiceBronze': unreferenced local variable
+ 115   2            aux+=3;
+ 116   2          }
+ 117   1      while(1) ; // Final do programa 
+ 118   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    827    ----
+   CODE SIZE        =    843    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =    325     164
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      22
+   DATA SIZE        =   ----      18
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

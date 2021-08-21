@@ -100,15 +100,19 @@ void main()
 				j = indicePrata;
 			} 
 			
+			letrasNome = 0;
 			//pega o nome de cada competidor do podio
-			for(letrasNome = 0; letrasNome<15; letrasNome++){
+			while (nomeCompetidor[j][letrasNome] != ' '){
+			//for(letrasNome = 0; letrasNome<15; letrasNome++){
 				RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio)
 				aux++;
+				letrasNome++;
 		}
-			//pega a nota de cada competidor do podio
+			aux++;
 			RESULT[aux] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
-			RESULT[aux+1] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
-			aux+=2;
+			RESULT[aux+1] = ',';
+			RESULT[aux+2] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
+			aux+=3;
 		}
 while(1) ; // Final do programa 
 }
