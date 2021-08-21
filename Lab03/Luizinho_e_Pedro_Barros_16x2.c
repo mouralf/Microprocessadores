@@ -125,11 +125,12 @@ void main()
 				aux++;
 				letrasNome++;
 		}
-			RESULT[aux+1] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
-			RESULT[aux+2] = ',';
-			RESULT[aux+3] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
-			aux+=4;
-		  
+			RESULT[aux+1] = notasFinais[j]/1000; //armazena em RESULT o dígito da dezena
+			RESULT[aux+2] = (notasFinais[j]/100)%10; //armazena em RESULT o dígito da unidade
+			RESULT[aux+3] = ',';
+			RESULT[aux+4] = (notasFinais[j]-(notasFinais[j]/100)*100)/10; ////armazena em RESULT o dígito da dezena após a vírgula
+			RESULT[aux+5] = (notasFinais[j]-(notasFinais[j]/100)*100)%10; //armazena em RESULT o dígito da unidade após a virgula
+			aux+=6;	  
 		}
 		
 		
