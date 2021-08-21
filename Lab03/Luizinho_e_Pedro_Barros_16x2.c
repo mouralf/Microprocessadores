@@ -1,4 +1,9 @@
-//#include <stdio.h>
+//Lab 2 de Microprocessadores
+//Turma D
+//Luiz Felipe de Moura 00305017
+//Pedro Barros Baitelli 00304123
+
+#include <stdio.h>
 
 char xdata LISTA[] = {
 'N','Y','A','H',' ','H','U','S','T','O','N',0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 0,0; 0,0; 0, 0; 0,0
@@ -32,43 +37,26 @@ void main()
 	for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
 		letrasNome = 0; //para armazenar as letras do nome, será resetado a cada vez que for ler os dados de um competidor
 		
-		/*le o nome do competidor até chegar no espaço em branco*/
-		//talvez mudar para do while para pegar o espaço em branco e reaproveitar no final.
-		while(LISTA[indiceLista] != ' '){
+		/*le o nome do competidor até chegar no 0*/
+		while(LISTA[indiceLista] != 0){
                 nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz adequada
                 letrasNome++; //incrementa as letras do nome
                 indiceLista++; //incrementa o indice da lista
 		} 
 		
-		/*Incrementa o indice da lista até chegar no 0, indicando que chegou nas notas*/
-		do{
-			indiceLista++;  //incrementa o indice da lista
-		} while(LISTA[indiceLista] != 0);
-		
+		indiceLista++;  //incrementa o indice da lista
 
 		indiceNota = 0; //para ser incrementado e pegar as notas
 
-		//opção 1: vai ter que no final separar novamente a unidade e a parte decimal
 		for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
 			notasTemporarias[indiceNota] = LISTA[indiceLista]*100 + LISTA[indiceLista+1]; //pega as notas temporarias e armazena
 			indiceNota++;
 			indiceLista+=2;
 			
 		} //fecha o for que le as notas
-		
-		//opção 2: vai armazenar a unidade e a parte decimal em variáveis diferentes
-		/*
-		for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
-			notasTemporarias[indiceNota] = LISTA[indiceLista]; //pega as notas (unidade) temporarias e armazena
-			virgulasTemporarias[indiceNota] = LISTA[indiceLista+1]; //pega as notas (decimais) e armazena
-			indiceNota++;
-			indiceLista+=2;
-			
-		} //fecha o for que le as notas
-    */  
-		
-		/*algoritmo para ordenar as 7 notas em ordem decrescente*/
-		//mudar para um que gaste menos memoria
+        
+
+		/*ordena as 7 notas em ordem decrescente*/
 		for (k = 1; k < 8; k++) {
         
         for (j = 0; j < 7; j++) {
@@ -81,10 +69,7 @@ void main()
         }
     }
 		//pega só as 4 maiores notas de cada competidor
-		//caso seja usada a opçao 1 :)
 		notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporarias[3]);
-		
-	
 	
 	}//fecha o for que percorre LISTA[]
 	
@@ -107,24 +92,22 @@ void main()
     }
 		
 		aux = 0;
-		for (k = 0; k<2; k++){ //percorre as melhores notas para pegar o ouro e prata
+		for (k = 0; k<2; k++){ //pega as duas melhores notas para o podio
 			
 			if( k == 0){ //pega o índice do ouro
 				j = indiceOuro;
 			}else if( k == 1){ //pega o índice do prata
 				j = indicePrata;
 			} 
+			
 			//pega o nome de cada competidor do podio
 			for(letrasNome = 0; letrasNome<15; letrasNome++){
 				RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio)
 				aux++;
 		}
-			
 			//pega a nota de cada competidor do podio
-			//caso seja utilizada a primeira opção para armazenar as notas
 			RESULT[aux] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
 			RESULT[aux+1] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
-		
 			aux+=2;
 		}
 while(1) ; // Final do programa 
