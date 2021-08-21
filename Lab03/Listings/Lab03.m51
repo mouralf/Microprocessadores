@@ -1,27 +1,19 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    08/21/2021  10:46:41  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    08/21/2021  12:04:23  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
 D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\Luizinho_e_Pedro_Barros_16x2.obj TO .\Objects\Lab03 PRINT (.\Listings\Lab03.m51)
 
 
-MEMORY MODEL: SMALL WITH FLOATING POINT ARITHMETIC
+MEMORY MODEL: SMALL
 
 
 INPUT MODULES INCLUDED:
   .\Objects\Luizinho_e_Pedro_Barros_16x2.obj (LUIZINHO_E_PEDRO_BARROS_16X2)
-  D:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPADD)
-  D:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPCMP)
-  D:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FCAST)
-  D:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?CASTF)
-  D:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPGETOPN)
   D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
   D:\KEIL_V5\C51\LIB\C51S.LIB (?C?IMUL)
-  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?SIDIV)
-  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?LNEG)
-  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?LSTXDATA)
-  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
   D:\KEIL_V5\C51\LIB\C51S.LIB (?C?UIDIV)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
 
 
 LINK MAP OF MODULE:  .\Objects\Lab03 (LUIZINHO_E_PEDRO_BARROS_16X2)
@@ -32,20 +24,20 @@ LINK MAP OF MODULE:  .\Objects\Lab03 (LUIZINHO_E_PEDRO_BARROS_16X2)
 
             * * * * * * *   D A T A   M E M O R Y   * * * * * * *
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
-            DATA    0008H     0012H     UNIT         _DATA_GROUP_
-            IDATA   001AH     0001H     UNIT         ?STACK
+            DATA    0008H     002AH     UNIT         _DATA_GROUP_
+            IDATA   0032H     0001H     UNIT         ?STACK
 
             * * * * * * *  X D A T A   M E M O R Y  * * * * * * *
             XDATA   0000H     0145H     UNIT         ?XD?LUIZINHO_E_PEDRO_BARROS_16X2
-            XDATA   0145H     00A4H     UNIT         _XDATA_GROUP_
+            XDATA   0145H     0078H     UNIT         _XDATA_GROUP_
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
                     0003H     07FDH                  *** GAP ***
-            CODE    0800H     034BH     UNIT         ?PR?MAIN?LUIZINHO_E_PEDRO_BARROS_16X2
-            CODE    0B4BH     02E7H     UNIT         ?C?LIB_CODE
-            CODE    0E32H     00E6H     UNIT         ?C_INITSEG
-            CODE    0F18H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0800H     0244H     UNIT         ?PR?MAIN?LUIZINHO_E_PEDRO_BARROS_16X2
+            CODE    0A44H     00E6H     UNIT         ?C_INITSEG
+            CODE    0B2AH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0BB6H     0067H     UNIT         ?C?LIB_CODE
 
 
 
@@ -59,10 +51,7 @@ SEGMENT                                         DATA_GROUP          XDATA_GROUP
   +--> ?PR?MAIN?LUIZINHO_E_PEDRO_BARROS_16X2
   +--> ?C_INITSEG
 
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  08/21/2021  10:46:41  PAGE 2
-
-
-?PR?MAIN?LUIZINHO_E_PEDRO_BARROS_16X2         0008H    0012H      0145H    00A4H
+?PR?MAIN?LUIZINHO_E_PEDRO_BARROS_16X2         0008H    002AH      0145H    0078H
 
 
 
@@ -70,6 +59,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\Lab03 (LUIZINHO_E_PEDRO_BARROS_16X2)
 
   VALUE           TYPE          NAME
   ----------------------------------
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  08/21/2021  12:04:23  PAGE 2
+
+
 
   -------         MODULE        LUIZINHO_E_PEDRO_BARROS_16X2
   C:0000H         SYMBOL        _ICE_DUMMY_
@@ -78,133 +70,97 @@ SYMBOL TABLE OF MODULE:  .\Objects\Lab03 (LUIZINHO_E_PEDRO_BARROS_16X2)
   X:00E1H         PUBLIC        RESULT
   -------         PROC          MAIN
   -------         DO            
-  D:0008H         SYMBOL        indiceLista
-  X:0145H         SYMBOL        notasTemporarias
-  X:0161H         SYMBOL        nomeCompetidor
-  X:01D9H         SYMBOL        notasFinais
-  D:000AH         SYMBOL        numCompetidor
-  D:000BH         SYMBOL        letrasNome
-  D:000CH         SYMBOL        indiceNota
-  D:000DH         SYMBOL        indiceNotaLista
-  D:000EH         SYMBOL        k
-  D:000FH         SYMBOL        j
-  D:0010H         SYMBOL        aux
-  D:0012H         SYMBOL        notaOuro
-  D:0014H         SYMBOL        notaPrata
-  D:0016H         SYMBOL        indiceOuro
-  D:0018H         SYMBOL        indicePrata
+  D:0001H         SYMBOL        indiceLista
+  D:0008H         SYMBOL        notasTemporarias
+  X:0145H         SYMBOL        nomeCompetidor
+  D:0016H         SYMBOL        notasFinais
+  D:0002H         SYMBOL        numCompetidor
+  D:0026H         SYMBOL        letrasNome
+  D:0027H         SYMBOL        indiceNota
+  D:0028H         SYMBOL        indiceNotaLista
+  D:0003H         SYMBOL        k
+  D:0029H         SYMBOL        j
+  D:002AH         SYMBOL        aux
+  D:002CH         SYMBOL        notaOuro
+  D:002EH         SYMBOL        notaPrata
+  D:0030H         SYMBOL        indiceOuro
+  D:0031H         SYMBOL        indicePrata
   -------         ENDDO         
   C:0800H         LINE#         24
   C:0800H         LINE#         25
   C:0800H         LINE#         26
-  C:0805H         LINE#         37
-  C:0815H         LINE#         38
-  C:0818H         LINE#         41
-  C:082FH         LINE#         42
-  C:084BH         LINE#         43
-  C:084DH         LINE#         44
-  C:0855H         LINE#         45
-  C:0857H         LINE#         47
-  C:085FH         LINE#         49
-  C:0862H         LINE#         51
-  C:086FH         LINE#         52
-  C:08B5H         LINE#         53
-  C:08B7H         LINE#         54
-  C:08C2H         LINE#         56
-  C:08C6H         LINE#         60
-  C:08D7H         LINE#         62
-  C:08E8H         LINE#         64
-  C:0923H         LINE#         65
-  C:0944H         LINE#         66
-  C:0970H         LINE#         67
-  C:098AH         LINE#         68
-  C:098AH         LINE#         69
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  08/21/2021  10:46:41  PAGE 3
+  C:0802H         LINE#         37
+  C:0810H         LINE#         38
+  C:0813H         LINE#         41
+  C:0828H         LINE#         42
+  C:0843H         LINE#         43
+  C:0845H         LINE#         44
+  C:0846H         LINE#         45
+  C:0848H         LINE#         47
+  C:0849H         LINE#         49
+  C:084CH         LINE#         51
+  C:0859H         LINE#         52
+  C:0892H         LINE#         53
+  C:0894H         LINE#         54
+  C:0896H         LINE#         56
+  C:089AH         LINE#         60
+  C:08A6H         LINE#         62
+  C:08B4H         LINE#         64
+  C:08D2H         LINE#         65
+  C:08D6H         LINE#         66
+  C:08EEH         LINE#         67
+  C:08FAH         LINE#         68
+  C:08FAH         LINE#         69
+  C:08FEH         LINE#         70
+  C:0901H         LINE#         75
+  C:0926H         LINE#         77
+  C:092AH         LINE#         80
+  C:0936H         LINE#         81
+  C:0949H         LINE#         83
+  C:094FH         LINE#         84
+  C:0952H         LINE#         86
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  08/21/2021  12:04:23  PAGE 3
 
 
-  C:098FH         LINE#         70
-  C:0994H         LINE#         72
-  C:09E8H         LINE#         74
-  C:09EDH         LINE#         77
-  C:09FBH         LINE#         78
-  C:0A1BH         LINE#         80
-  C:0A21H         LINE#         81
-  C:0A27H         LINE#         83
-  C:0A2BH         LINE#         84
-  C:0A31H         LINE#         86
-  C:0A53H         LINE#         88
-  C:0A57H         LINE#         89
-  C:0A5DH         LINE#         91
-  C:0A5DH         LINE#         92
-  C:0A61H         LINE#         94
-  C:0A66H         LINE#         95
-  C:0A79H         LINE#         97
-  C:0A7CH         LINE#         98
-  C:0A7FH         LINE#         99
-  C:0A87H         LINE#         100
-  C:0A8AH         LINE#         101
-  C:0A8AH         LINE#         103
-  C:0A8DH         LINE#         105
-  C:0AADH         LINE#         107
-  C:0ABBH         LINE#         108
-  C:0AC3H         LINE#         109
-  C:0AC5H         LINE#         110
-  C:0AC7H         LINE#         111
-  C:0ACFH         LINE#         112
-  C:0AF6H         LINE#         113
-  C:0B05H         LINE#         114
-  C:0B39H         LINE#         115
-  C:0B44H         LINE#         116
-  C:0B49H         LINE#         117
+  C:0956H         LINE#         87
+  C:0958H         LINE#         89
+  C:0963H         LINE#         91
+  C:0967H         LINE#         92
+  C:0969H         LINE#         94
+  C:0969H         LINE#         95
+  C:096CH         LINE#         97
+  C:0971H         LINE#         98
+  C:0982H         LINE#         100
+  C:0985H         LINE#         101
+  C:0988H         LINE#         102
+  C:0990H         LINE#         103
+  C:0993H         LINE#         104
+  C:0993H         LINE#         106
+  C:0996H         LINE#         108
+  C:09B6H         LINE#         109
+  C:09C4H         LINE#         110
+  C:09CCH         LINE#         111
+  C:09CEH         LINE#         112
+  C:09D0H         LINE#         113
+  C:09F1H         LINE#         114
+  C:0A00H         LINE#         115
+  C:0A33H         LINE#         116
+  C:0A3EH         LINE#         117
+  C:0A42H         LINE#         120
   -------         ENDPROC       MAIN
   -------         ENDMOD        LUIZINHO_E_PEDRO_BARROS_16X2
 
-  -------         MODULE        ?C?FPADD
-  C:0B52H         PUBLIC        ?C?FPADD
-  C:0B4EH         PUBLIC        ?C?FPSUB
-  -------         ENDMOD        ?C?FPADD
-
-  -------         MODULE        ?C?FPCMP
-  C:0C45H         PUBLIC        ?C?FPCMP
-  C:0C43H         PUBLIC        ?C?FPCMP3
-  -------         ENDMOD        ?C?FPCMP
-
-  -------         MODULE        ?C?FCAST
-  C:0CC6H         PUBLIC        ?C?FCASTC
-  C:0CC1H         PUBLIC        ?C?FCASTI
-  C:0CBCH         PUBLIC        ?C?FCASTL
-  -------         ENDMOD        ?C?FCAST
-
-  -------         MODULE        ?C?CASTF
-  C:0CFAH         PUBLIC        ?C?CASTF
-  -------         ENDMOD        ?C?CASTF
-
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  08/21/2021  10:46:41  PAGE 4
-
-
   -------         MODULE        ?C?IMUL
-  C:0D7BH         PUBLIC        ?C?IMUL
+  C:0BB6H         PUBLIC        ?C?IMUL
   -------         ENDMOD        ?C?IMUL
 
-  -------         MODULE        ?C?SIDIV
-  C:0D8DH         PUBLIC        ?C?SIDIV
-  -------         ENDMOD        ?C?SIDIV
-
-  -------         MODULE        ?C?LNEG
-  C:0DC3H         PUBLIC        ?C?LNEG
-  -------         ENDMOD        ?C?LNEG
-
-  -------         MODULE        ?C?LSTXDATA
-  C:0DD1H         PUBLIC        ?C?LSTXDATA
-  -------         ENDMOD        ?C?LSTXDATA
-
   -------         MODULE        ?C?UIDIV
-  C:0DDDH         PUBLIC        ?C?UIDIV
+  C:0BC8H         PUBLIC        ?C?UIDIV
   -------         ENDMOD        ?C?UIDIV
 
 ******************************************************************************
-* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0430H BYTE (52%) *
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0329H BYTE (39%) *
 ******************************************************************************
 
-Program Size: data=27.0 xdata=489 code=1959
+Program Size: data=51.0 xdata=445 code=1056
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

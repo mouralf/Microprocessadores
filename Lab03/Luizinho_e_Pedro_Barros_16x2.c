@@ -1,4 +1,4 @@
-//Lab 2 de Microprocessadores
+//Lab 3 de Microprocessadores
 //Turma D
 //Luiz Felipe de Moura 00305017
 //Pedro Barros Baitelli 00304123
@@ -23,14 +23,14 @@ char xdata RESULT[100] ;
 
 void main()
 {
-	int indiceLista = 0; //variável para controlar a posição na lista
-  float xdata notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
+	unsigned char indiceLista = 0; //variável para controlar a posição na lista
+  unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
   unsigned char xdata nomeCompetidor[8][15]; //matriz para armazenar o índice e o nome do competidor
-  int xdata notasFinais[8]; //matriz para armazenar as notas dos competidores
+  unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
 	unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j; //variáveis para auxiliar a armazenar notas e nome
-	unsigned short int  aux; //variável auxiliar
+	unsigned int  aux; //variável auxiliar
 	int notaOuro , notaPrata; //variáveis para armazenar as melhores notas do podio
-  unsigned short int indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
+  unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
 	
 
 	
@@ -68,6 +68,9 @@ void main()
             }
         }
     }
+		
+		
+		
 		//pega só as 4 maiores notas de cada competidor
 		notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporarias[3]);
 	
@@ -103,16 +106,16 @@ void main()
 			letrasNome = 0;
 			//pega o nome de cada competidor do podio
 			while (nomeCompetidor[j][letrasNome] != ' '){
-			//for(letrasNome = 0; letrasNome<15; letrasNome++){
 				RESULT[aux] = nomeCompetidor[j][letrasNome]; //armazena em RESULT o nome do competidor (ordem de podio)
 				aux++;
 				letrasNome++;
 		}
-			aux++;
-			RESULT[aux] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
-			RESULT[aux+1] = ',';
-			RESULT[aux+2] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
-			aux+=3;
+			RESULT[aux+1] = notasFinais[j]/100; //armazena em RESULT a nota centesimal do competidor
+			RESULT[aux+2] = ',';
+			RESULT[aux+3] = notasFinais[j]-(notasFinais[j]/100)*100; //armazena a parte das dezenas + unidades na memória
+			aux+=4;
 		}
+		
+		
 while(1) ; // Final do programa 
 }
