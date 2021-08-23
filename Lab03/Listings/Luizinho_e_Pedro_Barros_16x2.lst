@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 1   
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/22/2021 11:50:28 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LUIZINHO_E_PEDRO_BARROS_16X2
@@ -62,18 +62,18 @@ line level    source
   44          
   45          //AS QUATRO MELHORES NOTAS SÃO SOMADAS PARA DETERMINAR A PONTUAÇÃO
   46          
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 2   
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/22/2021 11:50:28 PAGE 2   
 
   47          void main()
   48          {
   49   1        unsigned char indiceLista = 0; //variável para controlar a posição na lista
   50   1        unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  51   1        char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
-  52   1        unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
-  53   1        unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para auxilia
-             -r a armazenar notas e nome
-  54   1        int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
-  55   1        unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
+  51   1        char idata nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
+  52   1        unsigned int idata notasFinais[8]; //matriz para armazenar as notas dos competidores
+  53   1        unsigned char  idata numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para a
+             -uxiliar a armazenar notas e nome
+  54   1        int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
+  55   1        unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
   56   1        
   57   1        
   58   1        for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
@@ -126,7 +126,7 @@ line level    source
  101   2        
  102   2        }//fecha o for que percorre LISTA[]
  103   1        
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 3   
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/22/2021 11:50:28 PAGE 3   
 
  104   1        /* pega as maiores notas para definir o podio */
  105   1        for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
@@ -165,176 +165,190 @@ line level    source
  137   3              sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)
  138   3              letrasNome++;
  139   3          }
- 140   2            sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
- 141   2            sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
- 142   2            sendChar(',');
- 143   2            sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena 
+ 140   2            sendChar(' ');
+ 141   2            sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
+ 142   2            sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
+ 143   2            sendChar(',');
+ 144   2            sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena 
              -após a vírgula
- 144   2            sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade 
+ 145   2            sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade 
              -após a virgula
- 145   2            //aux+=6;   
  146   2          
  147   2            //pula pra segunda linha
  148   2            setDdRamAddress(0x40); // set address to start of second line
  149   2          }
  150   1          
  151   1          
- 152   1      while (1) {
- 153   2          if (ret == 0) {
- 154   3            returnHome();
- 155   3          }
- 156   2          else {  
- 157   3            if (left == 0 && right == 1) {
- 158   4              cursorOrDisplayShift(1, 0); // shift display left
- 159   4            }
- 160   3            else if (left == 1 && right == 0) {
- 161   4              cursorOrDisplayShift(1, 1); // shift display right
- 162   4            } 
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 4   
+ 152   1        while (1) {
+ 153   2            if (ret == 0) {
+ 154   3              returnHome();
+ 155   3            }
+ 156   2            else {  
+ 157   3              if (left == 0 && right == 1) {
+ 158   4                cursorOrDisplayShift(1, 0); // shift display left
+ 159   4              }
+ 160   3              else if (left == 1 && right == 0) {
+ 161   4                cursorOrDisplayShift(1, 1); // shift display right
+ 162   4              } 
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/22/2021 11:50:28 PAGE 4   
 
- 163   3          } 
- 164   2        }
+ 163   3            } 
+ 164   2          }
  165   1      }
-*** WARNING C280 IN LINE 54 OF Luizinho_e_Pedro_Barros_16x2.c: 'notaBronze': unreferenced local variable
-*** WARNING C280 IN LINE 55 OF Luizinho_e_Pedro_Barros_16x2.c: 'indiceBronze': unreferenced local variable
  166          
- 167          void returnHome(void) {
- 168   1        RS = 0;
- 169   1        DB7 = 0;
- 170   1        DB6 = 0;
- 171   1        DB5 = 0;
- 172   1        DB4 = 0;
- 173   1        E = 1;
- 174   1        E = 0;
- 175   1        DB5 = 1;
- 176   1        E = 1;
- 177   1        E = 0;
- 178   1        delay();
- 179   1      } 
- 180          
- 181          void entryModeSet(bit id, bit s) {
- 182   1        RS = 0;
- 183   1        DB7 = 0;
- 184   1        DB6 = 0;
- 185   1        DB5 = 0;
- 186   1        DB4 = 0;
- 187   1        E = 1;
- 188   1        E = 0;
- 189   1        DB6 = 1;
- 190   1        DB5 = id;
- 191   1        DB4 = s;
+ 167          // LCD Module instructions -------------------------------------------
+ 168          // To understand why the pins are being set to the particular values in the functions
+ 169          // below, see the instruction set.
+ 170          // A full explanation of the LCD Module: HD44780.pdf
+ 171          
+ 172          void returnHome(void) {
+ 173   1        RS = 0;
+ 174   1        DB7 = 0;
+ 175   1        DB6 = 0;
+ 176   1        DB5 = 0;
+ 177   1        DB4 = 0;
+ 178   1        E = 1;
+ 179   1        E = 0;
+ 180   1        DB5 = 1;
+ 181   1        E = 1;
+ 182   1        E = 0;
+ 183   1        delay();
+ 184   1      } 
+ 185          
+ 186          void entryModeSet(bit id, bit s) {
+ 187   1        RS = 0;
+ 188   1        DB7 = 0;
+ 189   1        DB6 = 0;
+ 190   1        DB5 = 0;
+ 191   1        DB4 = 0;
  192   1        E = 1;
  193   1        E = 0;
- 194   1        delay();
- 195   1      }
- 196          
- 197          void displayOnOffControl(bit display, bit cursor, bit blinking) {
- 198   1        DB7 = 0;
- 199   1        DB6 = 0;
- 200   1        DB5 = 0;
- 201   1        DB4 = 0;
- 202   1        E = 1;
- 203   1        E = 0;
- 204   1        DB7 = 1;
- 205   1        DB6 = display;
- 206   1        DB5 = cursor;
- 207   1        DB4 = blinking;
- 208   1        E = 1;
- 209   1        E = 0;
- 210   1        delay();
- 211   1      }
- 212          
- 213          void cursorOrDisplayShift(bit sc, bit rl) {
- 214   1        RS = 0;
- 215   1        DB7 = 0;
- 216   1        DB6 = 0;
- 217   1        DB5 = 0;
- 218   1        DB4 = 1;
- 219   1        E = 1;
- 220   1        E = 0;
- 221   1        DB7 = sc;
- 222   1        DB6 = rl;
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 5   
+ 194   1        DB6 = 1;
+ 195   1        DB5 = id;
+ 196   1        DB4 = s;
+ 197   1        E = 1;
+ 198   1        E = 0;
+ 199   1        delay();
+ 200   1      }
+ 201          
+ 202          void displayOnOffControl(bit display, bit cursor, bit blinking) {
+ 203   1        DB7 = 0;
+ 204   1        DB6 = 0;
+ 205   1        DB5 = 0;
+ 206   1        DB4 = 0;
+ 207   1        E = 1;
+ 208   1        E = 0;
+ 209   1        DB7 = 1;
+ 210   1        DB6 = display;
+ 211   1        DB5 = cursor;
+ 212   1        DB4 = blinking;
+ 213   1        E = 1;
+ 214   1        E = 0;
+ 215   1        delay();
+ 216   1      }
+ 217          
+ 218          void cursorOrDisplayShift(bit sc, bit rl) {
+ 219   1        RS = 0;
+ 220   1        DB7 = 0;
+ 221   1        DB6 = 0;
+ 222   1        DB5 = 0;
+ 223   1        DB4 = 1;
+ 224   1        E = 1;
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/22/2021 11:50:28 PAGE 5   
 
- 223   1        E = 1;
- 224   1        E = 0;
- 225   1        delay();
- 226   1      }
- 227          
- 228          void functionSet(void) {
- 229   1        // The high nibble for the function set is actually sent twice. Why? See 4-bit operation
- 230   1        // on pages 39 and 42 of HD44780.pdf.
- 231   1        DB7 = 0;
- 232   1        DB6 = 0;
- 233   1        DB5 = 1;
- 234   1        DB4 = 0;
- 235   1        RS = 0;
- 236   1        E = 1;
- 237   1        E = 0;
- 238   1        delay();
- 239   1        E = 1;
- 240   1        E = 0;
- 241   1        DB7 = 1;
- 242   1        E = 1;
- 243   1        E = 0;
- 244   1        delay();
- 245   1      }
- 246          
- 247          void setDdRamAddress(char address) {
- 248   1        RS = 0;
- 249   1        DB7 = 1;
- 250   1        DB6 = getBit(address, 6);
- 251   1        DB5 = getBit(address, 5);
- 252   1        DB4 = getBit(address, 4);
- 253   1        E = 1;
- 254   1        E = 0;
- 255   1        DB7 = getBit(address, 3);
- 256   1        DB6 = getBit(address, 2);
- 257   1        DB5 = getBit(address, 1);
- 258   1        DB4 = getBit(address, 0);
- 259   1        E = 1;
- 260   1        E = 0;
- 261   1        delay();
- 262   1      }
- 263          
- 264          void sendChar(char c) {
- 265   1        DB7 = getBit(c, 7);
- 266   1        DB6 = getBit(c, 6);
- 267   1        DB5 = getBit(c, 5);
- 268   1        DB4 = getBit(c, 4);
- 269   1        RS = 1;
- 270   1        E = 1;
- 271   1        E = 0;
- 272   1        DB7 = getBit(c, 3);
- 273   1        DB6 = getBit(c, 2);
- 274   1        DB5 = getBit(c, 1);
- 275   1        DB4 = getBit(c, 0);
- 276   1        E = 1;
- 277   1        E = 0;
- 278   1        delay();
- 279   1      }
- 280          
- 281          bit getBit(char c, char bitNumber) {
- 282   1        return (c >> bitNumber) & 1;
- 283   1      }
- 284          
-C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/21/2021 19:50:44 PAGE 6   
+ 225   1        E = 0;
+ 226   1        DB7 = sc;
+ 227   1        DB6 = rl;
+ 228   1        E = 1;
+ 229   1        E = 0;
+ 230   1        delay();
+ 231   1      }
+ 232          
+ 233          void functionSet(void) {
+ 234   1        // The high nibble for the function set is actually sent twice. Why? See 4-bit operation
+ 235   1        // on pages 39 and 42 of HD44780.pdf.
+ 236   1        DB7 = 0;
+ 237   1        DB6 = 0;
+ 238   1        DB5 = 1;
+ 239   1        DB4 = 0;
+ 240   1        RS = 0;
+ 241   1        E = 1;
+ 242   1        E = 0;
+ 243   1        delay();
+ 244   1        E = 1;
+ 245   1        E = 0;
+ 246   1        DB7 = 1;
+ 247   1        E = 1;
+ 248   1        E = 0;
+ 249   1        delay();
+ 250   1      }
+ 251          
+ 252          void setDdRamAddress(char address) {
+ 253   1        RS = 0;
+ 254   1        DB7 = 1;
+ 255   1        DB6 = getBit(address, 6);
+ 256   1        DB5 = getBit(address, 5);
+ 257   1        DB4 = getBit(address, 4);
+ 258   1        E = 1;
+ 259   1        E = 0;
+ 260   1        DB7 = getBit(address, 3);
+ 261   1        DB6 = getBit(address, 2);
+ 262   1        DB5 = getBit(address, 1);
+ 263   1        DB4 = getBit(address, 0);
+ 264   1        E = 1;
+ 265   1        E = 0;
+ 266   1        delay();
+ 267   1      }
+ 268          
+ 269          void sendChar(char c) {
+ 270   1        DB7 = getBit(c, 7);
+ 271   1        DB6 = getBit(c, 6);
+ 272   1        DB5 = getBit(c, 5);
+ 273   1        DB4 = getBit(c, 4);
+ 274   1        RS = 1;
+ 275   1        E = 1;
+ 276   1        E = 0;
+ 277   1        DB7 = getBit(c, 3);
+ 278   1        DB6 = getBit(c, 2);
+ 279   1        DB5 = getBit(c, 1);
+ 280   1        DB4 = getBit(c, 0);
+ 281   1        E = 1;
+ 282   1        E = 0;
+ 283   1        delay();
+ 284   1      }
+ 285          
+ 286          // -- End of LCD Module instructions
+C51 COMPILER V9.60.0.0   LUIZINHO_E_PEDRO_BARROS_16X2                                      08/22/2021 11:50:28 PAGE 6   
 
- 285          void delay(void) {
- 286   1        char c;
- 287   1        for (c = 0; c < 50; c++);
- 288   1      }
+ 287          // --------------------------------------------------------------------
+ 288          
+ 289          void sendString(char* str) {
+ 290   1        int index = 0;
+ 291   1        while (str[index] != 0) {
+ 292   2          sendChar(str[index]);
+ 293   2          index++;
+ 294   2        }
+ 295   1      }
+ 296          
+ 297          bit getBit(char c, char bitNumber) {
+ 298   1        return (c >> bitNumber) & 1;
+ 299   1      }
+ 300          
+ 301          void delay(void) {
+ 302   1        char c;
+ 303   1        for (c = 0; c < 50; c++);
+ 304   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    977    ----
+   CODE SIZE        =   1100    ----
    CONSTANT SIZE    =    225    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----     109
-   IDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      27
+   IDATA SIZE       =   ----      87
    BIT SIZE         =   ----       7
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

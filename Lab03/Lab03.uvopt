@@ -140,22 +140,22 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RESULT,0x0A</ItemText>
+          <ItemText>aux,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>indiceOuro</ItemText>
+          <ItemText>notasFinais,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>indicePrata</ItemText>
+          <ItemText>notaOuro</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>indiceBronze</ItemText>
+          <ItemText>notaPrata</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

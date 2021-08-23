@@ -1,9 +1,3 @@
-//Lab 3 de Microprocessadores
-//Turma D
-//Luiz Felipe de Moura 00305017
-//Pedro Barros Baitelli 00304123
-
-#include <stdio.h>
 #include <reg51.h>
 
 sbit DB7 = P1^7;
@@ -26,156 +20,58 @@ void functionSet(void);
 void setDdRamAddress(char address);
 
 void sendChar(char c);
+void sendString(char* str);
 bit getBit(char c, char bitNumber);
 void delay(void);
 
-//AS QUATRO MELHORES NOTAS SÃO SOMADAS PARA DETERMINAR A PONTUAÇÃO
-	char xdata LISTA[] = {
-	'N','Y','A','H',' ', 0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 0,0; 0,0; 0, 0; 0,0
-	'K','E','L','V','I','N',' ',0, 8, 98, 8, 84, 8, 99, 0, 0, 0, 0, 7,58, 9,34, //8,98; 8,84; 8,99; 0,0; 0,0; 7,58; 9,34
-	};
-void main()
-{
-	unsigned char indiceLista = 0; //variável para controlar a posição na lista
-  unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
-  unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
-	unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para auxiliar a armazenar notas e nome
-	int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
-  unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
-	
-	
-	for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
-		letrasNome = 0; //para armazenar as letras do nome, será resetado a cada vez que for ler os dados de um competidor
-		
-		/*le o nome do competidor até chegar no 0*/
-		do{
-			
-			nomeCompetidor[numCompetidor][letrasNome] = LISTA[indiceLista]; //armazena as letras do nome na matriz adequada
-    	letrasNome++; //incrementa as letras do nome
-      indiceLista++; //incrementa o indice da lista
-		}while(LISTA[indiceLista-1] != ' ');
-		
-		while(LISTA[indiceLista] != 0){
-			indiceLista++;
-		}
-		indiceLista++;  //incrementa o indice da lista
+char code LISTA[] = {
+'N','Y','A','H',' ','H','U','S','T','O','N',0, 7, 90, 9, 11, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0,  //7,90; 9,11; 0,0; 0,0; 0, 0; 0,0
+'J','A','G','G','E','R',' ','E','A','T','O','N',0, 8, 20, 9, 5, 0, 0, 8, 70,9,40, 0, 0, 0, 0, //8,20; 9,05; 0,0; 8,70; 9,40; 0,0; 0,0
+'G','U','S','T','A','V','O',' ','R','I','B','E','I','R','O',0, 7, 23, 5, 82, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,  //7,23; 5,82; 0,0; 0,0; 0,0; 0,0; 2,0
+'K','E','L','V','I','N',' ','H','O','E','F','L','E','R',0, 8, 98, 8, 84, 8, 99, 0, 0, 0, 0, 7,58, 9,34, //8,98; 8,84; 8,99; 0,0; 0,0; 7,58; 9,34
+'V','I','C','E','N','T',' ','M','I','L','O','U',0, 7, 87, 5, 54, 9, 23, 0, 0, 8, 34, 0,0, 8,70, //7,87; 5,54; 9,23; 0,0; 8,34; 0,0; 8,70
+'A','N','G','E','L','O',' ','N','A','R','V','A','E','Z',0, 7, 1, 6, 9, 9, 0, 0, 0, 0, 0, 8,65, 8,21, //7,01; 6,89; 9,00; 0,0; 0,0; 8,65; 8,21
+'A','U','R','E','L','I','A','N',' ','G','R','A','U','D',0, 4, 21, 7, 20, 8, 68, 0, 0, 9, 0, 0, 0, 0, 0, //4,21; 7,20; 8,68; 0,0; 9,0; 0,0;
+'Y','U','T','O',' ','H','O','R','I','G','A','M','E',0, 8, 02, 6, 77, 9, 3, 0, 0, 9, 35, 9, 50, 9,30 //8,02; 6,77; 9,03; 0,0; 9,35; 9,50; 9,30
+};
 
-		indiceNota = 0; //para ser incrementado e pegar as notas
-
-		for (indiceNotaLista = 0; indiceNotaLista<7; indiceNotaLista++){ //percorre a lista para pegar as notas
-			notasTemporarias[indiceNota] = LISTA[indiceLista]*100 + LISTA[indiceLista+1]; //pega as notas temporarias e armazena
-			indiceNota++;
-			indiceLista+=2;
-			
-		} //fecha o for que le as notas
-        
-
-		/*ordena as 7 notas em ordem decrescente*/
-		for (k = 1; k < 8; k++) {
-        
-        for (j = 0; j < 7; j++) {
-
-            if (notasTemporarias[j] > notasTemporarias[j + 1]) {
-                aux = notasTemporarias[j];
-                notasTemporarias[j] = notasTemporarias[j + 1];
-                notasTemporarias[j + 1] = aux;
-            }
-        }
-    }
-		
-		
-		
-		//pega só as 4 maiores notas de cada competidor
-		notasFinais[numCompetidor] = (notasTemporarias[6]+notasTemporarias[5]+notasTemporarias[4]+notasTemporarias[3]);
+void main(void) {
+	char teste[5] = {'p', 'e', 'n', 'i', 's'};
+	unsigned char j = 0, letrasNome;
+	unsigned int notasFinais[8] = {3718, 3615};
+	char code LISTA [] = {'N','Y','A','H',' '};
 	
-	}//fecha o for que percorre LISTA[]
+	functionSet();
+	entryModeSet(1, 0); // increment and no shift
+	displayOnOffControl(1, 1, 1); // display on, cursor on and blinking on
 	
-	/* pega as maiores notas para definir o podio */
-	for(numCompetidor = 0; numCompetidor < 8; numCompetidor++){
-            if(notasFinais[numCompetidor]>notaOuro){ //se a nota lida for maior que a nota antiga do Ouro
-							//redefine o prata para os valores antigos do ouro
-							setDdRamAddress(0x40); // set address to start of second line
-							letrasNome = 0;
-							//pega o nome de cada competidor do podio
-							while (nomeCompetidor[j][letrasNome] != ' '){
-								sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)								
-								//aux++;
-								letrasNome++;
-						}
-							sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
-							sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
-							sendChar(',');
-							sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
-							sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
-						
-							returnHome();
-						
-							letrasNome = 0;
-						
-						//pega o nome do ouro
-							while (nomeCompetidor[j][letrasNome] != ' '){
-								sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)								
-								//aux++;
-								letrasNome++;
-						}
-							sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
-							sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
-							sendChar(',');
-							sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
-							sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
-					
-						
-            } else if (notasFinais[numCompetidor]>notaPrata){ //caso a nota seja maior que a nota antiga do Prata
-							setDdRamAddress(0x40); // set address to start of second line
-							while (nomeCompetidor[j][letrasNome] != ' '){
-								sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)								
-								//aux++;
-								letrasNome++;
-						}
-							sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
-							sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
-							sendChar(',');
-							sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
-							sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
-						
-            } 
-						
-    }
-		
-		//inicialização do display
-		functionSet();
-		entryModeSet(1, 0); // increment and no shift
-		displayOnOffControl(1, 1, 1); // display on, cursor on and blinking on
-		
-		//aux = 0;
-		for (k = 0; k<2; k++){ //pega as duas melhores notas para o podio que será exibido no display
-			if( k == 0){ //pega o índice do ouro
-				j = indiceOuro;
-			}else if( k == 1){ //pega o índice do prata
-				j = indicePrata;
-			} 
-			
-			letrasNome = 0;
+	letrasNome = 0;
 			//pega o nome de cada competidor do podio
-			while (nomeCompetidor[j][letrasNome] != ' '){
-				sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)
-				//aux++;
-				letrasNome++;
-		}
+	while (LISTA[letrasNome] != ' '){
+		sendChar(LISTA[letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)
+		letrasNome++;
+}
+			sendChar(' ');
+	for (j = 0; j<2; j++){
 			sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
 			sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
 			sendChar(',');
 			sendChar(((notasFinais[j]-(notasFinais[j]/100)*100)/10)+48); ////armazena em RESULT o dígito da dezena após a vírgula
 			sendChar (((notasFinais[j]-(notasFinais[j]/100)*100)%10)+48); //armazena em RESULT o dígito da unidade após a virgula
-			//aux+=6;	  
-		
-			//pula pra segunda linha
 			setDdRamAddress(0x40); // set address to start of second line
-		}
-		
-		
-while (1) {
+
+	}
+	
+
+	
+
+	// The program can be controlled via some of the switches on port 2.
+	// If switch 5 is closed the cursor returns home (address 0).
+	// Otherwise, switches 6 and 7 are read - if both switches are open or both switches 
+	//      are closed, the display does not shift.
+	// If switch 7 is closed, continuously shift left.
+	// If switch 6 is closed, continuously shift right.
+	while (1) {
 		if (ret == 0) {
 			returnHome();
 		}
@@ -189,6 +85,11 @@ while (1) {
 		}	
 	}
 }
+
+// LCD Module instructions -------------------------------------------
+// To understand why the pins are being set to the particular values in the functions
+// below, see the instruction set.
+// A full explanation of the LCD Module: HD44780.pdf
 
 void returnHome(void) {
 	RS = 0;
@@ -302,6 +203,17 @@ void sendChar(char c) {
 	E = 1;
 	E = 0;
 	delay();
+}
+
+// -- End of LCD Module instructions
+// --------------------------------------------------------------------
+
+void sendString(char* str) {
+	int index = 0;
+	while (str[index] != 0) {
+		sendChar(str[index]);
+		index++;
+	}
 }
 
 bit getBit(char c, char bitNumber) {

@@ -48,11 +48,11 @@ void main()
 {
 	unsigned char indiceLista = 0; //variável para controlar a posição na lista
   unsigned int notasTemporarias[7]; //variavel para auxiliar no armazenamento das notas
-  char nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
-  unsigned int notasFinais[8]; //matriz para armazenar as notas dos competidores
-	unsigned char  numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para auxiliar a armazenar notas e nome
-	int notaOuro, notaPrata, notaBronze; //variáveis para armazenar as melhores notas do podio
-  unsigned char indiceOuro , indicePrata, indiceBronze; //variáveis para armazenar os índices do pódio
+  char idata nomeCompetidor[8][8]; //matriz para armazenar o índice e o nome do competidor
+  unsigned int idata notasFinais[8]; //matriz para armazenar as notas dos competidores
+	unsigned char  idata numCompetidor, letrasNome, indiceNota,indiceNotaLista, k, j, aux; //variáveis para auxiliar a armazenar notas e nome
+	int notaOuro, notaPrata; //variáveis para armazenar as melhores notas do podio
+  unsigned char indiceOuro , indicePrata; //variáveis para armazenar os índices do pódio
 	
 	
 	for (numCompetidor = 0; numCompetidor<8; numCompetidor++){ //for para percorrer a lista
@@ -137,6 +137,7 @@ void main()
 				sendChar(nomeCompetidor[j][letrasNome]); //armazena em RESULT o nome do competidor (ordem de podio)
 				letrasNome++;
 		}
+			sendChar(' ');
 			sendChar((notasFinais[j]/1000)+48); //armazena em RESULT o dígito da dezena
 			sendChar(((notasFinais[j]/100)%10)+48); //armazena em RESULT o dígito da unidade
 			sendChar(',');
@@ -148,20 +149,25 @@ void main()
 		}
 		
 		
-while (1) {
-		if (ret == 0) {
-			returnHome();
-		}
-		else {	
-			if (left == 0 && right == 1) {
-				cursorOrDisplayShift(1, 0); // shift display left
+	while (1) {
+			if (ret == 0) {
+				returnHome();
 			}
-			else if (left == 1 && right == 0) {
-				cursorOrDisplayShift(1, 1); // shift display right
+			else {	
+				if (left == 0 && right == 1) {
+					cursorOrDisplayShift(1, 0); // shift display left
+				}
+				else if (left == 1 && right == 0) {
+					cursorOrDisplayShift(1, 1); // shift display right
+				}	
 			}	
-		}	
-	}
+		}
 }
+
+// LCD Module instructions -------------------------------------------
+// To understand why the pins are being set to the particular values in the functions
+// below, see the instruction set.
+// A full explanation of the LCD Module: HD44780.pdf
 
 void returnHome(void) {
 	RS = 0;
@@ -275,6 +281,17 @@ void sendChar(char c) {
 	E = 1;
 	E = 0;
 	delay();
+}
+
+// -- End of LCD Module instructions
+// --------------------------------------------------------------------
+
+void sendString(char* str) {
+	int index = 0;
+	while (str[index] != 0) {
+		sendChar(str[index]);
+		index++;
+	}
 }
 
 bit getBit(char c, char bitNumber) {
