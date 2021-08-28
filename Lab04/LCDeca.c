@@ -34,14 +34,18 @@ RS		R/W		D7		D6		D5		D4		E
 Aguardar >4 ms
 */
 
+#ifndef LCDECA_H_
+#define LCDECA_H_
+
 #include <reg51.h>
 
-//seta os pinos de dados
+//define os pinos de dados
 sbit DB7 = P1^7;
 sbit DB6 = P1^6;
 sbit DB5 = P1^5;
 sbit DB4 = P1^4;
-//seta os pinos de enable e registrer select
+
+//define os pinos de enable e registrer select
 sbit RS = P1^3;
 sbit E = P1^2;
 
@@ -49,18 +53,19 @@ sbit E = P1^2;
 //#define RS 7	//PD7 -> RS
 
 //variaveis para controle do LCD (valor pro RS)
-#define CNFG 0	//para configurar o display
-#define DADO 1		//para envio de dados
+#define CNFG 0													//para configurar o display
+#define DADO 1													//para envio de dados
 
-//definições para inicializar o LCD (pinos D7 D6 D5 D4 e D3 D2 D1 D0) :)
-#define LCD_SET 0x28	//dois nibbles: 0010 1000 -> function set
-#define LCD_DSP_CTR 0x0C //dois nibbles: 0000 1100 -> liga o display e cursor off
-#define LCD_ENT_MODE 0x06 //dois nibbles: 0000 0110 -> incrementa o cursor
+//definições para inicializar o LCD :)
+#define LCD_SET 0x28										//dois nibbles: 0010 1000 -> function set
+#define LCD_DSP_CTR 0x0C 								//dois nibbles: 0000 1100 -> liga o display e cursor off
+#define LCD_ENT_MODE 0x06 							//dois nibbles: 0000 0110 -> incrementa o cursor
 
 //0010 0000
 //0000 0010
 
 void LCD_control(unsigned char c, unsigned char control_type){
+	/*Função para controle e envio de dados do/pro LCD  */
 	//c -> numero hexadecimal para setar os pinos do LCD
 	// control_type -> pode ser para configurações do LCD (0) ou envio de dados (1)
 	
@@ -106,4 +111,12 @@ void LCD_init(){
 	LCD_control(LCD_SET, CNFG); 					//function set
 	LCD_control(LCD_DSP_CTR, CNFG); 			//display control
 	LCD_control(LCD_ENT_MODE, CNFG); 			//entry mode
+}
+
+void enviaString(char* str({
+	//sabendo que o caracter delimitador de fim da string é '\0':
+	while(*str != '\0'){
+		LCD_control(*str, DADO);
+		str++;
+	}
 }
