@@ -1,0 +1,248 @@
+C51 COMPILER V9.60.0.0   CODIGO_SITE                                                       08/28/2021 22:21:45 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE CODIGO_SITE
+OBJECT MODULE PLACED IN .\Objects\Codigo_site.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Codigo_site.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listin
+                    -gs\Codigo_site.lst) TABS(2) OBJECT(.\Objects\Codigo_site.obj)
+
+line level    source
+
+   1          //Luiz Felipe de Moura 00305017
+   2          //Pedro Barros Baitelli 00301234
+   3          
+   4          //versão utilizando o código exemplo do site 
+   5          //data=15.3 code = 546 Time: 00:00:01
+   6          
+   7          /*
+   8          Inicialização do display:
+   9          - Function set: define se será trabalhado com 8 ou 4 bits (queremos 4)
+  10            Manda 0010
+  11            Bota 0 no RS
+  12            1 no Enable
+  13            Coloca o valor e baixa o Enable ou Baixa o Enable e coloca o valor
+  14          */
+  15          
+  16          #include <reg51.h>
+  17          
+  18          sbit DB7 = P1^7;
+  19          sbit DB6 = P1^6;
+  20          sbit DB5 = P1^5;
+  21          sbit DB4 = P1^4;
+  22          sbit RS = P1^3;
+  23          sbit E = P1^2;
+  24          
+  25          sbit clear = P2^4;
+  26          sbit ret = P2^5;          
+  27          sbit left = P2^6;
+  28          sbit right = P2^7;
+  29          
+  30          void returnHome(void);
+  31          void entryModeSet(bit id, bit s);
+  32          void displayOnOffControl(bit display, bit cursor, bit blinking);
+  33          void cursorOrDisplayShift(bit sc, bit rl);
+  34          void functionSet(void);
+  35          void setDdRamAddress(char address);
+  36          
+  37          void sendChar(char c);
+  38          void sendString(char* str);
+  39          bit getBit(char c, char bitNumber);
+  40          void delay(void);
+  41          
+  42          void main(void) {
+  43   1      
+  44   1        functionSet();
+  45   1        entryModeSet(1, 0); // increment and no shift
+  46   1        displayOnOffControl(1, 1, 1); // display on, cursor on and blinking on
+  47   1        sendString("Luiz");
+  48   1        setDdRamAddress(0x40); // set address to start of second line
+  49   1        sendString("Pedro");
+  50   1      
+  51   1        // The program can be controlled from some of the switches on port 2.
+  52   1        // If switch 5 is closed the cursor returns home (address 0).
+  53   1        // Otherwise, switches 6 and 7 are read - if both switches are open or both switches 
+  54   1        //      are closed, the display does not shift.
+C51 COMPILER V9.60.0.0   CODIGO_SITE                                                       08/28/2021 22:21:45 PAGE 2   
+
+  55   1        // If switch 7 is closed, continuously shift left.
+  56   1        // If switch 6 is closed, continuously shift right.
+  57   1        while (1) {
+  58   2          if (ret == 0) {
+  59   3            returnHome();
+  60   3          }
+  61   2          else {  
+  62   3            if (left == 0 && right == 1) {
+  63   4              cursorOrDisplayShift(1, 0); // shift display left
+  64   4            }
+  65   3            else if (left == 1 && right == 0) {
+  66   4              cursorOrDisplayShift(1, 1); // shift display right
+  67   4            } 
+  68   3          } 
+  69   2        }
+  70   1      }
+  71          
+  72          // LCD Module instructions -------------------------------------------
+  73          
+  74          void returnHome(void) {
+  75   1        //0000 0010 = 0x02
+  76   1        RS = 0;
+  77   1        DB7 = 0;
+  78   1        DB6 = 0;
+  79   1        DB5 = 0;
+  80   1        DB4 = 0;
+  81   1        E = 1;
+  82   1        E = 0;
+  83   1        DB5 = 1;
+  84   1        E = 1;
+  85   1        E = 0;
+  86   1        delay();
+  87   1      } 
+  88          
+  89          void entryModeSet(bit id, bit s) {
+  90   1        RS = 0;
+  91   1        DB7 = 0;
+  92   1        DB6 = 0;
+  93   1        DB5 = 0;
+  94   1        DB4 = 0;
+  95   1        E = 1;
+  96   1        E = 0;
+  97   1        DB6 = 1;
+  98   1        DB5 = id;
+  99   1        DB4 = s;
+ 100   1        E = 1;
+ 101   1        E = 0;
+ 102   1        delay();
+ 103   1      }
+ 104          
+ 105          void displayOnOffControl(bit display, bit cursor, bit blinking) {
+ 106   1        DB7 = 0;
+ 107   1        DB6 = 0;
+ 108   1        DB5 = 0;
+ 109   1        DB4 = 0;
+ 110   1        E = 1;
+ 111   1        E = 0;
+ 112   1        DB7 = 1;
+ 113   1        DB6 = display;
+ 114   1        DB5 = cursor;
+ 115   1        DB4 = blinking;
+ 116   1        E = 1;
+C51 COMPILER V9.60.0.0   CODIGO_SITE                                                       08/28/2021 22:21:45 PAGE 3   
+
+ 117   1        E = 0;
+ 118   1        delay();
+ 119   1      }
+ 120          
+ 121          void cursorOrDisplayShift(bit sc, bit rl) {
+ 122   1        //0001 1101 -> 0x1D
+ 123   1        RS = 0;
+ 124   1        DB7 = 0;
+ 125   1        DB6 = 0;
+ 126   1        DB5 = 0;
+ 127   1        DB4 = 1;
+ 128   1        E = 1;
+ 129   1        E = 0;
+ 130   1        DB7 = sc;
+ 131   1        DB6 = rl;
+ 132   1        E = 1;
+ 133   1        E = 0;
+ 134   1        delay();
+ 135   1      }
+ 136          
+ 137          void functionSet(void) {
+ 138   1        // The high nibble for the function set is actually sent twice. Why? See 4-bit operation
+ 139   1        // on pages 39 and 42 of HD44780.pdf.
+ 140   1        DB7 = 0;
+ 141   1        DB6 = 0;
+ 142   1        DB5 = 1;
+ 143   1        DB4 = 0;
+ 144   1        RS = 0;
+ 145   1        E = 1;
+ 146   1        E = 0;
+ 147   1        delay();
+ 148   1        E = 1;
+ 149   1        E = 0;
+ 150   1        DB7 = 1;
+ 151   1        E = 1;
+ 152   1        E = 0;
+ 153   1        delay();
+ 154   1      }
+ 155          
+ 156          //recebe 0x40 = 0100 0000
+ 157          void setDdRamAddress(char address) {
+ 158   1        //RS    R/W   D7    D6    D5    D4    E 
+ 159   1        //0      0    1     1     0     0     1 -> isso equivale a 0xC
+ 160   1        //RS    R/W   D7    D6    D5    D4    E
+ 161   1        //0      0    1     1     0     0     0
+ 162   1        RS = 0;
+ 163   1        DB7 = 1;
+ 164   1        DB6 = getBit(address, 6);
+ 165   1        DB5 = getBit(address, 5);
+ 166   1        DB4 = getBit(address, 4);
+ 167   1        E = 1;
+ 168   1        E = 0;
+ 169   1        
+ 170   1        //RS    R/W   D7    D6    D5    D4    E
+ 171   1        //0      0    0     0     0     0     1 -> isso equivale a 0x0
+ 172   1        //RS    R/W   D7    D6    D5    D4    E
+ 173   1        //0      0    0     0     0     0     0
+ 174   1        DB7 = getBit(address, 3);
+ 175   1        DB6 = getBit(address, 2);
+ 176   1        DB5 = getBit(address, 1);
+ 177   1        DB4 = getBit(address, 0);
+ 178   1        E = 1;
+C51 COMPILER V9.60.0.0   CODIGO_SITE                                                       08/28/2021 22:21:45 PAGE 4   
+
+ 179   1        E = 0;
+ 180   1        
+ 181   1        delay();
+ 182   1      }
+ 183          
+ 184          // --------------------------------------------------------------------
+ 185          
+ 186          void sendChar(char c) {
+ 187   1        DB7 = getBit(c, 7);
+ 188   1        DB6 = getBit(c, 6);
+ 189   1        DB5 = getBit(c, 5);
+ 190   1        DB4 = getBit(c, 4);
+ 191   1        RS = 1;
+ 192   1        E = 1;
+ 193   1        E = 0;
+ 194   1        DB7 = getBit(c, 3);
+ 195   1        DB6 = getBit(c, 2);
+ 196   1        DB5 = getBit(c, 1);
+ 197   1        DB4 = getBit(c, 0);
+ 198   1        E = 1;
+ 199   1        E = 0;
+ 200   1        delay();
+ 201   1      }
+ 202          
+ 203          void sendString(char* str) {
+ 204   1        int index = 0;
+ 205   1        while (str[index] != 0) {
+ 206   2          sendChar(str[index]);
+ 207   2          index++;
+ 208   2        }
+ 209   1      }
+ 210          
+ 211          bit getBit(char c, char bitNumber) {
+ 212   1        return (c >> bitNumber) & 1;
+ 213   1      }
+ 214          
+ 215          void delay(void) {
+ 216   1        char c;
+ 217   1        for (c = 0; c < 50; c++);
+ 218   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    475    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       7
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,4 @@
+".\Objects\Main.obj",
+".\Objects\Codigo_site.obj" 
+TO ".\Objects\E01 (criação própria)" 
+PRINT(".\Listings\E01 (criação própria).m51")

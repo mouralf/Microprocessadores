@@ -13,13 +13,13 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>8051AH</Device>
+          <Device>8031AH</Device>
           <Vendor>Intel</Vendor>
-          <Cpu>IRAM(0-0x7F) IROM(0-0xFFF) CLOCK(12000000)</Cpu>
+          <Cpu>IRAM(0-0x7F) CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile>"LIB\STARTUP.A51" ("Standard 8051 Startup Code")</StartupFile>
           <FlashDriverDll></FlashDriverDll>
-          <DeviceId>2999</DeviceId>
+          <DeviceId>3000</DeviceId>
           <RegisterFile>REG51.H</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>Lab04E01</OutputName>
+          <OutputName>E01 (criação própria)</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -197,7 +197,7 @@
             <UseOnchipXram>0</UseOnchipXram>
             <HadIRAM>1</HadIRAM>
             <HadXRAM>0</HadXRAM>
-            <HadIROM>1</HadIROM>
+            <HadIROM>0</HadIROM>
             <Moda2>0</Moda2>
             <Moddp2>0</Moddp2>
             <Modp2>0</Modp2>
@@ -271,9 +271,9 @@
                 <Size>0x0</Size>
               </Ocr3>
               <IRO>
-                <Type>1</Type>
+                <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x1000</Size>
+                <Size>0x0</Size>
               </IRO>
               <IRA>
                 <Type>0</Type>
@@ -377,19 +377,19 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>E01.c</FileName>
+              <FileName>Main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\E01.c</FilePath>
+              <FilePath>.\Main.c</FilePath>
             </File>
             <File>
-              <FileName>E01Propria.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\E01Propria.c</FilePath>
+              <FileName>LCDeca.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\LCDeca.h</FilePath>
             </File>
             <File>
-              <FileName>LCDeca.c</FileName>
+              <FileName>Codigo_site.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\LCDeca.c</FilePath>
+              <FilePath>.\Codigo_site.c</FilePath>
             </File>
           </Files>
         </Group>

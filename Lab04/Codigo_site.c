@@ -72,6 +72,7 @@ void main(void) {
 // LCD Module instructions -------------------------------------------
 
 void returnHome(void) {
+	//0000 0010 = 0x02
 	RS = 0;
 	DB7 = 0;
 	DB6 = 0;
@@ -118,6 +119,7 @@ void displayOnOffControl(bit display, bit cursor, bit blinking) {
 }
 
 void cursorOrDisplayShift(bit sc, bit rl) {
+	//0001 1101 -> 0x1D
 	RS = 0;
 	DB7 = 0;
 	DB6 = 0;
@@ -151,7 +153,12 @@ void functionSet(void) {
 	delay();
 }
 
+//recebe 0x40 = 0100 0000
 void setDdRamAddress(char address) {
+	//RS		R/W		D7		D6		D5		D4		E 
+	//0			 0		1			1			0			0			1 -> isso equivale a 0xC
+	//RS		R/W		D7		D6		D5		D4		E
+	//0			 0		1			1			0			0			0
 	RS = 0;
 	DB7 = 1;
 	DB6 = getBit(address, 6);
@@ -159,12 +166,18 @@ void setDdRamAddress(char address) {
 	DB4 = getBit(address, 4);
 	E = 1;
 	E = 0;
+	
+	//RS		R/W		D7		D6		D5		D4		E
+	//0			 0		0			0			0			0			1 -> isso equivale a 0x0
+	//RS		R/W		D7		D6		D5		D4		E
+	//0			 0		0			0			0			0			0
 	DB7 = getBit(address, 3);
 	DB6 = getBit(address, 2);
 	DB5 = getBit(address, 1);
 	DB4 = getBit(address, 0);
 	E = 1;
 	E = 0;
+	
 	delay();
 }
 
