@@ -5,9 +5,7 @@
  * Author : pbatm
  */ 
 
-#define F_CPU 32000000UL
 #include <avr/io.h>
-#include <util/delay.h>
 
 //define os pinos de enable e registrer select
 #define RS PB0
@@ -64,7 +62,7 @@ void LCD_control(unsigned char c, unsigned char control_type){
 	PORTB |= (1<<EN);															//seta EN como 1							
 	PORTB &= ~(1<<EN);															//seta EN como 0
 	
-	_delay_ms(10);
+	delay_lcd();
 	
 	c = c<<4;															//desloca 4 bits para a esquerda
 	PORTD &= 0x0F; 													    //1111 0000
@@ -73,15 +71,16 @@ void LCD_control(unsigned char c, unsigned char control_type){
 	PORTB |= (1<<EN);																//seta EN como 1
 	PORTB &= ~(1<<EN);	 															//seta EN como 0
 	
-	_delay_ms(10);
+	delay_lcd();
 }
 
 
 
 void LCD_init(){
-	DDRB = 0x03;							    // Define os pinos PB0 e PB1 como output
-	DDRD = 0xF0;								// Define os pinos PD4, PD5, PD6 e PD7 como output
-	_delay_ms(10);
+	DDRB |= 0x03;								// Define os pinos PB0 e PB1 como output
+	DDRD |= 0xF0;								// Define os pinos PD4, PD5, PD6 e PD7 como output
+	delay_lcd();
+	LCD_control(LCD_HOME, CNFG); //TESTANDO
 	LCD_control(LCD_SET, CNFG); 				//function set
 	LCD_control(LCD_DSP_CTR, CNFG); 			//display control
 	LCD_control(LCD_ENT_MODE, CNFG); 			//entry mode
@@ -106,17 +105,17 @@ int main(){
 	
 	DDRB = 0x03;
 	DDRD = 0xF0;
-	_delay_ms(100);
+	delay_lcd();
 	
 	LCD_init();
-	_delay_ms(100);
+	delay_lcd();
 	
 	LCD_control(LCD_CLR, CNFG);					//Limpa a tela e põe o cursor em 0,0
 	enviaString("Deu certo");
-	_delay_ms(100);
+	delay_lcd();
 	LCD_control(LCD_SEG_LINHA, CNFG);
-	_delay_ms(100);
-	enviaString("So que nao :)");
+	delay_lcd();
+	enviaString("Deus e pai :)");
 	
 	while(1){
 		

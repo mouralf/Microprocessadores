@@ -9,10 +9,7 @@ main.d main.o: .././main.c \
  d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\common.h \
  d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
- d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
- d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
- d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h
+ d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h
 
 d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -35,9 +32,3 @@ d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h
 d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h:
 
 d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
-
-d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h:
-
-d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
-
-d:\amtel\ studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
