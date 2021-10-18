@@ -1,4 +1,4 @@
-/*
+    /*
  * GccApplication1.c
  *
  * Created: 01/10/2021 10:00:40
@@ -18,7 +18,6 @@ int main(void)
 {
 	
 	//LED no pino PB5
-	
 	DDRB = (1 << 5);	//pino PB5 é saída (LED)
 	
 	TCCR0A = 0x2;		//modo CTC para o timer 0
