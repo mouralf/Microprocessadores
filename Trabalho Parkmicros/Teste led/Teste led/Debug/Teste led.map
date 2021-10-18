@@ -384,11 +384,11 @@ END GROUP
  *(.debug_frame)
  .debug_frame   0x00000000       0x34 main.o
 
-.debug_str      0x00000000      0x386
+.debug_str      0x00000000      0x37e
  *(.debug_str)
  .debug_str     0x00000000      0x208 D:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_str     0x00000208      0x17e main.o
-                                0x1b2 (size before relaxing)
+ .debug_str     0x00000208      0x176 main.o
+                                0x1aa (size before relaxing)
 
 .debug_loc
  *(.debug_loc)
@@ -417,5 +417,5 @@ END GROUP
 
 .debug_macro
  *(.debug_macro)
-OUTPUT(GccApplication1.elf elf32-avr)
+OUTPUT(Teste led.elf elf32-avr)
 LOAD linker stubs
