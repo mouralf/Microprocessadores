@@ -88,12 +88,20 @@ void LCD_init(){
 	LCD_control(0x80, CNFG);	// Sets cursor to (0,0). SE DER CERTO TESTAR SEM DEP
 }
 
-void enviaString(char* str){
+void enviaString(char* str){      
 	int index = 0;
 	while (str[index] != 0){
 		LCD_control(str[index], 1);
 		index++;
 	}
+}
+
+void enviaChar(char c){
+	LCD_control(c, 1);    //envia o char c
+}
+
+void enviaInt(int c){
+	LCD_control(c+48, 1); //soma 48 para ser o numero em char da tabela ascii
 }
 
 void delay(){
@@ -110,15 +118,13 @@ int main(){
 	LCD_init();
 	delay_lcd();
 	
-	LCD_control(LCD_CLR, CNFG);					//Limpa a tela e põe o cursor em 0,0
-	enviaString("Deu certo");
-	delay_lcd();
-	LCD_control(LCD_SEG_LINHA, CNFG);
-	delay_lcd();
-	enviaString("Deus e pai :)");
+	enviaChar('o');
+	enviaChar('i');
+	
+	enviaInt(7);
 	
 	while(1){
-		
+
 	}
 	return 0;
 }
