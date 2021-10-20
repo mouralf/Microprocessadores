@@ -3,29 +3,29 @@ Teclado.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000206  2**0
+  0 .data         00000000  00800100  00800100  0000025a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000001b2  00000000  00000000  00000054  2**1
+  1 .text         00000206  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000206  2**0
+  2 .comment      00000030  00000000  00000000  0000025a  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000238  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000028c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000068  00000000  00000000  00000278  2**0
+  4 .debug_aranges 00000068  00000000  00000000  000002cc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000008f8  00000000  00000000  000002e0  2**0
+  5 .debug_info   00000979  00000000  00000000  00000334  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000006ce  00000000  00000000  00000bd8  2**0
+  6 .debug_abbrev 000006fa  00000000  00000000  00000cad  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000003e9  00000000  00000000  000012a6  2**0
+  7 .debug_line   00000433  00000000  00000000  000013a7  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000c8  00000000  00000000  00001690  2**2
+  8 .debug_frame  000000d4  00000000  00000000  000017dc  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000003f5  00000000  00000000  00001758  2**0
+  9 .debug_str    00000402  00000000  00000000  000018b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000015b  00000000  00000000  00001b4d  2**0
+ 10 .debug_loc    000001d2  00000000  00000000  00001cb2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000058  00000000  00000000  00001ca8  2**0
+ 11 .debug_ranges 00000058  00000000  00000000  00001e84  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,8 +65,8 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 cc 00 	call	0x198	; 0x198 <main>
-  78:	0c 94 d7 00 	jmp	0x1ae	; 0x1ae <_exit>
+  74:	0e 94 f6 00 	call	0x1ec	; 0x1ec <main>
+  78:	0c 94 01 01 	jmp	0x202	; 0x202 <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -210,87 +210,151 @@ void Keyboard_config(){
  15c:	08 95       	ret
 
 0000015e <Keyboard_validation>:
+}
 
 void Keyboard_validation(){	
-	//uint8_t contador = 1;
-	
-	//coloca as linhas em estado LOW (exceto a LINHA1)
-	PORTD |=	(1 << LINHA1);		//PD0 = 1
- 15e:	8b b1       	in	r24, 0x0b	; 11
- 160:	81 60       	ori	r24, 0x01	; 1
- 162:	8b b9       	out	0x0b, r24	; 11
-	PORTD |=	(1 << LINHA2);		//PD1 = 1
- 164:	8b b1       	in	r24, 0x0b	; 11
- 166:	82 60       	ori	r24, 0x02	; 2
- 168:	8b b9       	out	0x0b, r24	; 11
-	PORTD |=	(1 << LINHA3);		//PD2 = 1
- 16a:	8b b1       	in	r24, 0x0b	; 11
- 16c:	84 60       	ori	r24, 0x04	; 4
- 16e:	8b b9       	out	0x0b, r24	; 11
-	PORTD &= ~ (1 << LINHA4);		//PD3 = 0	
- 170:	8b b1       	in	r24, 0x0b	; 11
- 172:	87 7f       	andi	r24, 0xF7	; 247
- 174:	8b b9       	out	0x0b, r24	; 11
-	//enviaChar('L');
-	//enviaInt(1);
-	
-	if(!((PINC &  (1 <<  COLUNA1)) >> COLUNA1)){
- 176:	31 99       	sbic	0x06, 1	; 6
- 178:	03 c0       	rjmp	.+6      	; 0x180 <Keyboard_validation+0x22>
-		enviaChar('*');
- 17a:	8a e2       	ldi	r24, 0x2A	; 42
- 17c:	0e 94 87 00 	call	0x10e	; 0x10e <enviaChar>
-	}
-	
-	if(!((PINC &  (1 <<  COLUNA2)) >> COLUNA2)){
- 180:	32 99       	sbic	0x06, 2	; 6
- 182:	04 c0       	rjmp	.+8      	; 0x18c <Keyboard_validation+0x2e>
-		enviaInt(0);
- 184:	80 e0       	ldi	r24, 0x00	; 0
- 186:	90 e0       	ldi	r25, 0x00	; 0
- 188:	0e 94 8b 00 	call	0x116	; 0x116 <enviaInt>
-	}
-	
+ 15e:	cf 93       	push	r28
+ 160:	df 93       	push	r29
 	if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
- 18c:	33 99       	sbic	0x06, 3	; 6
- 18e:	03 c0       	rjmp	.+6      	; 0x196 <Keyboard_validation+0x38>
 		enviaChar('#');
- 190:	83 e2       	ldi	r24, 0x23	; 35
- 192:	0e 94 87 00 	call	0x10e	; 0x10e <enviaChar>
- 196:	08 95       	ret
-
-00000198 <main>:
+	}
+	
+	*/
+	for (int LINHA = 0; LINHA<4; LINHA++){
+ 162:	c0 e0       	ldi	r28, 0x00	; 0
+ 164:	d0 e0       	ldi	r29, 0x00	; 0
+ 166:	3c c0       	rjmp	.+120    	; 0x1e0 <Keyboard_validation+0x82>
+		PORTD &= ~(1 << LINHA); //coloca o pino referente a LINHA em LOW
+ 168:	2b b1       	in	r18, 0x0b	; 11
+ 16a:	81 e0       	ldi	r24, 0x01	; 1
+ 16c:	90 e0       	ldi	r25, 0x00	; 0
+ 16e:	0c 2e       	mov	r0, r28
+ 170:	02 c0       	rjmp	.+4      	; 0x176 <Keyboard_validation+0x18>
+ 172:	88 0f       	add	r24, r24
+ 174:	99 1f       	adc	r25, r25
+ 176:	0a 94       	dec	r0
+ 178:	e2 f7       	brpl	.-8      	; 0x172 <Keyboard_validation+0x14>
+ 17a:	80 95       	com	r24
+ 17c:	82 23       	and	r24, r18
+ 17e:	8b b9       	out	0x0b, r24	; 11
+		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){
+ 180:	20 e0       	ldi	r18, 0x00	; 0
+ 182:	30 e0       	ldi	r19, 0x00	; 0
+ 184:	10 c0       	rjmp	.+32     	; 0x1a6 <Keyboard_validation+0x48>
+			if(OUTRAS!= LINHA){
+ 186:	c2 17       	cp	r28, r18
+ 188:	d3 07       	cpc	r29, r19
+ 18a:	59 f0       	breq	.+22     	; 0x1a2 <Keyboard_validation+0x44>
+				PORTD |= (1<<OUTRAS); //coloca as outras portas em HIGH
+ 18c:	4b b1       	in	r20, 0x0b	; 11
+ 18e:	81 e0       	ldi	r24, 0x01	; 1
+ 190:	90 e0       	ldi	r25, 0x00	; 0
+ 192:	02 2e       	mov	r0, r18
+ 194:	02 c0       	rjmp	.+4      	; 0x19a <Keyboard_validation+0x3c>
+ 196:	88 0f       	add	r24, r24
+ 198:	99 1f       	adc	r25, r25
+ 19a:	0a 94       	dec	r0
+ 19c:	e2 f7       	brpl	.-8      	; 0x196 <Keyboard_validation+0x38>
+ 19e:	84 2b       	or	r24, r20
+ 1a0:	8b b9       	out	0x0b, r24	; 11
+	}
+	
+	*/
+	for (int LINHA = 0; LINHA<4; LINHA++){
+		PORTD &= ~(1 << LINHA); //coloca o pino referente a LINHA em LOW
+		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){
+ 1a2:	2f 5f       	subi	r18, 0xFF	; 255
+ 1a4:	3f 4f       	sbci	r19, 0xFF	; 255
+ 1a6:	24 30       	cpi	r18, 0x04	; 4
+ 1a8:	31 05       	cpc	r19, r1
+ 1aa:	6c f3       	brlt	.-38     	; 0x186 <Keyboard_validation+0x28>
+			if(OUTRAS!= LINHA){
+				PORTD |= (1<<OUTRAS); //coloca as outras portas em HIGH
+			}
+		}
+		if(!((PINC &  (1 <<  COLUNA1)) >> COLUNA1)){
+ 1ac:	31 99       	sbic	0x06, 1	; 6
+ 1ae:	06 c0       	rjmp	.+12     	; 0x1bc <Keyboard_validation+0x5e>
+			enviaInt(LINHA);
+ 1b0:	ce 01       	movw	r24, r28
+ 1b2:	0e 94 8b 00 	call	0x116	; 0x116 <enviaInt>
+			enviaChar('*');
+ 1b6:	8a e2       	ldi	r24, 0x2A	; 42
+ 1b8:	0e 94 87 00 	call	0x10e	; 0x10e <enviaChar>
+		}
+		
+		if(!((PINC &  (1 <<  COLUNA2)) >> COLUNA2)){
+ 1bc:	32 99       	sbic	0x06, 2	; 6
+ 1be:	07 c0       	rjmp	.+14     	; 0x1ce <Keyboard_validation+0x70>
+			enviaInt(LINHA);
+ 1c0:	ce 01       	movw	r24, r28
+ 1c2:	0e 94 8b 00 	call	0x116	; 0x116 <enviaInt>
+			enviaInt(0);
+ 1c6:	80 e0       	ldi	r24, 0x00	; 0
+ 1c8:	90 e0       	ldi	r25, 0x00	; 0
+ 1ca:	0e 94 8b 00 	call	0x116	; 0x116 <enviaInt>
+		}
+		
+		if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
+ 1ce:	33 99       	sbic	0x06, 3	; 6
+ 1d0:	06 c0       	rjmp	.+12     	; 0x1de <Keyboard_validation+0x80>
+			enviaInt(LINHA);
+ 1d2:	ce 01       	movw	r24, r28
+ 1d4:	0e 94 8b 00 	call	0x116	; 0x116 <enviaInt>
+			enviaChar('#');
+ 1d8:	83 e2       	ldi	r24, 0x23	; 35
+ 1da:	0e 94 87 00 	call	0x10e	; 0x10e <enviaChar>
+	if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
+		enviaChar('#');
+	}
+	
+	*/
+	for (int LINHA = 0; LINHA<4; LINHA++){
+ 1de:	21 96       	adiw	r28, 0x01	; 1
+ 1e0:	c4 30       	cpi	r28, 0x04	; 4
+ 1e2:	d1 05       	cpc	r29, r1
+ 1e4:	0c f2       	brlt	.-126    	; 0x168 <Keyboard_validation+0xa>
+			enviaChar('#');
+		}
+	}
+	delay_lcd();
+	
 }
+ 1e6:	df 91       	pop	r29
+ 1e8:	cf 91       	pop	r28
+ 1ea:	08 95       	ret
+
+000001ec <main>:
 
 int main(void)
 {
 	//LCD
 	DDRB = 0x03;
- 198:	83 e0       	ldi	r24, 0x03	; 3
- 19a:	84 b9       	out	0x04, r24	; 4
+ 1ec:	83 e0       	ldi	r24, 0x03	; 3
+ 1ee:	84 b9       	out	0x04, r24	; 4
 	DDRD = 0xF0;
- 19c:	80 ef       	ldi	r24, 0xF0	; 240
- 19e:	8a b9       	out	0x0a, r24	; 10
+ 1f0:	80 ef       	ldi	r24, 0xF0	; 240
+ 1f2:	8a b9       	out	0x0a, r24	; 10
 	delay_lcd();
 	
 	LCD_init();
- 1a0:	0e 94 68 00 	call	0xd0	; 0xd0 <LCD_init>
+ 1f4:	0e 94 68 00 	call	0xd0	; 0xd0 <LCD_init>
 	delay_lcd();
 	
 	
 	Keyboard_config();
- 1a4:	0e 94 90 00 	call	0x120	; 0x120 <Keyboard_config>
+ 1f8:	0e 94 90 00 	call	0x120	; 0x120 <Keyboard_config>
 	
 	//PORTC = 0xFF;
     /* Replace with your application code */
     while (1) 
     {
 		Keyboard_validation();
- 1a8:	0e 94 af 00 	call	0x15e	; 0x15e <Keyboard_validation>
- 1ac:	fd cf       	rjmp	.-6      	; 0x1a8 <main+0x10>
+ 1fc:	0e 94 af 00 	call	0x15e	; 0x15e <Keyboard_validation>
+ 200:	fd cf       	rjmp	.-6      	; 0x1fc <main+0x10>
 
-000001ae <_exit>:
- 1ae:	f8 94       	cli
+00000202 <_exit>:
+ 202:	f8 94       	cli
 
-000001b0 <__stop_program>:
- 1b0:	ff cf       	rjmp	.-2      	; 0x1b0 <__stop_program>
+00000204 <__stop_program>:
+ 204:	ff cf       	rjmp	.-2      	; 0x204 <__stop_program>

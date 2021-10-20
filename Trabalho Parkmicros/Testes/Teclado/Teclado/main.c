@@ -145,7 +145,7 @@ void Keyboard_config(){
 
 void Keyboard_validation(){	
 	//uint8_t contador = 1;
-	
+	/*
 	//coloca as linhas em estado LOW (exceto a LINHA1)
 	PORTD |=	(1 << LINHA1);		//PD0 = 1
 	PORTD |=	(1 << LINHA2);		//PD1 = 1
@@ -164,6 +164,30 @@ void Keyboard_validation(){
 	
 	if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
 		enviaChar('#');
+	}
+	
+	*/
+	for (int LINHA = 0; LINHA<4; LINHA++){
+		PORTD &= ~(1 << LINHA); //coloca o pino referente a LINHA em LOW
+		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){
+			if(OUTRAS!= LINHA){
+				PORTD |= (1<<OUTRAS); //coloca as outras portas em HIGH
+			}
+		}
+		if(!((PINC &  (1 <<  COLUNA1)) >> COLUNA1)){
+			enviaInt(LINHA);
+			enviaChar('*');
+		}
+		
+		if(!((PINC &  (1 <<  COLUNA2)) >> COLUNA2)){
+			enviaInt(LINHA);
+			enviaInt(0);
+		}
+		
+		if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
+			enviaInt(LINHA);
+			enviaChar('#');
+		}
 	}
 	delay_lcd();
 	
