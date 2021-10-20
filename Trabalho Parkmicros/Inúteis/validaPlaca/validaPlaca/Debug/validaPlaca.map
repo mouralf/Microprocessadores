@@ -178,7 +178,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x208
+.text           0x00000000      0x2de
  *(.vectors)
  .vectors       0x00000000       0x68 D:/AMTEL STUDIO/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -272,16 +272,19 @@ END GROUP
  .text.enviaString
                 0x00000124       0x2e main.o
                 0x00000124                enviaString
+ .text.comparaString
+                0x00000152       0x32 main.o
+                0x00000152                comparaString
  .text.validaPlaca
-                0x00000152       0x5c main.o
-                0x00000152                validaPlaca
- .text.main     0x000001ae       0x56 main.o
-                0x000001ae                main
-                0x00000204                . = ALIGN (0x2)
+                0x00000184       0xf0 main.o
+                0x00000184                validaPlaca
+ .text.main     0x00000274       0x66 main.o
+                0x00000274                main
+                0x000002da                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000204        0x0 d:/amtel studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000204                _exit
-                0x00000204                exit
+ .fini9         0x000002da        0x0 d:/amtel studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000002da                _exit
+                0x000002da                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -300,11 +303,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000204        0x4 d:/amtel studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000002da        0x4 d:/amtel studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000208                _etext = .
+                0x000002de                _etext = .
 
-.data           0x00800100       0x2a load address 0x00000208
+.data           0x00800100       0x4c load address 0x000002de
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -312,27 +315,29 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800100       0x29 main.o
+                0x00800100       0x37 main.o
+ .rodata.placas_idosos_PNE
+                0x00800137       0x15 main.o
+                0x00800137                placas_idosos_PNE
  *(.gnu.linkonce.r*)
-                0x0080012a                . = ALIGN (0x2)
- *fill*         0x00800129        0x1 
-                0x0080012a                _edata = .
-                0x0080012a                PROVIDE (__data_end, .)
+                0x0080014c                . = ALIGN (0x2)
+                0x0080014c                _edata = .
+                0x0080014c                PROVIDE (__data_end, .)
 
-.bss            0x0080012a        0x0
+.bss            0x0080014c        0x0
                 [!provide]                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
                 [!provide]                PROVIDE (__bss_end, .)
-                0x00000208                __data_load_start = LOADADDR (.data)
-                0x00000232                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000002de                __data_load_start = LOADADDR (.data)
+                0x0000032a                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080012a        0x0
+.noinit         0x0080014c        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x0080012a                _end = .
+                0x0080014c                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -397,42 +402,42 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x60
+.debug_aranges  0x00000000       0x68
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x60 main.o
+                0x00000000       0x68 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x93e
+.debug_info     0x00000000      0xa3c
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 D:/AMTEL STUDIO/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_info    0x000005f4      0x34a main.o
+ .debug_info    0x000005f4      0x448 main.o
 
-.debug_abbrev   0x00000000      0x706
+.debug_abbrev   0x00000000      0x756
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 D:/AMTEL STUDIO/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_abbrev  0x000005a2      0x164 main.o
+ .debug_abbrev  0x000005a2      0x1b4 main.o
 
-.debug_line     0x00000000      0x3ba
+.debug_line     0x00000000      0x44d
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 D:/AMTEL STUDIO/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000134      0x286 main.o
+ .debug_line    0x00000134      0x319 main.o
 
-.debug_frame    0x00000000       0xc8
+.debug_frame    0x00000000       0xfc
  *(.debug_frame)
- .debug_frame   0x00000000       0xc8 main.o
+ .debug_frame   0x00000000       0xfc main.o
 
-.debug_str      0x00000000      0x3b9
+.debug_str      0x00000000      0x3ec
  *(.debug_str)
  .debug_str     0x00000000      0x208 D:/AMTEL STUDIO/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_str     0x00000208      0x1b1 main.o
-                                0x1ea (size before relaxing)
+ .debug_str     0x00000208      0x1e4 main.o
+                                0x21d (size before relaxing)
 
-.debug_loc      0x00000000      0x1ee
+.debug_loc      0x00000000      0x3ad
  *(.debug_loc)
- .debug_loc     0x00000000      0x1ee main.o
+ .debug_loc     0x00000000      0x3ad main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -452,9 +457,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x50
+.debug_ranges   0x00000000       0x58
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x50 main.o
+ .debug_ranges  0x00000000       0x58 main.o
 
 .debug_macro
  *(.debug_macro)

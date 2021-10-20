@@ -7,6 +7,11 @@
 
 #include <avr/io.h>
 
+
+
+
+
+
 //define os pinos de enable e registrer select
 #define RS PB0
 #define EN PB1
@@ -111,11 +116,34 @@ void delay(){
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//CODIGO DA VALIDAÇÃO DA PLACA A PARTIR DAQUI
+
+
+
+
+
+//A PARTIR DE AGORA 
+
+char const placas_idosos_PNE[3][7] = {
+	"IDO1020",
+	"IDS0089",
+	"PNE0102"
+};	
+
+int comparaString(char* str1, char* str2){ //compara duas strings de 7 algarismos para verificar se sao iguais
+	int i;
+	
+	for(i=0; i<7; i++){
+		if(str1[i] != str2[i])				//caso sejam diferentes, retorna 0
+			return 0;
+	}
+	return 1;								//caso sejam iguais, retorna 1
+}
+
 
 int validaPlaca(char* str){  //retorna 0 se a placa é inválida, e 1 se a placa é válida
-	int i = 0;
+	int j, k, i = 0;
+	char aux[7];
+	
 	
 	while(i != 7){
 		
@@ -139,30 +167,43 @@ int validaPlaca(char* str){  //retorna 0 se a placa é inválida, e 1 se a placa é
 		}
 		i++;
 	}
+	
+	
+	for(j=0; j<3; j++){
+		for(k=0; k<7; k++){
+			aux[k] = placas_idosos_PNE[j][k];		//copia a placa do idoso para uma string auxiliar
+		}
+		if(comparaString(str, aux))				//compara as duas placas
+			return 2;							//retorna 2 se for caso especial, ex. idoso
+	}
 	return 1;									//retorna 1 se a placa for válida
 }
 
 
 int main(void)
 {
-    char placa[] = "ABC1D34";
-	int val;
+    char placa[] = "PNE0102";
+	int val, especial;
 	
-	//
 	DDRB = 0x03;
 	DDRD = 0xF0;
 	delay_lcd();
 	
 	LCD_init();
 	delay_lcd();
-	//
 	
 	val = validaPlaca(placa);
 	
-	if(val == 1)
-		enviaString("Placa valida :)");
-	if(val == 0)
-		enviaString("Placa invalida:(");
+	if(val==1)
+		enviaString("Placa valida");
+		
+	if(val==0)
+		enviaString("Placa invalida");
+		
+	if(val==2){
+		enviaString("Placa preferencial");
+		especial = 1;
+	}
 		
     while (1) 
     {
