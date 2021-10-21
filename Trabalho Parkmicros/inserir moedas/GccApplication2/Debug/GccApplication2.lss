@@ -1,0 +1,1108 @@
+
+GccApplication2.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         0000001e  00800100  000006b2  00000726  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000006b2  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  00000744  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000774  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000070  00000000  00000000  000007b4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000b4c  00000000  00000000  00000824  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000778  00000000  00000000  00001370  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000055f  00000000  00000000  00001ae8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000ec  00000000  00000000  00002048  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000451  00000000  00000000  00002134  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000004bb  00000000  00000000  00002585  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000060  00000000  00000000  00002a40  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+   8:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+   c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  10:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  14:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  18:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  1c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  20:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  24:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  28:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  2c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  30:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  34:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  38:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  3c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  40:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  44:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  48:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  4c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  50:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  54:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  58:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  5c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  60:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  64:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_copy_data>:
+  74:	11 e0       	ldi	r17, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	e2 eb       	ldi	r30, 0xB2	; 178
+  7c:	f6 e0       	ldi	r31, 0x06	; 6
+  7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
+  80:	05 90       	lpm	r0, Z+
+  82:	0d 92       	st	X+, r0
+  84:	ae 31       	cpi	r26, 0x1E	; 30
+  86:	b1 07       	cpc	r27, r17
+  88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
+  8a:	0e 94 22 01 	call	0x244	; 0x244 <main>
+  8e:	0c 94 57 03 	jmp	0x6ae	; 0x6ae <_exit>
+
+00000092 <__bad_interrupt>:
+  92:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000096 <LCD_control>:
+	TCNT0 = 0;            //Zera timer
+	OCR0A = 63;        //Valor de comparação 63 contagens (1 ms)
+
+	TIFR0 = (1 << 1); //limpa flag de comparacao A
+	while((TIFR0 & (1 << 1)) == 0);
+}
+  96:	61 30       	cpi	r22, 0x01	; 1
+  98:	11 f4       	brne	.+4      	; 0x9e <LCD_control+0x8>
+  9a:	28 9a       	sbi	0x05, 0	; 5
+  9c:	03 c0       	rjmp	.+6      	; 0xa4 <LCD_control+0xe>
+  9e:	61 11       	cpse	r22, r1
+  a0:	01 c0       	rjmp	.+2      	; 0xa4 <LCD_control+0xe>
+  a2:	28 98       	cbi	0x05, 0	; 5
+  a4:	9b b1       	in	r25, 0x0b	; 11
+  a6:	9f 70       	andi	r25, 0x0F	; 15
+  a8:	9b b9       	out	0x0b, r25	; 11
+  aa:	9b b1       	in	r25, 0x0b	; 11
+  ac:	28 2f       	mov	r18, r24
+  ae:	20 7f       	andi	r18, 0xF0	; 240
+  b0:	92 2b       	or	r25, r18
+  b2:	9b b9       	out	0x0b, r25	; 11
+  b4:	29 9a       	sbi	0x05, 1	; 5
+  b6:	29 98       	cbi	0x05, 1	; 5
+  b8:	9b b1       	in	r25, 0x0b	; 11
+  ba:	9f 70       	andi	r25, 0x0F	; 15
+  bc:	9b b9       	out	0x0b, r25	; 11
+  be:	9b b1       	in	r25, 0x0b	; 11
+  c0:	82 95       	swap	r24
+  c2:	80 7f       	andi	r24, 0xF0	; 240
+  c4:	89 2b       	or	r24, r25
+  c6:	8b b9       	out	0x0b, r24	; 11
+  c8:	29 9a       	sbi	0x05, 1	; 5
+  ca:	29 98       	cbi	0x05, 1	; 5
+  cc:	08 95       	ret
+
+000000ce <LCD_init>:
+  ce:	84 b1       	in	r24, 0x04	; 4
+  d0:	83 60       	ori	r24, 0x03	; 3
+  d2:	84 b9       	out	0x04, r24	; 4
+  d4:	8a b1       	in	r24, 0x0a	; 10
+  d6:	80 6f       	ori	r24, 0xF0	; 240
+  d8:	8a b9       	out	0x0a, r24	; 10
+  da:	60 e0       	ldi	r22, 0x00	; 0
+  dc:	82 e0       	ldi	r24, 0x02	; 2
+  de:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+  e2:	60 e0       	ldi	r22, 0x00	; 0
+  e4:	88 e2       	ldi	r24, 0x28	; 40
+  e6:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+  ea:	60 e0       	ldi	r22, 0x00	; 0
+  ec:	8c e0       	ldi	r24, 0x0C	; 12
+  ee:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+  f2:	60 e0       	ldi	r22, 0x00	; 0
+  f4:	86 e0       	ldi	r24, 0x06	; 6
+  f6:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+  fa:	60 e0       	ldi	r22, 0x00	; 0
+  fc:	81 e0       	ldi	r24, 0x01	; 1
+  fe:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+ 102:	60 e0       	ldi	r22, 0x00	; 0
+ 104:	80 e8       	ldi	r24, 0x80	; 128
+ 106:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+ 10a:	08 95       	ret
+
+0000010c <enviaString>:
+ 10c:	cf 93       	push	r28
+ 10e:	df 93       	push	r29
+ 110:	ec 01       	movw	r28, r24
+ 112:	88 81       	ld	r24, Y
+ 114:	88 23       	and	r24, r24
+ 116:	39 f0       	breq	.+14     	; 0x126 <enviaString+0x1a>
+ 118:	21 96       	adiw	r28, 0x01	; 1
+ 11a:	61 e0       	ldi	r22, 0x01	; 1
+ 11c:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+ 120:	89 91       	ld	r24, Y+
+ 122:	81 11       	cpse	r24, r1
+ 124:	fa cf       	rjmp	.-12     	; 0x11a <enviaString+0xe>
+ 126:	df 91       	pop	r29
+ 128:	cf 91       	pop	r28
+ 12a:	08 95       	ret
+
+0000012c <enviaInt>:
+ 12c:	61 e0       	ldi	r22, 0x01	; 1
+ 12e:	80 5d       	subi	r24, 0xD0	; 208
+ 130:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+ 134:	08 95       	ret
+
+00000136 <Buttons_config>:
+ 136:	23 98       	cbi	0x04, 3	; 4
+ 138:	24 98       	cbi	0x04, 4	; 4
+ 13a:	08 95       	ret
+
+0000013c <Buttons_validation>:
+
+float Buttons_validation(){
+ 13c:	cf 92       	push	r12
+ 13e:	df 92       	push	r13
+ 140:	ef 92       	push	r14
+ 142:	ff 92       	push	r15
+ 144:	cf 93       	push	r28
+	/*Valida se algum botão foi pressionado e, se sim, faz o debounce e retorna o valor correspondnete (0,50 ou 1,00 real)*/
+	unsigned char botaoAntes = 0, botaoAtual;	//utilizados para controle do debounce
+	unsigned char count = 0;					//utilizados para controle do debounce
+	float valor = 0;
+	int contagem = 0;
+ 146:	20 e0       	ldi	r18, 0x00	; 0
+ 148:	30 e0       	ldi	r19, 0x00	; 0
+
+float Buttons_validation(){
+	/*Valida se algum botão foi pressionado e, se sim, faz o debounce e retorna o valor correspondnete (0,50 ou 1,00 real)*/
+	unsigned char botaoAntes = 0, botaoAtual;	//utilizados para controle do debounce
+	unsigned char count = 0;					//utilizados para controle do debounce
+	float valor = 0;
+ 14a:	c1 2c       	mov	r12, r1
+ 14c:	d1 2c       	mov	r13, r1
+ 14e:	76 01       	movw	r14, r12
+}
+
+float Buttons_validation(){
+	/*Valida se algum botão foi pressionado e, se sim, faz o debounce e retorna o valor correspondnete (0,50 ou 1,00 real)*/
+	unsigned char botaoAntes = 0, botaoAtual;	//utilizados para controle do debounce
+	unsigned char count = 0;					//utilizados para controle do debounce
+ 150:	90 e0       	ldi	r25, 0x00	; 0
+	while((TIFR0 & (1 << 1)) == 0);
+}
+
+float Buttons_validation(){
+	/*Valida se algum botão foi pressionado e, se sim, faz o debounce e retorna o valor correspondnete (0,50 ou 1,00 real)*/
+	unsigned char botaoAntes = 0, botaoAtual;	//utilizados para controle do debounce
+ 152:	40 e0       	ldi	r20, 0x00	; 0
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 154:	5f ef       	ldi	r21, 0xFF	; 255
+ 156:	61 ee       	ldi	r22, 0xE1	; 225
+ 158:	84 e0       	ldi	r24, 0x04	; 4
+ 15a:	51 50       	subi	r21, 0x01	; 1
+ 15c:	60 40       	sbci	r22, 0x00	; 0
+ 15e:	80 40       	sbci	r24, 0x00	; 0
+ 160:	e1 f7       	brne	.-8      	; 0x15a <Buttons_validation+0x1e>
+ 162:	00 c0       	rjmp	.+0      	; 0x164 <Buttons_validation+0x28>
+ 164:	00 00       	nop
+	float valor = 0;
+	int contagem = 0;
+	
+	while(count != BOUNCE && contagem != 10){						//enquanto count não atingir 7
+		_delay_ms(100);
+		contagem++;						//delay para corrigir o debouncaa
+ 166:	2f 5f       	subi	r18, 0xFF	; 255
+ 168:	3f 4f       	sbci	r19, 0xFF	; 255
+		if(PINB >> BOTAO1 == 1){					//se a leitura do registrador B deslocada em 3 bits for 1 foi pressionado o botão D11/PB3
+ 16a:	83 b1       	in	r24, 0x03	; 3
+ 16c:	86 95       	lsr	r24
+ 16e:	86 95       	lsr	r24
+ 170:	86 95       	lsr	r24
+ 172:	81 30       	cpi	r24, 0x01	; 1
+ 174:	09 f5       	brne	.+66     	; 0x1b8 <Buttons_validation+0x7c>
+			botaoAtual = (PINB >> BOTAO1);			//le o estado atual do botão D11
+ 176:	c3 b1       	in	r28, 0x03	; 3
+ 178:	c6 95       	lsr	r28
+ 17a:	c6 95       	lsr	r28
+ 17c:	c6 95       	lsr	r28
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+ 17e:	c4 13       	cpse	r28, r20
+ 180:	19 c0       	rjmp	.+50     	; 0x1b4 <Buttons_validation+0x78>
+			count++;}else{count = 0;}						//incrementa o contador						//senão, zera o contador
+ 182:	9f 5f       	subi	r25, 0xFF	; 255
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+ 184:	97 30       	cpi	r25, 0x07	; 7
+ 186:	09 f0       	breq	.+2      	; 0x18a <Buttons_validation+0x4e>
+ 188:	45 c0       	rjmp	.+138    	; 0x214 <Buttons_validation+0xd8>
+				valor = valor + 0.50;					//seta o valor a ser retornado para 0.50
+ 18a:	20 e0       	ldi	r18, 0x00	; 0
+ 18c:	30 e0       	ldi	r19, 0x00	; 0
+ 18e:	40 e0       	ldi	r20, 0x00	; 0
+ 190:	5f e3       	ldi	r21, 0x3F	; 63
+ 192:	c7 01       	movw	r24, r14
+ 194:	b6 01       	movw	r22, r12
+ 196:	0e 94 ce 01 	call	0x39c	; 0x39c <__addsf3>
+ 19a:	6b 01       	movw	r12, r22
+ 19c:	7c 01       	movw	r14, r24
+				enviaString("B");
+ 19e:	80 e0       	ldi	r24, 0x00	; 0
+ 1a0:	91 e0       	ldi	r25, 0x01	; 1
+ 1a2:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+ 1a6:	83 b1       	in	r24, 0x03	; 3
+ 1a8:	82 95       	swap	r24
+ 1aa:	8f 70       	andi	r24, 0x0F	; 15
+ 1ac:	81 30       	cpi	r24, 0x01	; 1
+ 1ae:	09 f0       	breq	.+2      	; 0x1b2 <Buttons_validation+0x76>
+ 1b0:	41 c0       	rjmp	.+130    	; 0x234 <Buttons_validation+0xf8>
+ 1b2:	37 c0       	rjmp	.+110    	; 0x222 <Buttons_validation+0xe6>
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+				valor = valor + 0.50;					//seta o valor a ser retornado para 0.50
+				enviaString("B");
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+ 1b4:	4c 2f       	mov	r20, r28
+		_delay_ms(100);
+		contagem++;						//delay para corrigir o debouncaa
+		if(PINB >> BOTAO1 == 1){					//se a leitura do registrador B deslocada em 3 bits for 1 foi pressionado o botão D11/PB3
+			botaoAtual = (PINB >> BOTAO1);			//le o estado atual do botão D11
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+			count++;}else{count = 0;}						//incrementa o contador						//senão, zera o contador
+ 1b6:	90 e0       	ldi	r25, 0x00	; 0
+				enviaString("B");
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+ 1b8:	83 b1       	in	r24, 0x03	; 3
+ 1ba:	82 95       	swap	r24
+ 1bc:	8f 70       	andi	r24, 0x0F	; 15
+ 1be:	81 30       	cpi	r24, 0x01	; 1
+ 1c0:	c9 f4       	brne	.+50     	; 0x1f4 <Buttons_validation+0xb8>
+ 1c2:	01 c0       	rjmp	.+2      	; 0x1c6 <Buttons_validation+0x8a>
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+				valor = valor + 0.50;					//seta o valor a ser retornado para 0.50
+				enviaString("B");
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+ 1c4:	4c 2f       	mov	r20, r28
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+			botaoAtual = (PINB >> BOTAO2);			//le o estado atual do botão D12
+ 1c6:	83 b1       	in	r24, 0x03	; 3
+ 1c8:	82 95       	swap	r24
+ 1ca:	8f 70       	andi	r24, 0x0F	; 15
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+ 1cc:	84 13       	cpse	r24, r20
+ 1ce:	15 c0       	rjmp	.+42     	; 0x1fa <Buttons_validation+0xbe>
+			count++;							//incrementa o contador
+ 1d0:	9f 5f       	subi	r25, 0xFF	; 255
+			}else{count = 0;}							//senão, zera o contador
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+ 1d2:	97 30       	cpi	r25, 0x07	; 7
+ 1d4:	a9 f4       	brne	.+42     	; 0x200 <Buttons_validation+0xc4>
+				valor = valor + 1;					//seta o valor a ser retornado para 1
+ 1d6:	20 e0       	ldi	r18, 0x00	; 0
+ 1d8:	30 e0       	ldi	r19, 0x00	; 0
+ 1da:	40 e8       	ldi	r20, 0x80	; 128
+ 1dc:	5f e3       	ldi	r21, 0x3F	; 63
+ 1de:	c7 01       	movw	r24, r14
+ 1e0:	b6 01       	movw	r22, r12
+ 1e2:	0e 94 ce 01 	call	0x39c	; 0x39c <__addsf3>
+ 1e6:	6b 01       	movw	r12, r22
+ 1e8:	7c 01       	movw	r14, r24
+				enviaString("B");
+ 1ea:	80 e0       	ldi	r24, 0x00	; 0
+ 1ec:	91 e0       	ldi	r25, 0x01	; 1
+ 1ee:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+ 1f2:	20 c0       	rjmp	.+64     	; 0x234 <Buttons_validation+0xf8>
+	unsigned char botaoAntes = 0, botaoAtual;	//utilizados para controle do debounce
+	unsigned char count = 0;					//utilizados para controle do debounce
+	float valor = 0;
+	int contagem = 0;
+	
+	while(count != BOUNCE && contagem != 10){						//enquanto count não atingir 7
+ 1f4:	97 30       	cpi	r25, 0x07	; 7
+ 1f6:	49 f4       	brne	.+18     	; 0x20a <Buttons_validation+0xce>
+ 1f8:	1d c0       	rjmp	.+58     	; 0x234 <Buttons_validation+0xf8>
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+			botaoAtual = (PINB >> BOTAO2);			//le o estado atual do botão D12
+ 1fa:	48 2f       	mov	r20, r24
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+			count++;							//incrementa o contador
+			}else{count = 0;}							//senão, zera o contador
+ 1fc:	90 e0       	ldi	r25, 0x00	; 0
+ 1fe:	05 c0       	rjmp	.+10     	; 0x20a <Buttons_validation+0xce>
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+			botaoAtual = (PINB >> BOTAO2);			//le o estado atual do botão D12
+ 200:	48 2f       	mov	r20, r24
+ 202:	03 c0       	rjmp	.+6      	; 0x20a <Buttons_validation+0xce>
+			count++;}else{count = 0;}						//incrementa o contador						//senão, zera o contador
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+				valor = valor + 0.50;					//seta o valor a ser retornado para 0.50
+				enviaString("B");
+				contagem = 0;
+ 204:	20 e0       	ldi	r18, 0x00	; 0
+ 206:	30 e0       	ldi	r19, 0x00	; 0
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+			botaoAtual = (PINB >> BOTAO2);			//le o estado atual do botão D12
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+			count++;							//incrementa o contador
+ 208:	98 e0       	ldi	r25, 0x08	; 8
+	unsigned char botaoAntes = 0, botaoAtual;	//utilizados para controle do debounce
+	unsigned char count = 0;					//utilizados para controle do debounce
+	float valor = 0;
+	int contagem = 0;
+	
+	while(count != BOUNCE && contagem != 10){						//enquanto count não atingir 7
+ 20a:	2a 30       	cpi	r18, 0x0A	; 10
+ 20c:	31 05       	cpc	r19, r1
+ 20e:	09 f0       	breq	.+2      	; 0x212 <Buttons_validation+0xd6>
+ 210:	a1 cf       	rjmp	.-190    	; 0x154 <Buttons_validation+0x18>
+ 212:	10 c0       	rjmp	.+32     	; 0x234 <Buttons_validation+0xf8>
+				enviaString("B");
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+ 214:	83 b1       	in	r24, 0x03	; 3
+ 216:	82 95       	swap	r24
+ 218:	8f 70       	andi	r24, 0x0F	; 15
+ 21a:	81 30       	cpi	r24, 0x01	; 1
+ 21c:	99 f2       	breq	.-90     	; 0x1c4 <Buttons_validation+0x88>
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+				valor = valor + 0.50;					//seta o valor a ser retornado para 0.50
+				enviaString("B");
+				contagem = 0;
+			}else{botaoAntes = botaoAtual;}			//se nao tiver atingido 7, volta a contar
+ 21e:	4c 2f       	mov	r20, r28
+ 220:	f4 cf       	rjmp	.-24     	; 0x20a <Buttons_validation+0xce>
+		}
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+			botaoAtual = (PINB >> BOTAO2);			//le o estado atual do botão D12
+ 222:	43 b1       	in	r20, 0x03	; 3
+ 224:	42 95       	swap	r20
+ 226:	4f 70       	andi	r20, 0x0F	; 15
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+ 228:	4c 17       	cp	r20, r28
+ 22a:	61 f3       	breq	.-40     	; 0x204 <Buttons_validation+0xc8>
+			count++;}else{count = 0;}						//incrementa o contador						//senão, zera o contador
+			
+			if (count == BOUNCE){				//se o contador atingir o valor de 7
+				valor = valor + 0.50;					//seta o valor a ser retornado para 0.50
+				enviaString("B");
+				contagem = 0;
+ 22c:	20 e0       	ldi	r18, 0x00	; 0
+ 22e:	30 e0       	ldi	r19, 0x00	; 0
+		
+		if(PINB >> BOTAO2 == 1){					//se a leitura do registrador B deslocada em 4 bits for 1 foi pressionado o botão D12/PB4
+			botaoAtual = (PINB >> BOTAO2);			//le o estado atual do botão D12
+			if (botaoAtual == botaoAntes){		//se for igual ao estado anterior
+			count++;							//incrementa o contador
+			}else{count = 0;}							//senão, zera o contador
+ 230:	90 e0       	ldi	r25, 0x00	; 0
+ 232:	e0 cf       	rjmp	.-64     	; 0x1f4 <Buttons_validation+0xb8>
+		}
+	}
+	
+	return valor;
+	
+}
+ 234:	c7 01       	movw	r24, r14
+ 236:	b6 01       	movw	r22, r12
+ 238:	cf 91       	pop	r28
+ 23a:	ff 90       	pop	r15
+ 23c:	ef 90       	pop	r14
+ 23e:	df 90       	pop	r13
+ 240:	cf 90       	pop	r12
+ 242:	08 95       	ret
+
+00000244 <main>:
+int main(void){
+	
+	float val = 0;
+	int contagem = 0;
+	
+	Buttons_config();
+ 244:	0e 94 9b 00 	call	0x136	; 0x136 <Buttons_config>
+	
+	DDRB = 0x03;
+ 248:	83 e0       	ldi	r24, 0x03	; 3
+ 24a:	84 b9       	out	0x04, r24	; 4
+	DDRD = 0xF0;
+ 24c:	80 ef       	ldi	r24, 0xF0	; 240
+ 24e:	8a b9       	out	0x0a, r24	; 10
+	delay_lcd();
+	
+	LCD_init();
+ 250:	0e 94 67 00 	call	0xce	; 0xce <LCD_init>
+		enviaString("   ");
+		enviaInt(((int)val));
+		enviaString(",");
+		enviaInt(((int)(val*10)%2)*5);
+		enviaInt(0);
+		val = 0;
+ 254:	61 2c       	mov	r6, r1
+ 256:	71 2c       	mov	r7, r1
+ 258:	81 2c       	mov	r8, r1
+ 25a:	91 2c       	mov	r9, r1
+ 25c:	a6 2c       	mov	r10, r6
+ 25e:	b7 2c       	mov	r11, r7
+ 260:	c8 2c       	mov	r12, r8
+ 262:	d9 2c       	mov	r13, r9
+ 264:	e1 2c       	mov	r14, r1
+ 266:	f1 2c       	mov	r15, r1
+ 268:	06 2d       	mov	r16, r6
+ 26a:	17 2d       	mov	r17, r7
+ 26c:	d8 2d       	mov	r29, r8
+ 26e:	c9 2d       	mov	r28, r9
+    while(1){ 
+		
+		contagem++;
+		
+		delay_lcd();
+		enviaString(".");
+ 270:	82 e0       	ldi	r24, 0x02	; 2
+ 272:	91 e0       	ldi	r25, 0x01	; 1
+ 274:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		val = val + Buttons_validation();
+ 278:	0e 94 9e 00 	call	0x13c	; 0x13c <Buttons_validation>
+ 27c:	9b 01       	movw	r18, r22
+ 27e:	ac 01       	movw	r20, r24
+ 280:	60 2f       	mov	r22, r16
+ 282:	71 2f       	mov	r23, r17
+ 284:	8d 2f       	mov	r24, r29
+ 286:	9c 2f       	mov	r25, r28
+ 288:	0e 94 ce 01 	call	0x39c	; 0x39c <__addsf3>
+ 28c:	06 2f       	mov	r16, r22
+ 28e:	17 2f       	mov	r17, r23
+ 290:	d8 2f       	mov	r29, r24
+ 292:	c9 2f       	mov	r28, r25
+		enviaString(",");
+ 294:	84 e0       	ldi	r24, 0x04	; 4
+ 296:	91 e0       	ldi	r25, 0x01	; 1
+ 298:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		
+		if(PINB >> BOTAO2 == 1 || PINB >> BOTAO1 == 1){
+ 29c:	83 b1       	in	r24, 0x03	; 3
+ 29e:	82 95       	swap	r24
+ 2a0:	8f 70       	andi	r24, 0x0F	; 15
+ 2a2:	81 30       	cpi	r24, 0x01	; 1
+ 2a4:	09 f4       	brne	.+2      	; 0x2a8 <main+0x64>
+ 2a6:	4e c0       	rjmp	.+156    	; 0x344 <main+0x100>
+ 2a8:	83 b1       	in	r24, 0x03	; 3
+ 2aa:	86 95       	lsr	r24
+ 2ac:	86 95       	lsr	r24
+ 2ae:	86 95       	lsr	r24
+ 2b0:	81 30       	cpi	r24, 0x01	; 1
+ 2b2:	09 f4       	brne	.+2      	; 0x2b6 <main+0x72>
+ 2b4:	4a c0       	rjmp	.+148    	; 0x34a <main+0x106>
+		
+		
+	
+    while(1){ 
+		
+		contagem++;
+ 2b6:	8f ef       	ldi	r24, 0xFF	; 255
+ 2b8:	e8 1a       	sub	r14, r24
+ 2ba:	f8 0a       	sbc	r15, r24
+		
+		if(PINB >> BOTAO2 == 1 || PINB >> BOTAO1 == 1){
+			contagem = 0;
+		}
+		
+		if(contagem == 10){
+ 2bc:	8a e0       	ldi	r24, 0x0A	; 10
+ 2be:	e8 16       	cp	r14, r24
+ 2c0:	f1 04       	cpc	r15, r1
+ 2c2:	09 f0       	breq	.+2      	; 0x2c6 <main+0x82>
+ 2c4:	44 c0       	rjmp	.+136    	; 0x34e <main+0x10a>
+		contagem = 0;
+		LCD_control(LCD_CLR, CNFG);
+ 2c6:	60 e0       	ldi	r22, 0x00	; 0
+ 2c8:	81 e0       	ldi	r24, 0x01	; 1
+ 2ca:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+		enviaString("   ");
+ 2ce:	86 e0       	ldi	r24, 0x06	; 6
+ 2d0:	91 e0       	ldi	r25, 0x01	; 1
+ 2d2:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		enviaInt(((int)val));
+ 2d6:	60 2f       	mov	r22, r16
+ 2d8:	71 2f       	mov	r23, r17
+ 2da:	8d 2f       	mov	r24, r29
+ 2dc:	9c 2f       	mov	r25, r28
+ 2de:	0e 94 3a 02 	call	0x474	; 0x474 <__fixsfsi>
+ 2e2:	cb 01       	movw	r24, r22
+ 2e4:	0e 94 96 00 	call	0x12c	; 0x12c <enviaInt>
+		enviaString(",");
+ 2e8:	84 e0       	ldi	r24, 0x04	; 4
+ 2ea:	91 e0       	ldi	r25, 0x01	; 1
+ 2ec:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		enviaInt(((int)(val*10)%2)*5);
+ 2f0:	20 e0       	ldi	r18, 0x00	; 0
+ 2f2:	30 e0       	ldi	r19, 0x00	; 0
+ 2f4:	40 e2       	ldi	r20, 0x20	; 32
+ 2f6:	51 e4       	ldi	r21, 0x41	; 65
+ 2f8:	60 2f       	mov	r22, r16
+ 2fa:	71 2f       	mov	r23, r17
+ 2fc:	8d 2f       	mov	r24, r29
+ 2fe:	9c 2f       	mov	r25, r28
+ 300:	0e 94 c6 02 	call	0x58c	; 0x58c <__mulsf3>
+ 304:	0e 94 3a 02 	call	0x474	; 0x474 <__fixsfsi>
+ 308:	61 70       	andi	r22, 0x01	; 1
+ 30a:	70 78       	andi	r23, 0x80	; 128
+ 30c:	77 23       	and	r23, r23
+ 30e:	34 f4       	brge	.+12     	; 0x31c <main+0xd8>
+ 310:	61 50       	subi	r22, 0x01	; 1
+ 312:	71 09       	sbc	r23, r1
+ 314:	6e 6f       	ori	r22, 0xFE	; 254
+ 316:	7f 6f       	ori	r23, 0xFF	; 255
+ 318:	6f 5f       	subi	r22, 0xFF	; 255
+ 31a:	7f 4f       	sbci	r23, 0xFF	; 255
+ 31c:	cb 01       	movw	r24, r22
+ 31e:	88 0f       	add	r24, r24
+ 320:	99 1f       	adc	r25, r25
+ 322:	88 0f       	add	r24, r24
+ 324:	99 1f       	adc	r25, r25
+ 326:	86 0f       	add	r24, r22
+ 328:	97 1f       	adc	r25, r23
+ 32a:	0e 94 96 00 	call	0x12c	; 0x12c <enviaInt>
+		enviaInt(0);
+ 32e:	80 e0       	ldi	r24, 0x00	; 0
+ 330:	90 e0       	ldi	r25, 0x00	; 0
+ 332:	0e 94 96 00 	call	0x12c	; 0x12c <enviaInt>
+		if(PINB >> BOTAO2 == 1 || PINB >> BOTAO1 == 1){
+			contagem = 0;
+		}
+		
+		if(contagem == 10){
+		contagem = 0;
+ 336:	e1 2c       	mov	r14, r1
+ 338:	f1 2c       	mov	r15, r1
+		enviaString("   ");
+		enviaInt(((int)val));
+		enviaString(",");
+		enviaInt(((int)(val*10)%2)*5);
+		enviaInt(0);
+		val = 0;
+ 33a:	0a 2d       	mov	r16, r10
+ 33c:	1b 2d       	mov	r17, r11
+ 33e:	dc 2d       	mov	r29, r12
+ 340:	cd 2d       	mov	r28, r13
+ 342:	96 cf       	rjmp	.-212    	; 0x270 <main+0x2c>
+		enviaString(".");
+		val = val + Buttons_validation();
+		enviaString(",");
+		
+		if(PINB >> BOTAO2 == 1 || PINB >> BOTAO1 == 1){
+			contagem = 0;
+ 344:	e1 2c       	mov	r14, r1
+ 346:	f1 2c       	mov	r15, r1
+ 348:	02 c0       	rjmp	.+4      	; 0x34e <main+0x10a>
+ 34a:	e1 2c       	mov	r14, r1
+ 34c:	f1 2c       	mov	r15, r1
+		enviaInt(((int)(val*10)%2)*5);
+		enviaInt(0);
+		val = 0;
+		}
+		
+		if(val > 4.50){
+ 34e:	20 e0       	ldi	r18, 0x00	; 0
+ 350:	30 e0       	ldi	r19, 0x00	; 0
+ 352:	40 e9       	ldi	r20, 0x90	; 144
+ 354:	50 e4       	ldi	r21, 0x40	; 64
+ 356:	60 2f       	mov	r22, r16
+ 358:	71 2f       	mov	r23, r17
+ 35a:	8d 2f       	mov	r24, r29
+ 35c:	9c 2f       	mov	r25, r28
+ 35e:	0e 94 c1 02 	call	0x582	; 0x582 <__gesf2>
+ 362:	18 16       	cp	r1, r24
+ 364:	0c f0       	brlt	.+2      	; 0x368 <main+0x124>
+ 366:	84 cf       	rjmp	.-248    	; 0x270 <main+0x2c>
+		contagem = 0;
+		LCD_control(LCD_CLR, CNFG);
+ 368:	60 e0       	ldi	r22, 0x00	; 0
+ 36a:	81 e0       	ldi	r24, 0x01	; 1
+ 36c:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+		enviaString("   ");
+ 370:	86 e0       	ldi	r24, 0x06	; 6
+ 372:	91 e0       	ldi	r25, 0x01	; 1
+ 374:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		enviaString("4,50");
+ 378:	8a e0       	ldi	r24, 0x0A	; 10
+ 37a:	91 e0       	ldi	r25, 0x01	; 1
+ 37c:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		LCD_control(LCD_SEG_LINHA, CNFG);
+ 380:	60 e0       	ldi	r22, 0x00	; 0
+ 382:	80 ec       	ldi	r24, 0xC0	; 192
+ 384:	0e 94 4b 00 	call	0x96	; 0x96 <LCD_control>
+		enviaString("   ");
+ 388:	86 e0       	ldi	r24, 0x06	; 6
+ 38a:	91 e0       	ldi	r25, 0x01	; 1
+ 38c:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+		enviaString("VALOR MAXIMO!");
+ 390:	8f e0       	ldi	r24, 0x0F	; 15
+ 392:	91 e0       	ldi	r25, 0x01	; 1
+ 394:	0e 94 86 00 	call	0x10c	; 0x10c <enviaString>
+ 398:	65 cf       	rjmp	.-310    	; 0x264 <main+0x20>
+
+0000039a <__subsf3>:
+ 39a:	50 58       	subi	r21, 0x80	; 128
+
+0000039c <__addsf3>:
+ 39c:	bb 27       	eor	r27, r27
+ 39e:	aa 27       	eor	r26, r26
+ 3a0:	0e 94 e5 01 	call	0x3ca	; 0x3ca <__addsf3x>
+ 3a4:	0c 94 87 02 	jmp	0x50e	; 0x50e <__fp_round>
+ 3a8:	0e 94 79 02 	call	0x4f2	; 0x4f2 <__fp_pscA>
+ 3ac:	38 f0       	brcs	.+14     	; 0x3bc <__addsf3+0x20>
+ 3ae:	0e 94 80 02 	call	0x500	; 0x500 <__fp_pscB>
+ 3b2:	20 f0       	brcs	.+8      	; 0x3bc <__addsf3+0x20>
+ 3b4:	39 f4       	brne	.+14     	; 0x3c4 <__addsf3+0x28>
+ 3b6:	9f 3f       	cpi	r25, 0xFF	; 255
+ 3b8:	19 f4       	brne	.+6      	; 0x3c0 <__addsf3+0x24>
+ 3ba:	26 f4       	brtc	.+8      	; 0x3c4 <__addsf3+0x28>
+ 3bc:	0c 94 76 02 	jmp	0x4ec	; 0x4ec <__fp_nan>
+ 3c0:	0e f4       	brtc	.+2      	; 0x3c4 <__addsf3+0x28>
+ 3c2:	e0 95       	com	r30
+ 3c4:	e7 fb       	bst	r30, 7
+ 3c6:	0c 94 70 02 	jmp	0x4e0	; 0x4e0 <__fp_inf>
+
+000003ca <__addsf3x>:
+ 3ca:	e9 2f       	mov	r30, r25
+ 3cc:	0e 94 98 02 	call	0x530	; 0x530 <__fp_split3>
+ 3d0:	58 f3       	brcs	.-42     	; 0x3a8 <__addsf3+0xc>
+ 3d2:	ba 17       	cp	r27, r26
+ 3d4:	62 07       	cpc	r22, r18
+ 3d6:	73 07       	cpc	r23, r19
+ 3d8:	84 07       	cpc	r24, r20
+ 3da:	95 07       	cpc	r25, r21
+ 3dc:	20 f0       	brcs	.+8      	; 0x3e6 <__addsf3x+0x1c>
+ 3de:	79 f4       	brne	.+30     	; 0x3fe <__addsf3x+0x34>
+ 3e0:	a6 f5       	brtc	.+104    	; 0x44a <__LOCK_REGION_LENGTH__+0x4a>
+ 3e2:	0c 94 ba 02 	jmp	0x574	; 0x574 <__fp_zero>
+ 3e6:	0e f4       	brtc	.+2      	; 0x3ea <__addsf3x+0x20>
+ 3e8:	e0 95       	com	r30
+ 3ea:	0b 2e       	mov	r0, r27
+ 3ec:	ba 2f       	mov	r27, r26
+ 3ee:	a0 2d       	mov	r26, r0
+ 3f0:	0b 01       	movw	r0, r22
+ 3f2:	b9 01       	movw	r22, r18
+ 3f4:	90 01       	movw	r18, r0
+ 3f6:	0c 01       	movw	r0, r24
+ 3f8:	ca 01       	movw	r24, r20
+ 3fa:	a0 01       	movw	r20, r0
+ 3fc:	11 24       	eor	r1, r1
+ 3fe:	ff 27       	eor	r31, r31
+ 400:	59 1b       	sub	r21, r25
+ 402:	99 f0       	breq	.+38     	; 0x42a <__LOCK_REGION_LENGTH__+0x2a>
+ 404:	59 3f       	cpi	r21, 0xF9	; 249
+ 406:	50 f4       	brcc	.+20     	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+ 408:	50 3e       	cpi	r21, 0xE0	; 224
+ 40a:	68 f1       	brcs	.+90     	; 0x466 <__LOCK_REGION_LENGTH__+0x66>
+ 40c:	1a 16       	cp	r1, r26
+ 40e:	f0 40       	sbci	r31, 0x00	; 0
+ 410:	a2 2f       	mov	r26, r18
+ 412:	23 2f       	mov	r18, r19
+ 414:	34 2f       	mov	r19, r20
+ 416:	44 27       	eor	r20, r20
+ 418:	58 5f       	subi	r21, 0xF8	; 248
+ 41a:	f3 cf       	rjmp	.-26     	; 0x402 <__LOCK_REGION_LENGTH__+0x2>
+ 41c:	46 95       	lsr	r20
+ 41e:	37 95       	ror	r19
+ 420:	27 95       	ror	r18
+ 422:	a7 95       	ror	r26
+ 424:	f0 40       	sbci	r31, 0x00	; 0
+ 426:	53 95       	inc	r21
+ 428:	c9 f7       	brne	.-14     	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+ 42a:	7e f4       	brtc	.+30     	; 0x44a <__LOCK_REGION_LENGTH__+0x4a>
+ 42c:	1f 16       	cp	r1, r31
+ 42e:	ba 0b       	sbc	r27, r26
+ 430:	62 0b       	sbc	r22, r18
+ 432:	73 0b       	sbc	r23, r19
+ 434:	84 0b       	sbc	r24, r20
+ 436:	ba f0       	brmi	.+46     	; 0x466 <__LOCK_REGION_LENGTH__+0x66>
+ 438:	91 50       	subi	r25, 0x01	; 1
+ 43a:	a1 f0       	breq	.+40     	; 0x464 <__LOCK_REGION_LENGTH__+0x64>
+ 43c:	ff 0f       	add	r31, r31
+ 43e:	bb 1f       	adc	r27, r27
+ 440:	66 1f       	adc	r22, r22
+ 442:	77 1f       	adc	r23, r23
+ 444:	88 1f       	adc	r24, r24
+ 446:	c2 f7       	brpl	.-16     	; 0x438 <__LOCK_REGION_LENGTH__+0x38>
+ 448:	0e c0       	rjmp	.+28     	; 0x466 <__LOCK_REGION_LENGTH__+0x66>
+ 44a:	ba 0f       	add	r27, r26
+ 44c:	62 1f       	adc	r22, r18
+ 44e:	73 1f       	adc	r23, r19
+ 450:	84 1f       	adc	r24, r20
+ 452:	48 f4       	brcc	.+18     	; 0x466 <__LOCK_REGION_LENGTH__+0x66>
+ 454:	87 95       	ror	r24
+ 456:	77 95       	ror	r23
+ 458:	67 95       	ror	r22
+ 45a:	b7 95       	ror	r27
+ 45c:	f7 95       	ror	r31
+ 45e:	9e 3f       	cpi	r25, 0xFE	; 254
+ 460:	08 f0       	brcs	.+2      	; 0x464 <__LOCK_REGION_LENGTH__+0x64>
+ 462:	b0 cf       	rjmp	.-160    	; 0x3c4 <__addsf3+0x28>
+ 464:	93 95       	inc	r25
+ 466:	88 0f       	add	r24, r24
+ 468:	08 f0       	brcs	.+2      	; 0x46c <__LOCK_REGION_LENGTH__+0x6c>
+ 46a:	99 27       	eor	r25, r25
+ 46c:	ee 0f       	add	r30, r30
+ 46e:	97 95       	ror	r25
+ 470:	87 95       	ror	r24
+ 472:	08 95       	ret
+
+00000474 <__fixsfsi>:
+ 474:	0e 94 41 02 	call	0x482	; 0x482 <__fixunssfsi>
+ 478:	68 94       	set
+ 47a:	b1 11       	cpse	r27, r1
+ 47c:	0c 94 bb 02 	jmp	0x576	; 0x576 <__fp_szero>
+ 480:	08 95       	ret
+
+00000482 <__fixunssfsi>:
+ 482:	0e 94 a0 02 	call	0x540	; 0x540 <__fp_splitA>
+ 486:	88 f0       	brcs	.+34     	; 0x4aa <__fixunssfsi+0x28>
+ 488:	9f 57       	subi	r25, 0x7F	; 127
+ 48a:	98 f0       	brcs	.+38     	; 0x4b2 <__fixunssfsi+0x30>
+ 48c:	b9 2f       	mov	r27, r25
+ 48e:	99 27       	eor	r25, r25
+ 490:	b7 51       	subi	r27, 0x17	; 23
+ 492:	b0 f0       	brcs	.+44     	; 0x4c0 <__fixunssfsi+0x3e>
+ 494:	e1 f0       	breq	.+56     	; 0x4ce <__fixunssfsi+0x4c>
+ 496:	66 0f       	add	r22, r22
+ 498:	77 1f       	adc	r23, r23
+ 49a:	88 1f       	adc	r24, r24
+ 49c:	99 1f       	adc	r25, r25
+ 49e:	1a f0       	brmi	.+6      	; 0x4a6 <__fixunssfsi+0x24>
+ 4a0:	ba 95       	dec	r27
+ 4a2:	c9 f7       	brne	.-14     	; 0x496 <__fixunssfsi+0x14>
+ 4a4:	14 c0       	rjmp	.+40     	; 0x4ce <__fixunssfsi+0x4c>
+ 4a6:	b1 30       	cpi	r27, 0x01	; 1
+ 4a8:	91 f0       	breq	.+36     	; 0x4ce <__fixunssfsi+0x4c>
+ 4aa:	0e 94 ba 02 	call	0x574	; 0x574 <__fp_zero>
+ 4ae:	b1 e0       	ldi	r27, 0x01	; 1
+ 4b0:	08 95       	ret
+ 4b2:	0c 94 ba 02 	jmp	0x574	; 0x574 <__fp_zero>
+ 4b6:	67 2f       	mov	r22, r23
+ 4b8:	78 2f       	mov	r23, r24
+ 4ba:	88 27       	eor	r24, r24
+ 4bc:	b8 5f       	subi	r27, 0xF8	; 248
+ 4be:	39 f0       	breq	.+14     	; 0x4ce <__fixunssfsi+0x4c>
+ 4c0:	b9 3f       	cpi	r27, 0xF9	; 249
+ 4c2:	cc f3       	brlt	.-14     	; 0x4b6 <__fixunssfsi+0x34>
+ 4c4:	86 95       	lsr	r24
+ 4c6:	77 95       	ror	r23
+ 4c8:	67 95       	ror	r22
+ 4ca:	b3 95       	inc	r27
+ 4cc:	d9 f7       	brne	.-10     	; 0x4c4 <__fixunssfsi+0x42>
+ 4ce:	3e f4       	brtc	.+14     	; 0x4de <__fixunssfsi+0x5c>
+ 4d0:	90 95       	com	r25
+ 4d2:	80 95       	com	r24
+ 4d4:	70 95       	com	r23
+ 4d6:	61 95       	neg	r22
+ 4d8:	7f 4f       	sbci	r23, 0xFF	; 255
+ 4da:	8f 4f       	sbci	r24, 0xFF	; 255
+ 4dc:	9f 4f       	sbci	r25, 0xFF	; 255
+ 4de:	08 95       	ret
+
+000004e0 <__fp_inf>:
+ 4e0:	97 f9       	bld	r25, 7
+ 4e2:	9f 67       	ori	r25, 0x7F	; 127
+ 4e4:	80 e8       	ldi	r24, 0x80	; 128
+ 4e6:	70 e0       	ldi	r23, 0x00	; 0
+ 4e8:	60 e0       	ldi	r22, 0x00	; 0
+ 4ea:	08 95       	ret
+
+000004ec <__fp_nan>:
+ 4ec:	9f ef       	ldi	r25, 0xFF	; 255
+ 4ee:	80 ec       	ldi	r24, 0xC0	; 192
+ 4f0:	08 95       	ret
+
+000004f2 <__fp_pscA>:
+ 4f2:	00 24       	eor	r0, r0
+ 4f4:	0a 94       	dec	r0
+ 4f6:	16 16       	cp	r1, r22
+ 4f8:	17 06       	cpc	r1, r23
+ 4fa:	18 06       	cpc	r1, r24
+ 4fc:	09 06       	cpc	r0, r25
+ 4fe:	08 95       	ret
+
+00000500 <__fp_pscB>:
+ 500:	00 24       	eor	r0, r0
+ 502:	0a 94       	dec	r0
+ 504:	12 16       	cp	r1, r18
+ 506:	13 06       	cpc	r1, r19
+ 508:	14 06       	cpc	r1, r20
+ 50a:	05 06       	cpc	r0, r21
+ 50c:	08 95       	ret
+
+0000050e <__fp_round>:
+ 50e:	09 2e       	mov	r0, r25
+ 510:	03 94       	inc	r0
+ 512:	00 0c       	add	r0, r0
+ 514:	11 f4       	brne	.+4      	; 0x51a <__fp_round+0xc>
+ 516:	88 23       	and	r24, r24
+ 518:	52 f0       	brmi	.+20     	; 0x52e <__fp_round+0x20>
+ 51a:	bb 0f       	add	r27, r27
+ 51c:	40 f4       	brcc	.+16     	; 0x52e <__fp_round+0x20>
+ 51e:	bf 2b       	or	r27, r31
+ 520:	11 f4       	brne	.+4      	; 0x526 <__fp_round+0x18>
+ 522:	60 ff       	sbrs	r22, 0
+ 524:	04 c0       	rjmp	.+8      	; 0x52e <__fp_round+0x20>
+ 526:	6f 5f       	subi	r22, 0xFF	; 255
+ 528:	7f 4f       	sbci	r23, 0xFF	; 255
+ 52a:	8f 4f       	sbci	r24, 0xFF	; 255
+ 52c:	9f 4f       	sbci	r25, 0xFF	; 255
+ 52e:	08 95       	ret
+
+00000530 <__fp_split3>:
+ 530:	57 fd       	sbrc	r21, 7
+ 532:	90 58       	subi	r25, 0x80	; 128
+ 534:	44 0f       	add	r20, r20
+ 536:	55 1f       	adc	r21, r21
+ 538:	59 f0       	breq	.+22     	; 0x550 <__fp_splitA+0x10>
+ 53a:	5f 3f       	cpi	r21, 0xFF	; 255
+ 53c:	71 f0       	breq	.+28     	; 0x55a <__fp_splitA+0x1a>
+ 53e:	47 95       	ror	r20
+
+00000540 <__fp_splitA>:
+ 540:	88 0f       	add	r24, r24
+ 542:	97 fb       	bst	r25, 7
+ 544:	99 1f       	adc	r25, r25
+ 546:	61 f0       	breq	.+24     	; 0x560 <__fp_splitA+0x20>
+ 548:	9f 3f       	cpi	r25, 0xFF	; 255
+ 54a:	79 f0       	breq	.+30     	; 0x56a <__fp_splitA+0x2a>
+ 54c:	87 95       	ror	r24
+ 54e:	08 95       	ret
+ 550:	12 16       	cp	r1, r18
+ 552:	13 06       	cpc	r1, r19
+ 554:	14 06       	cpc	r1, r20
+ 556:	55 1f       	adc	r21, r21
+ 558:	f2 cf       	rjmp	.-28     	; 0x53e <__fp_split3+0xe>
+ 55a:	46 95       	lsr	r20
+ 55c:	f1 df       	rcall	.-30     	; 0x540 <__fp_splitA>
+ 55e:	08 c0       	rjmp	.+16     	; 0x570 <__fp_splitA+0x30>
+ 560:	16 16       	cp	r1, r22
+ 562:	17 06       	cpc	r1, r23
+ 564:	18 06       	cpc	r1, r24
+ 566:	99 1f       	adc	r25, r25
+ 568:	f1 cf       	rjmp	.-30     	; 0x54c <__fp_splitA+0xc>
+ 56a:	86 95       	lsr	r24
+ 56c:	71 05       	cpc	r23, r1
+ 56e:	61 05       	cpc	r22, r1
+ 570:	08 94       	sec
+ 572:	08 95       	ret
+
+00000574 <__fp_zero>:
+ 574:	e8 94       	clt
+
+00000576 <__fp_szero>:
+ 576:	bb 27       	eor	r27, r27
+ 578:	66 27       	eor	r22, r22
+ 57a:	77 27       	eor	r23, r23
+ 57c:	cb 01       	movw	r24, r22
+ 57e:	97 f9       	bld	r25, 7
+ 580:	08 95       	ret
+
+00000582 <__gesf2>:
+ 582:	0e 94 33 03 	call	0x666	; 0x666 <__fp_cmp>
+ 586:	08 f4       	brcc	.+2      	; 0x58a <__gesf2+0x8>
+ 588:	8f ef       	ldi	r24, 0xFF	; 255
+ 58a:	08 95       	ret
+
+0000058c <__mulsf3>:
+ 58c:	0e 94 d9 02 	call	0x5b2	; 0x5b2 <__mulsf3x>
+ 590:	0c 94 87 02 	jmp	0x50e	; 0x50e <__fp_round>
+ 594:	0e 94 79 02 	call	0x4f2	; 0x4f2 <__fp_pscA>
+ 598:	38 f0       	brcs	.+14     	; 0x5a8 <__mulsf3+0x1c>
+ 59a:	0e 94 80 02 	call	0x500	; 0x500 <__fp_pscB>
+ 59e:	20 f0       	brcs	.+8      	; 0x5a8 <__mulsf3+0x1c>
+ 5a0:	95 23       	and	r25, r21
+ 5a2:	11 f0       	breq	.+4      	; 0x5a8 <__mulsf3+0x1c>
+ 5a4:	0c 94 70 02 	jmp	0x4e0	; 0x4e0 <__fp_inf>
+ 5a8:	0c 94 76 02 	jmp	0x4ec	; 0x4ec <__fp_nan>
+ 5ac:	11 24       	eor	r1, r1
+ 5ae:	0c 94 bb 02 	jmp	0x576	; 0x576 <__fp_szero>
+
+000005b2 <__mulsf3x>:
+ 5b2:	0e 94 98 02 	call	0x530	; 0x530 <__fp_split3>
+ 5b6:	70 f3       	brcs	.-36     	; 0x594 <__mulsf3+0x8>
+
+000005b8 <__mulsf3_pse>:
+ 5b8:	95 9f       	mul	r25, r21
+ 5ba:	c1 f3       	breq	.-16     	; 0x5ac <__mulsf3+0x20>
+ 5bc:	95 0f       	add	r25, r21
+ 5be:	50 e0       	ldi	r21, 0x00	; 0
+ 5c0:	55 1f       	adc	r21, r21
+ 5c2:	62 9f       	mul	r22, r18
+ 5c4:	f0 01       	movw	r30, r0
+ 5c6:	72 9f       	mul	r23, r18
+ 5c8:	bb 27       	eor	r27, r27
+ 5ca:	f0 0d       	add	r31, r0
+ 5cc:	b1 1d       	adc	r27, r1
+ 5ce:	63 9f       	mul	r22, r19
+ 5d0:	aa 27       	eor	r26, r26
+ 5d2:	f0 0d       	add	r31, r0
+ 5d4:	b1 1d       	adc	r27, r1
+ 5d6:	aa 1f       	adc	r26, r26
+ 5d8:	64 9f       	mul	r22, r20
+ 5da:	66 27       	eor	r22, r22
+ 5dc:	b0 0d       	add	r27, r0
+ 5de:	a1 1d       	adc	r26, r1
+ 5e0:	66 1f       	adc	r22, r22
+ 5e2:	82 9f       	mul	r24, r18
+ 5e4:	22 27       	eor	r18, r18
+ 5e6:	b0 0d       	add	r27, r0
+ 5e8:	a1 1d       	adc	r26, r1
+ 5ea:	62 1f       	adc	r22, r18
+ 5ec:	73 9f       	mul	r23, r19
+ 5ee:	b0 0d       	add	r27, r0
+ 5f0:	a1 1d       	adc	r26, r1
+ 5f2:	62 1f       	adc	r22, r18
+ 5f4:	83 9f       	mul	r24, r19
+ 5f6:	a0 0d       	add	r26, r0
+ 5f8:	61 1d       	adc	r22, r1
+ 5fa:	22 1f       	adc	r18, r18
+ 5fc:	74 9f       	mul	r23, r20
+ 5fe:	33 27       	eor	r19, r19
+ 600:	a0 0d       	add	r26, r0
+ 602:	61 1d       	adc	r22, r1
+ 604:	23 1f       	adc	r18, r19
+ 606:	84 9f       	mul	r24, r20
+ 608:	60 0d       	add	r22, r0
+ 60a:	21 1d       	adc	r18, r1
+ 60c:	82 2f       	mov	r24, r18
+ 60e:	76 2f       	mov	r23, r22
+ 610:	6a 2f       	mov	r22, r26
+ 612:	11 24       	eor	r1, r1
+ 614:	9f 57       	subi	r25, 0x7F	; 127
+ 616:	50 40       	sbci	r21, 0x00	; 0
+ 618:	9a f0       	brmi	.+38     	; 0x640 <__mulsf3_pse+0x88>
+ 61a:	f1 f0       	breq	.+60     	; 0x658 <__mulsf3_pse+0xa0>
+ 61c:	88 23       	and	r24, r24
+ 61e:	4a f0       	brmi	.+18     	; 0x632 <__mulsf3_pse+0x7a>
+ 620:	ee 0f       	add	r30, r30
+ 622:	ff 1f       	adc	r31, r31
+ 624:	bb 1f       	adc	r27, r27
+ 626:	66 1f       	adc	r22, r22
+ 628:	77 1f       	adc	r23, r23
+ 62a:	88 1f       	adc	r24, r24
+ 62c:	91 50       	subi	r25, 0x01	; 1
+ 62e:	50 40       	sbci	r21, 0x00	; 0
+ 630:	a9 f7       	brne	.-22     	; 0x61c <__mulsf3_pse+0x64>
+ 632:	9e 3f       	cpi	r25, 0xFE	; 254
+ 634:	51 05       	cpc	r21, r1
+ 636:	80 f0       	brcs	.+32     	; 0x658 <__mulsf3_pse+0xa0>
+ 638:	0c 94 70 02 	jmp	0x4e0	; 0x4e0 <__fp_inf>
+ 63c:	0c 94 bb 02 	jmp	0x576	; 0x576 <__fp_szero>
+ 640:	5f 3f       	cpi	r21, 0xFF	; 255
+ 642:	e4 f3       	brlt	.-8      	; 0x63c <__mulsf3_pse+0x84>
+ 644:	98 3e       	cpi	r25, 0xE8	; 232
+ 646:	d4 f3       	brlt	.-12     	; 0x63c <__mulsf3_pse+0x84>
+ 648:	86 95       	lsr	r24
+ 64a:	77 95       	ror	r23
+ 64c:	67 95       	ror	r22
+ 64e:	b7 95       	ror	r27
+ 650:	f7 95       	ror	r31
+ 652:	e7 95       	ror	r30
+ 654:	9f 5f       	subi	r25, 0xFF	; 255
+ 656:	c1 f7       	brne	.-16     	; 0x648 <__mulsf3_pse+0x90>
+ 658:	fe 2b       	or	r31, r30
+ 65a:	88 0f       	add	r24, r24
+ 65c:	91 1d       	adc	r25, r1
+ 65e:	96 95       	lsr	r25
+ 660:	87 95       	ror	r24
+ 662:	97 f9       	bld	r25, 7
+ 664:	08 95       	ret
+
+00000666 <__fp_cmp>:
+ 666:	99 0f       	add	r25, r25
+ 668:	00 08       	sbc	r0, r0
+ 66a:	55 0f       	add	r21, r21
+ 66c:	aa 0b       	sbc	r26, r26
+ 66e:	e0 e8       	ldi	r30, 0x80	; 128
+ 670:	fe ef       	ldi	r31, 0xFE	; 254
+ 672:	16 16       	cp	r1, r22
+ 674:	17 06       	cpc	r1, r23
+ 676:	e8 07       	cpc	r30, r24
+ 678:	f9 07       	cpc	r31, r25
+ 67a:	c0 f0       	brcs	.+48     	; 0x6ac <__fp_cmp+0x46>
+ 67c:	12 16       	cp	r1, r18
+ 67e:	13 06       	cpc	r1, r19
+ 680:	e4 07       	cpc	r30, r20
+ 682:	f5 07       	cpc	r31, r21
+ 684:	98 f0       	brcs	.+38     	; 0x6ac <__fp_cmp+0x46>
+ 686:	62 1b       	sub	r22, r18
+ 688:	73 0b       	sbc	r23, r19
+ 68a:	84 0b       	sbc	r24, r20
+ 68c:	95 0b       	sbc	r25, r21
+ 68e:	39 f4       	brne	.+14     	; 0x69e <__fp_cmp+0x38>
+ 690:	0a 26       	eor	r0, r26
+ 692:	61 f0       	breq	.+24     	; 0x6ac <__fp_cmp+0x46>
+ 694:	23 2b       	or	r18, r19
+ 696:	24 2b       	or	r18, r20
+ 698:	25 2b       	or	r18, r21
+ 69a:	21 f4       	brne	.+8      	; 0x6a4 <__fp_cmp+0x3e>
+ 69c:	08 95       	ret
+ 69e:	0a 26       	eor	r0, r26
+ 6a0:	09 f4       	brne	.+2      	; 0x6a4 <__fp_cmp+0x3e>
+ 6a2:	a1 40       	sbci	r26, 0x01	; 1
+ 6a4:	a6 95       	lsr	r26
+ 6a6:	8f ef       	ldi	r24, 0xFF	; 255
+ 6a8:	81 1d       	adc	r24, r1
+ 6aa:	81 1d       	adc	r24, r1
+ 6ac:	08 95       	ret
+
+000006ae <_exit>:
+ 6ae:	f8 94       	cli
+
+000006b0 <__stop_program>:
+ 6b0:	ff cf       	rjmp	.-2      	; 0x6b0 <__stop_program>
