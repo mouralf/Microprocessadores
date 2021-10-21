@@ -5,7 +5,7 @@
  * Author : will
  */ 
 
-#define F_CPU 32000000UL
+#define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -110,7 +110,7 @@ void delay(){
 
 void atraso(){
 	
-	TCNT1 = 3036;				   //Para 0,1 Hz
+	TCNT1 = 42742;				   //Para 0,1 Hz
 								   // assim: 65536 - 62500 = 3036
 	while ((TIFR1 & (1<<0)) == 0); // Aguarda flag de estouro
 	TIFR1 = (1<<0);				   //Limpa flag de estouro 
@@ -137,14 +137,13 @@ int main(void)
 		enviaString("    ");
 		
 
-	int i = 60;			 // valor inicial
+	int i = 2850;			 // valor inicial
 	unsigned char hora;
 	unsigned char min;
 	
-	TCCR1A = 0;          // Modo Normal
-	TCCR1B = 0x5;		 // Clock 1024
-	TCNT1 = 3036;		 //Para 4 Hz
-						 // assim: 65536 - 62500 = 3036
+	TCCR1A = 0;          
+	TCCR1B = 0x5;		 
+	TCNT1 = 44684;		 //ajustado com o erro do loop 
 
 	
     while (1) 
@@ -155,12 +154,12 @@ int main(void)
 		
 		i++;
 		
-		if(i >= 8640){
+		if(i >= 21600){
 			i=0;
 		}
 	
-	  hora = i/360;
-	  min = i/6 - 60*hora;
+	  hora = i/900;
+	  min = i/15 - 60*hora;
 	  
 		enviaString("      ");
 			  
