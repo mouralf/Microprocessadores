@@ -7,8 +7,6 @@
 
 #include <avr/io.h>
 
-
-
 //-------------------------------------------- Definições do LCD --------------------------------------------
 //define os pinos de enable e registrer select
 #define RS PB0
@@ -124,7 +122,8 @@ void delay(){
 #define COLUNA1 PC1	//A1
 #define COLUNA2 PC2	//A2
 #define COLUNA3 PC3	//A3
-	
+
+#define BOUNCE 10
 void Keyboard_config(){
 	//configura as linhas como saída
 	DDRD |= (1 << DDD0); //set PD0 as OUTPUT
@@ -143,18 +142,34 @@ void Keyboard_config(){
 	PORTC |= (1 << COLUNA3); //set PC3 as INPUT_PULLUP
 }
 
-void Keyboard_validation(){	
+
+void delay_1ms(){
+	TCCR0A = 0x2;        //modo CTC para o timer 0
+	TCCR0B = 0x4;		//clock/256
+	TCNT0 = 0;            //Zera timer
+	OCR0A = 3;        //Valor de comparação 63 contagens (1 ms)
 	
-	for (int LINHA = 0; LINHA<4; LINHA++){
-		PORTD &= ~(1 << LINHA); //coloca o pino referente a LINHA em LOW
-		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){
-			if(OUTRAS!= LINHA){
-				PORTD |= (1<<OUTRAS); //coloca as outras portas em HIGH
+	TIFR0 = (1 << 1); //limpa flag de comparacao A
+	while((TIFR0 & (1 << 1)) == 0);
+}
+
+void Keyboard_validation(){	
+	unsigned char count = 0;
+	
+	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
+		PORTD &= ~(1 << LINHA);							//coloca o pino referente à LINHA em LOW
+		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){		//percorre novamente todas as linhas
+			if(OUTRAS!= LINHA){							//verifica se OUTRAS é diferente de LINHA, se for
+				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
 			}
 		}
 		
-		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){
-			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){
+		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){	//percorre todas as colunas
+			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){	//se a coluna em questão for LOW
+				for (count = 0; count <= 250; count++);
+				delay_1ms();
+				delay_1ms();
+				delay_1ms();
 				enviaInt(LINHA);
 				enviaInt(COLUNAS);
 			}
@@ -214,13 +229,13 @@ int main(void)
 	
 	
 	Keyboard_config();
+	enviaString("Socorro :)");
 	
 	//PORTC = 0xFF;
     /* Replace with your application code */
     while (1) 
     {
 		Keyboard_validation();
-	//	verificaTecla();
     }
 }
 
