@@ -122,6 +122,44 @@ void enviaInt(char c){
 	
 }
 
+int horarioAtual(int segundos, char min, char hora){
+	
+	int min_atual;
+	
+	min_atual = min;
+	
+	atraso();
+	segundos++;
+		
+	if(segundos >= 21600){
+		segundos = 0;
+	}
+	
+	hora = segundos/900;
+	min = segundos/15 - 60*hora;
+	
+	if(min_atual != min)
+		LCD_control(LCD_CLR, CNFG);	
+	  
+	enviaString("      ");
+			  
+	if(hora > 9){
+		enviaInt(hora/10);
+		enviaInt(hora%10);
+			
+	}else{enviaString("0");enviaInt(hora);}
+		
+		
+	enviaString(":");
+		
+	if(min > 9){
+		enviaInt(min/10);
+		enviaInt(min%10);
+			
+	}else{enviaString("0");enviaInt(min);}
+			
+}
+
 int main(void)
 { 
 	
@@ -137,7 +175,7 @@ int main(void)
 		enviaString("    ");
 		
 
-	int i = 2850;			 // valor inicial
+	int seg = 2850;			 // valor inicial
 	unsigned char hora;
 	unsigned char min;
 	
@@ -148,37 +186,7 @@ int main(void)
 	
     while (1) 
     {
-		
-		atraso();
-		LCD_control(LCD_CLR, CNFG);	
-		
-		i++;
-		
-		if(i >= 21600){
-			i=0;
-		}
-	
-	  hora = i/900;
-	  min = i/15 - 60*hora;
-	  
-		enviaString("      ");
-			  
-		if(hora > 9){
-			enviaInt(hora/10);
-			enviaInt(hora%10);
-			
-		}else{enviaString("0");enviaInt(hora);}
-		
-		
-		enviaString(":");
-		
-		if(min > 9){
-			enviaInt(min/10);
-			enviaInt(min%10);
-			
-			}else{enviaString("0");enviaInt(min);}
-		
-		
+		horarioAtual(seg, min, hora);
 		
     }
  return 0;
