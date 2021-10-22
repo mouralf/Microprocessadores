@@ -57,9 +57,9 @@ void LCD_control(unsigned char c, unsigned char control_type){
 	if(control_type == 1){
 		PORTB |= (1<<RS);
 	}
-	else{ 
+	else{
 		if(control_type == 0){
-		PORTB &= ~(1<<RS);
+			PORTB &= ~(1<<RS);
 		}
 	}
 
@@ -84,6 +84,11 @@ void LCD_control(unsigned char c, unsigned char control_type){
 
 
 void LCD_init(){
+	//configuração inicial pro LCD
+	DDRB = 0x03;
+	DDRD = 0xF0;
+	delay_ms(10);
+	
 	DDRB |= 0x03;								// Define os pinos PB0 e PB1 como output
 	DDRD |= 0xF0;								// Define os pinos PD4, PD5, PD6 e PD7 como output
 	delay_ms(20);
@@ -93,6 +98,8 @@ void LCD_init(){
 	LCD_control(LCD_ENT_MODE, CNFG); 			//entry mode
 	LCD_control(LCD_CLR, CNFG);					//Limpa a tela
 	LCD_control(0x80, CNFG);					// Sets cursor to (0,0). SE DER CERTO TESTAR SEM DEP
+	
+	delay_ms(10);
 }
 
 void enviaString(char* str){
@@ -158,11 +165,11 @@ void Keyboard_config(){
 char TecladoMatricial(){
 	//função para realizar a multiplexação pra identificar a tecla pressionada
 	char teclasMatricial [4][3] =	{	//[linhas][colunas]
-										{'1','2', '3'},
-										{'4','5', '6'},
-										{'7','8', '9'},
-										{'*','0', '#'},
-									};
+		{'1','2', '3'},
+		{'4','5', '6'},
+		{'7','8', '9'},
+		{'*','0', '#'},
+	};
 	char tecla_pressionada = ' ';
 	
 	//início do algoritmo para varrer o teclado
@@ -191,13 +198,8 @@ char TecladoMatricial(){
 
 int main(void)
 {
-	//LCD
-	DDRB = 0x03;
-	DDRD = 0xF0;
-	delay_ms(10);
-	
 	LCD_init();
-	delay_ms(10);
+	//delay_ms(10);
 	
 	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
 		{'2', 'A', 'B', 'C'},	//linha 0
@@ -207,8 +209,8 @@ int main(void)
 		{'6', 'M', 'N', 'O'},	//linha 4
 		{'8', 'T', 'U', 'V'},	//linha 5
 	};	//fim de teclasTelefone_3L
-		
-		
+	
+	
 	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
 		{'7', 'P', 'Q', 'R', 'S'}, //linha 0
 		{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
@@ -223,13 +225,13 @@ int main(void)
 	/*------------------ FUNÇÃO ---------------------*/
 	LCD_control(LCD_SEG_LINHA, 0);
 	char teclaAnterior = '/';
-    /* Replace with your application code */
-    while (1) 
-    {
+	/* Replace with your application code */
+	while (1)
+	{
 		
 		//
 		char teclaAtual = TecladoMatricial();
-	
+		
 		if(teclaAtual != ' '){
 			if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
 			{
@@ -242,29 +244,29 @@ int main(void)
 					nContagens ++;	//incrementa o número de contagens
 					switch (teclaAtual){	//altera a linha da matriz conforme o número
 						case '2':
-							linhaM = 0;
-							break;
+						linhaM = 0;
+						break;
 						case '3':
-							linhaM = 1;
-							break;
+						linhaM = 1;
+						break;
 						case '4':
-							linhaM = 2;
-							break;
+						linhaM = 2;
+						break;
 						case '5':
-							linhaM = 3;
-							break;
+						linhaM = 3;
+						break;
 						case '6':
-							linhaM = 4;
-							break;
+						linhaM = 4;
+						break;
 						case '7':
-							linhaM = 0;
-							break;
+						linhaM = 0;
+						break;
 						case '8':
-							linhaM = 5;
-							break;
+						linhaM = 5;
+						break;
 						case '9':			//se a tecla pressionada for 9, vai pra segunda linha da matriz
-							linhaM = 1;
-							break;
+						linhaM = 1;
+						break;
 					}
 					
 					if (teclaAtual == '7' || teclaAtual == '9')	//se a tecla for 7 ou 9, percorre a matriz de 4 letras
@@ -293,9 +295,9 @@ int main(void)
 				} //else teclaAtual == teclaAnterior
 				
 			} //else tecla atual é 1, 0, #, *
-		
+			
 		} //teclaAtual != ' '
 		
-	} //while 
+	} //while
 	
 }//main
