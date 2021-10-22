@@ -63,7 +63,6 @@ void enviaInt(int c);
 void Keyboard_config();
 void Keyboard_validation();
 char TecladoMatricial();
-char TecladoTelefonico();
 
 /************************************ LED ************************************/
 
@@ -254,7 +253,12 @@ void Keyboard_config(){
 
 
 
+char teclaAnterior = '/';
+int nContagens = 0;
+
 char TecladoMatricial(){
+	//LCD_control(LCD_SEG_LINHA, 0); //NECESSÁRIO CHAMAR ESSA FUNÇÃO ANTES DE PEGAR ALGO DO TECLADO
+	
 	//função para realizar a multiplexação pra identificar a tecla pressionada
 	char teclasMatricial [4][3] =	{	//[linhas][colunas]
 		{'1','2', '3'},
@@ -262,8 +266,31 @@ char TecladoMatricial(){
 		{'7','8', '9'},
 		{'*','0', '#'},
 	};
+	
+	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
+		{'2', 'A', 'B', 'C'},	//linha 0
+		{'3', 'D', 'E', 'F'},	//linha 1
+		{'4', 'G', 'H', 'I'},	//linha 2
+		{'5', 'J', 'K', 'L'},	//linha 3
+		{'6', 'M', 'N', 'O'},	//linha 4
+		{'8', 'T', 'U', 'V'},	//linha 5
+	};	//fim de teclasTelefone_3L
+	
+	
+	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
+		{'7', 'P', 'Q', 'R', 'S'}, //linha 0
+		{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
+	}; //fim de teclasTelefone_4L
+	
+	
+	
+	
+	int linhaM = 0; //para percorrer as matrizes
+	char caracter;
+	
 	char tecla_pressionada = ' ';
 
+	
 	//início do algoritmo para varrer o teclado
 	for (int linha = 0; linha<4; linha++){				//percorre todas as linhas
 		PORTD &= ~(1 << linha);							//coloca o pino referente à linha em LOW
@@ -282,74 +309,82 @@ char TecladoMatricial(){
 			}
 		}
 	}
+	
 	delay_ms(10);
-
-	return tecla_pressionada;
-}
-/*
-char TecladoTelefonico(){
-	int intervaloCliques = 0;
-
-	char teclaAtual = TecladoMatricial();
-	char teclaAnterior = teclaAtual;
-	char nApertos = 0;
-	char caracterPressionado;	//utilizado para armazenar e retornar o caractere correspondente ao que foi pressionado
-	char linhaM = 0, colunaM = 0; //utilizados para percorrer as matrizes das teclas
-
-	//matriz com as teclas de telefone com apenas 3 letras por número
-	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
-		{'2', 'A', 'B', 'C'},	//linha 0
-		{'3', 'D', 'E', 'F'},	//linha 1
-		{'4', 'G', 'H', 'I'},	//linha 2
-		{'5', 'J', 'K', 'L'},	//linha 3
-		{'6', 'M', 'N', 'O'},	//linha 4
-		{'8', 'A', 'B', 'C'},	//linha 5
-	};	//fim de teclasTelefone_3L
-
-	//matriz com as teclas de telefone com 4 letras por número
-	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
-		{'7', 'P', 'Q', 'R', 'S'}, //linha 0
-		{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
-	}; //fim de teclasTelefone_4L
-
-
-	//se a tecla apertada não tiver letras, retorna direto o caracter correspondente
-	if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
-	{
-		caracterPressionado = teclaAtual;
-	} //fecha o if que verifica se a tecla pressionada foi 1, 0, * ou #
-
-	else //se a tecla pressionada não for 1, 0, * ou #
-	{
-		if (teclaAtual == '7' || teclaAtual == '9')		//se a tecla em questão tiver 4 letras percorre a matriz teclasTelefone_4L
+	
+	char teclaAtual = tecla_pressionada;
+	
+	if(teclaAtual != ' '){
+		//enviaChar('d');
+		if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
 		{
-			if (teclaAtual == 9)						//se a tecla pressionada for a 9, altera a linha para 1. Se não for, já está setado em 0
-			{
-				linhaM = 1;	//correspondente à segunda linha da matriz teclasTelefone_4L
-			}//fecha o if que define a linha da matriz caso a tecla seja 9
-
-
-			//verifica se a tecla pressionada novamente é igual à tecla pressionada anteriormente
-			if (teclaAtual == teclaAnterior)
-			{
-				//chama o timer que verifica se o intervalo de tempo foi excedido
-				while (intervaloCliques < INTERVALOMAX)
-				{
-					nApertos++;
-					if (nApertos == 4)	//zera o nApertos caso ele atinja o valor de 4, pois passa do limite da matriz
-					{
-						nApertos == 0;
-					}
-
-					caracterPressionado = teclasTelefone_4L[linhaM][nApertos];
+			caracter = teclaAtual;
+			enviaChar(caracter);
+		}//fecha o if tecla atual é 1, 0, #, *
+		
+		else{ //se não for 1, 0, # ou *
+			
+			if(teclaAtual == teclaAnterior){ //se a tecla pressionada for igual à pressionada anteriormente
+				nContagens ++;	//incrementa o número de contagens
+				switch (teclaAtual){	//altera a linha da matriz conforme o número
+					case '2':
+					linhaM = 0;
 					break;
-				} //fecha o while do intervalo de cliques
-			} //fecha o if que verifica se a tecla atual é igual à anterior
+					case '3':
+					linhaM = 1;
+					break;
+					case '4':
+					linhaM = 2;
+					break;
+					case '5':
+					linhaM = 3;
+					break;
+					case '6':
+					linhaM = 4;
+					break;
+					case '7':
+					linhaM = 0;
+					break;
+					case '8':
+					linhaM = 5;
+					break;
+					case '9':			//se a tecla pressionada for 9, vai pra segunda linha da matriz
+					linhaM = 1;
+					break;
+				}
+				
+				if (teclaAtual == '7' || teclaAtual == '9')	//se a tecla for 7 ou 9, percorre a matriz de 4 letras
+				{
+					if (nContagens == 5){	//se atingir o limite do tamanho da matriz zera o contador
+						nContagens = 0;
+					}
+					caracter = teclasTelefone_4L[linhaM][nContagens];
+				}	//fecha o if que verifica se a tecla é 7 ou 9
+				
+				else{ //se a tecla for 2,3,4,5,6, ou 8 percorre a matriz de 3 letras
+					if (nContagens == 4){	//se atingir o limite do tamanho da matriz zera o contador
+						nContagens = 0;
+					}
+					caracter = teclasTelefone_3L[linhaM][nContagens];
+				}
+				enviaCharEsq(caracter);
+				
+			} //fecha o if teclaAtual == teclaAnterior
+			else{
+				nContagens = 0;
+				teclaAnterior = teclaAtual;
+				enviaChar(caracter);
+			} //else teclaAtual == teclaAnterior
+			
+		} //else tecla atual é 1, 0, #, *
+		
+	} //teclaAtual != ' '
+	
+	//teclaAnterior = caracter;
+	
+	return caracter;
+}
 
-
-		}	//fecha o if que verifica se a tecla é 7 ou 9
-	}
-*/
 // ------------------------------------- Funções pro Led --------------------------
 void LedConfig(){
 	DDRB |= 0x04;
