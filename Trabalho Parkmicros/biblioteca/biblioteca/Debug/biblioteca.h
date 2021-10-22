@@ -36,7 +36,7 @@ void delay_lcd();
 
 
 /************************************ TECLADO ************************************/
-
+#include <math.h>
 // -------------------------------- Definições pro teclado --------------------------
 //definições para as linhas
 #define LINHA1 PD0	//D0
@@ -49,11 +49,14 @@ void delay_lcd();
 #define COLUNA2 PC2	//A2
 #define COLUNA3 PC3	//A3
 
+#define INTERVALOMAX 1000 //máximo intervalo de tempo em ms entre cliques no botão pra  percorrer o alfabeto
+
 
 // -------------------------------- Protótipos pro teclado --------------------------
 void Keyboard_config();
 void Keyboard_validation();
-
+char TecladoMatricial();
+char TecladoTelefonico();
 
 /************************************ LED ************************************/
 
@@ -68,7 +71,8 @@ void piscaLed();
 /************************************ HORÁRIO ************************************/
 void Timer1Config();
 void atraso();
-int horarioAtual(int segundos, char min, char hora);
+int horarioAtual(int segundos);
+void printa_hora(int segundos);
 
 
 /************************************ MOEDAS/BOTÕES ************************************/
@@ -115,6 +119,17 @@ int creditos_cartao[10][2] = {
 void verificaCartao(char* placa);
 int verificaSaldo(int ind, int valor);
 int cadastraCartao(char* placa);
+
+
+/************************************ PLACA ************************************/
+char const placas_idosos_PNE[3][7] = {
+	"IDO1020",
+	"IDS0089",
+	"PNE0102"
+};
+
+int comparaString(char* str1, char* str2);
+int validaPlaca(char* placa);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -247,6 +262,101 @@ void Keyboard_validation(){
 	delay_lcd();
 }
 
+char TecladoMatricial(){
+	//função para realizar a multiplexação pra identificar a tecla pressionada
+	char teclasMatricial [4][3] =	{	//[linhas][colunas]
+		{'1','2', '3'},
+		{'4','5', '6'},
+		{'7','8', '9'},
+		{'*','0', '#'},
+	};
+	char tecla_pressionada = ' ';
+	
+	//início do algoritmo para varrer o teclado
+	for (int linha = 0; linha<4; linha++){				//percorre todas as linhas
+		PORTD &= ~(1 << linha);							//coloca o pino referente à linha em LOW
+		for (int outras = 0; outras < 4; outras++){		//percorre novamente todas as linhas
+			if(outras!= linha){							//verifica se outras é diferente de linha, se for
+				PORTD |= (1 << outras);					//coloca as outras portas em HIGH
+			}
+		}
+		//delay_ms(10);
+		for (int colunas = 1; colunas <=3; colunas++){			//percorre todas as colunas
+			if(!((PINC & (1 << colunas)) >> colunas)){			//se a coluna em questão for LOW, então significa que foi pressionada
+				tecla_pressionada =  (teclasMatricial[linha][colunas-1]); //armazena a tecla pressionada
+				while(!((PINC & (1 << colunas)) >> colunas));	//debounce simples
+				//delay_ms(5);
+				break;
+			}
+		}
+	}
+	delay_lcd();
+	return tecla_pressionada;
+}
+
+char TecladoTelefonico(){
+	int intervaloCliques = 0;
+	
+	char teclaAtual = TecladoMatricial();
+	char teclaAnterior = teclaAtual;
+	char nApertos = 0;
+	char caracterPressionado;	//utilizado para armazenar e retornar o caractere correspondente ao que foi pressionado
+	char linhaM = 0, colunaM = 0; //utilizados para percorrer as matrizes das teclas
+	
+	//matriz com as teclas de telefone com apenas 3 letras por número
+	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
+		{'2', 'A', 'B', 'C'},	//linha 0
+		{'3', 'D', 'E', 'F'},	//linha 1
+		{'4', 'G', 'H', 'I'},	//linha 2
+		{'5', 'J', 'K', 'L'},	//linha 3
+		{'6', 'M', 'N', 'O'},	//linha 4
+		{'8', 'A', 'B', 'C'},	//linha 5
+	};	//fim de teclasTelefone_3L
+	
+	//matriz com as teclas de telefone com 4 letras por número
+	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
+		{'7', 'P', 'Q', 'R', 'S'}, //linha 0
+		{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
+	}; //fim de teclasTelefone_4L
+	
+	
+	//se a tecla apertada não tiver letras, retorna direto o caracter correspondente
+	if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
+	{
+		caracterPressionado = teclaAtual;
+	} //fecha o if que verifica se a tecla pressionada foi 1, 0, * ou #
+	
+	else //se a tecla pressionada não for 1, 0, * ou #
+	{
+		if (teclaAtual == '7' || teclaAtual == '9')		//se a tecla em questão tiver 4 letras percorre a matriz teclasTelefone_4L
+		{
+			if (teclaAtual == 9)						//se a tecla pressionada for a 9, altera a linha para 1. Se não for, já está setado em 0
+			{
+				linhaM = 1;	//correspondente à segunda linha da matriz teclasTelefone_4L
+			}//fecha o if que define a linha da matriz caso a tecla seja 9
+			
+			
+			//verifica se a tecla pressionada novamente é igual à tecla pressionada anteriormente
+			if (teclaAtual == teclaAnterior)
+			{
+				//chama o timer que verifica se o intervalo de tempo foi excedido
+				while (intervaloCliques < INTERVALOMAX)
+				{
+					nApertos++;
+					if (nApertos == 4)	//zera o nApertos caso ele atinja o valor de 4, pois passa do limite da matriz
+					{
+						nApertos == 0;
+					}
+					
+					caracterPressionado = teclasTelefone_4L[linhaM][nApertos];
+					break;
+				} //fecha o while do intervalo de cliques
+			} //fecha o if que verifica se a tecla atual é igual à anterior
+			
+			
+		}	//fecha o if que verifica se a tecla é 7 ou 9
+	}
+
 // ------------------------------------- Funções pro Led --------------------------
 void LedConfig(){
 	DDRB |= 0x04;
@@ -282,17 +392,10 @@ void atraso(){
 	TIFR1 = (1<<0);				    //Limpa flag de estouro
 }
 
-int horarioAtual(int segundos, char min, char hora){ //Função para saber o horário
+void printa_hora(int segundos){
 	
-	atraso();
-	segundos++;						//incrementa a variável de segundos, sendo cada segundo equivalente a 4 segundos reais
-	
-	if(segundos >= 21600){			//Esse valor é igual ao numero de segundos no dia, e quando chegar irá resetar o valor.
-		segundos = 0;
-	}
-	
-	hora = segundos/900;			//transforma os segundos em horas
-	min = segundos/15 - 60*hora;	//transforma os segundos em minutos
+	int hora = segundos/900;			//transforma os segundos em horas
+	int min = segundos/15 - 60*hora;	//transforma os segundos em minutos
 	
 
 	LCD_control(0x80, CNFG);		//posiciona o cursor do LCD no inicio da linha
@@ -303,17 +406,26 @@ int horarioAtual(int segundos, char min, char hora){ //Função para saber o horár
 		enviaInt(hora/10);
 		enviaInt(hora%10);
 		
-		}else{enviaString("0");enviaInt(hora);}
+	}else{enviaString("0");enviaInt(hora);}
 		
 		
-		enviaString(":");
+	enviaString(":");
 		
-		if(min > 9){
-			enviaInt(min/10);
-			enviaInt(min%10);
+	if(min > 9){
+		enviaInt(min/10);
+		enviaInt(min%10);
 			
-		}else{enviaString("0");enviaInt(min);}
-			
+	}else{enviaString("0");enviaInt(min);}
+}
+
+int horarioAtual(int segundos){ //Função para saber o horário
+	
+	atraso();
+	segundos++;						//incrementa a variável de segundos, sendo cada segundo equivalente a 4 segundos reais
+	
+	if(segundos >= 21600){			//Esse valor é igual ao numero de segundos no dia, e quando chegar irá resetar o valor.
+		segundos = 0;
+	}		
 		return segundos;				//retorna a variavel segundos para que se tenha controle do tempo
 }
 
@@ -474,4 +586,56 @@ int cadastraCartao(char* placa){
 	}
 	return ind;							//retorna o indice para poder ser incrementado o valor inserido depois,
 	//se for igual a 15, atinjiu o limite e nao pode ser cadastrado
+}
+
+
+// ------------------------------------- Funções pra placa --------------------------
+int comparaString(char* str1, char* str2){ //compara duas strings de 7 algarismos para verificar se sao iguais
+	int i;
+	
+	for(i=0; i<7; i++){
+		if(str1[i] != str2[i])				//caso sejam diferentes, retorna 0
+		return 0;
+	}
+	return 1;								//caso sejam iguais, retorna 1
+}
+
+
+int validaPlaca(char* str){  //retorna 0 se a placa é inválida, e 1 se a placa é válida
+	int j, k, i = 0;
+	char aux[7];
+	
+	
+	while(i != 7){
+		
+		if(i < 3){
+			if(str[i] < 65){   //na tabela ascii o numero decimal equivalente em que começa a ter letras é 65
+				return 0;		//caso seja menor que 65 não é uma letra ou seja é invalida a placa, nas 3 primeiras letras
+			}
+		}
+		
+		if(i >= 3){
+			if(str[i] < 48 || str[i] > 57){		//verifica se os ultimos 4 caracteres sao numeros
+				if(str[i] >= 65){				//verifica se é uma letra
+					if(i != 4){					//caso seja uma letra, verifica se é no quinto caracter por causa das novas placas
+						return 0;				//caso não seja retorna placa invalida
+					}
+				}
+				else {							//caso não seja uma letra nem número retorna placa invalida
+					return 0;
+				}
+			}
+		}
+		i++;
+	}
+	
+	
+	for(j=0; j<3; j++){
+		for(k=0; k<7; k++){
+			aux[k] = placas_idosos_PNE[j][k];		//copia a placa do idoso para uma string auxiliar
+		}
+		if(comparaString(str, aux))				//compara as duas placas
+		return 2;							//retorna 2 se for caso especial, ex. idoso
+	}
+	return 1;									//retorna 1 se a placa for válida
 }
