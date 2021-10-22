@@ -37,23 +37,16 @@ void delay_ms(float tempo_ms){
 
 
 //configurações visuais do LCD
-#define LCD_SEG_LINHA 0xC0							//1100 0000 -> envia o cursor pra segunda linha
-#define LCD_HOME 	0x02							//0000 0010 -> volta o cursor para o inicio
-#define LCD_SHIFT 	0x1D							//0001 1101 -> incrementa o display pra direita
+#define LCD_SEG_LINHA	0xC0							//1100 0000 -> envia o cursor pra segunda linha
+#define LCD_HOME 		0x02							//0000 0010 -> volta o cursor para o inicio
+#define LCD_SHIFT 		0x1D							//0001 1101 -> incrementa o display pra direita
+#define LCD_NO_SHIFT	0x11							//0001 0001 -> decrementa o cursor pra esquerda
 
 // ------------------------------------- Funções pro LCD --------------------------
 void LCD_control(unsigned char c, unsigned char control_type);
 void LCD_init();
 void enviaString(char* str);
-void delay_lcd();
-void delay();
 
-void delay_lcd(){
-	char t;
-	t = 70;
-	while (t != 0)
-	t--;
-}
 
 
 void LCD_control(unsigned char c, unsigned char control_type){
@@ -67,25 +60,25 @@ void LCD_control(unsigned char c, unsigned char control_type){
 	else{ 
 		if(control_type == 0){
 		PORTB &= ~(1<<RS);
+		}
 	}
-}
 
-PORTD &= 0x0F; 						//0000 1111
-PORTD |= (c & 0xF0);				//Envia o primeiro nibble
+	PORTD &= 0x0F; 						//0000 1111
+	PORTD |= (c & 0xF0);				//Envia o primeiro nibble
 
-PORTB |= (1<<EN);					//seta EN como 1
-PORTB &= ~(1<<EN);					//seta EN como 0
+	PORTB |= (1<<EN);					//seta EN como 1
+	PORTB &= ~(1<<EN);					//seta EN como 0
 
-delay_ms(10);
+	delay_ms(10);
 
-c = c<<4;							//desloca 4 bits para a esquerda
-PORTD &= 0x0F; 						//1111 0000
-PORTD |= (c & 0xF0); 				//Envia o segundo nibble
+	c = c<<4;							//desloca 4 bits para a esquerda
+	PORTD &= 0x0F; 						//1111 0000
+	PORTD |= (c & 0xF0); 				//Envia o segundo nibble
 
-PORTB |= (1<<EN);					//seta EN como 1
-PORTB &= ~(1<<EN);	 				//seta EN como 0
+	PORTB |= (1<<EN);					//seta EN como 1
+	PORTB &= ~(1<<EN);	 				//seta EN como 0
 
-delay_ms(10);
+	delay_ms(10);
 }
 
 
@@ -114,6 +107,12 @@ void enviaChar(char c){
 	LCD_control(c, 1);    //envia o char c
 }
 
+void enviaCharEsq(char c){
+	//envia o char com o deslocamento pra esquerda
+	LCD_control(LCD_NO_SHIFT, 0);	//configura o display pra deslocar o cursor pra esquerda
+	LCD_control(c, 1);    //envia o char c
+
+}
 void enviaInt(int c){
 	LCD_control(c+48, 1); //soma 48 para ser o numero em char da tabela ascii
 }
@@ -164,7 +163,7 @@ char TecladoMatricial(){
 										{'7','8', '9'},
 										{'*','0', '#'},
 									};
-	char tecla_pressionada = ' ', teclaAnterior;
+	char tecla_pressionada = ' ';
 	
 	//início do algoritmo para varrer o teclado
 	for (int linha = 0; linha<4; linha++){				//percorre todas as linhas
@@ -220,11 +219,15 @@ int main(void)
 	char caracter;
 	
 	Keyboard_config();
+	
+	/*------------------ FUNÇÃO ---------------------*/
+	LCD_control(LCD_SEG_LINHA, 0);
 	char teclaAnterior = '/';
     /* Replace with your application code */
     while (1) 
     {
-	
+		
+		//
 		char teclaAtual = TecladoMatricial();
 	
 		if(teclaAtual != ' '){
@@ -279,7 +282,7 @@ int main(void)
 						caracter = teclasTelefone_3L[linhaM][nContagens];
 					}
 					
-					enviaChar(caracter);
+					enviaCharEsq(caracter);
 					
 				} //fecha o if teclaAtual == teclaAnterior
 				else{
