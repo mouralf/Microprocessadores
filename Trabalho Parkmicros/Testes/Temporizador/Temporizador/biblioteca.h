@@ -1,6 +1,10 @@
 #include <avr/io.h>
 #include <math.h>
 
+//pra usar é só colar (descomentado) a linha abaixo
+#include "biblioteca.h"
+
+
 // Biblioteca poggers
 /******************************************** SEÇÃO 1 - DEFINIÇÕES E PROTÓTIPOS *************************************/
 
@@ -40,7 +44,6 @@ void enviaString(char* str);
 void enviaChar(char c);
 void enviaCharEsq(char c);
 void enviaInt(int c);
-void delay_lcd();
 
 
 /************************************ TECLADO ************************************/
@@ -109,19 +112,19 @@ char placas_cartao[10][7] = {
 };
 
 int creditos_cartao[10][2] = {
-	30, 50, 	// R$30,5
-	8,  50,		// R$8,5
-	20,  0,		// R$20,0
-	30,  0,		// R$30,0
-	20,  0,		// R$20,0
-	10, 50,		// R$10,5
-	0, 	0,
-	0, 	0,
-	0, 	0,
-	0, 	0
+	{30, 50}, 	// R$30,5
+	{8,  50},		// R$8,5
+	{20,  0},		// R$20,0
+	{30,  0},		// R$30,0
+	{20,  0},		// R$20,0
+	{10, 50},		// R$10,5
+	{0,	0},
+	{0, 0},
+	{0, 0},
+	{0, 0},
 };
 
-void verificaCartao(char* placa);
+int verificaCartao(char* placa);
 int verificaSaldo(int ind, int valor);
 int cadastraCartao(char* placa);
 
@@ -253,35 +256,7 @@ void Keyboard_config(){
 	PORTC |= (1 << COLUNA3); //set PC3 as INPUT_PULLUP
 }
 
-void Keyboard_validation(){
-	unsigned char count = 0;
-	unsigned char teclaAntes = 0, teclaAtual;
-	
-	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
-		PORTD &= ~(1 << LINHA);							//coloca o pino referente à LINHA em LOW
-		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){		//percorre novamente todas as linhas
-			if(OUTRAS!= LINHA){							//verifica se OUTRAS é diferente de LINHA, se for
-				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
-			}
-		}
-		delay_ms(10);
-		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){	//percorre todas as colunas
-			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){	//se a coluna em questão for LOW, então significa que foi pressionada
-				
-				//LCD_control(LCD_CLR, CNFG);
-				
-				enviaInt(LINHA);
-				enviaInt(COLUNAS);
-				while(!((PINC & (1 << COLUNAS)) >> COLUNAS));	//bounce simples
-				delay_ms(10);
-				break;
-				
-			}
-		}
-		
-	}
-	delay_lcd();
-}
+
 
 char TecladoMatricial(){
 	//função para realizar a multiplexação pra identificar a tecla pressionada
@@ -311,10 +286,11 @@ char TecladoMatricial(){
 			}
 		}
 	}
-	delay_lcd();
+	delay_ms(10);
+
 	return tecla_pressionada;
 }
-
+/*
 char TecladoTelefonico(){
 	int intervaloCliques = 0;
 	
@@ -377,7 +353,7 @@ char TecladoTelefonico(){
 			
 		}	//fecha o if que verifica se a tecla é 7 ou 9
 	}
-
+*/
 // ------------------------------------- Funções pro Led --------------------------
 void LedConfig(){
 	DDRB |= 0x04;
@@ -466,7 +442,7 @@ float Buttons_validation(){
 	int contagem = 0;
 	
 	while(count != BOUNCE && contagem != 15){		//enquanto count não atingir 7 e espera sem toque no botão passar de determinado tempo com contagem
-		_delay_ms(50);								//delay para corrigir o debouncaa
+		delay_ms(50);								//delay para corrigir o debouncaa
 		contagem++;									// variável para determinar tempo de espera dentro desse while
 		if(PINB >> BOTAO1 == 1){					//se a leitura do registrador B deslocada em 3 bits for 1 foi pressionado o botão D11/PB3
 			botaoAtual = (PINB >> BOTAO1);			//le o estado atual do botão D11

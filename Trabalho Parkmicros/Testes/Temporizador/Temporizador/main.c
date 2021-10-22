@@ -4,7 +4,7 @@
 
 int main(void)
 {
-	//PartsConfig();
+	PartsConfig();
 	enviaChar('a');
 	while (1)
 	{
