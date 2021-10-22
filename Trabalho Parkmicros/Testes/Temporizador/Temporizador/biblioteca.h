@@ -257,7 +257,6 @@ void Keyboard_config(){
 }
 
 
-
 char TecladoMatricial(){
 	//função para realizar a multiplexação pra identificar a tecla pressionada
 	char teclasMatricial [4][3] =	{	//[linhas][colunas]
@@ -290,6 +289,7 @@ char TecladoMatricial(){
 
 	return tecla_pressionada;
 }
+
 /*
 char TecladoTelefonico(){
 	int intervaloCliques = 0;

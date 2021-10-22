@@ -598,7 +598,7 @@ int main(void)
 	Keyboard_config();
  3c0:	0e 94 db 00 	call	0x1b6	; 0x1b6 <Keyboard_config>
 	
-	
+	/*------------------ FUNÇÃO ---------------------*/
 	LCD_control(LCD_SEG_LINHA, 0);
  3c4:	60 e0       	ldi	r22, 0x00	; 0
  3c6:	80 ec       	ldi	r24, 0xC0	; 192
