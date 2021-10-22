@@ -155,6 +155,8 @@ char teclaAnterior = '/';
 int nContagens = 0;
 
 char TecladoMatricial(){
+	//LCD_control(LCD_SEG_LINHA, 0); //NECESSÁRIO CHAMAR ESSA FUNÇÃO ANTES DE PEGAR ALGO DO TECLADO
+	
 	//função para realizar a multiplexação pra identificar a tecla pressionada
 	char teclasMatricial [4][3] =	{	//[linhas][colunas]
 		{'1','2', '3'},
@@ -215,6 +217,7 @@ char TecladoMatricial(){
 		if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
 		{
 			caracter = teclaAtual;
+			enviaChar(caracter);
 		}//fecha o if tecla atual é 1, 0, #, *
 		
 		else{ //se não for 1, 0, # ou *
@@ -262,12 +265,13 @@ char TecladoMatricial(){
 					}
 					caracter = teclasTelefone_3L[linhaM][nContagens];
 				}
-				
+				enviaCharEsq(caracter);
 				
 			} //fecha o if teclaAtual == teclaAnterior
 			else{
 				nContagens = 0;
 				teclaAnterior = teclaAtual;
+				enviaChar(caracter);
 			} //else teclaAtual == teclaAnterior
 			
 		} //else tecla atual é 1, 0, #, *
@@ -293,13 +297,17 @@ int main(void)
 	
 	
 	Keyboard_config();
-	char envia;
+	
+	
+
 	while(1){
+		TecladoMatricial();
+		/*
 		envia = TecladoMatricial();
 		if(envia != ' ')
 		enviaChar(envia);
 		//enviaChar(teclaAnterior);
-		
+		*/
 	} //while
 	
 }//main
