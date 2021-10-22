@@ -299,6 +299,3 @@ int main(void)
 	} //while 
 	
 }//main
-
-
-
