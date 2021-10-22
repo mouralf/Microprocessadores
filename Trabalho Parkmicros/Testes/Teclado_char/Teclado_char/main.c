@@ -154,40 +154,73 @@ void delay_ms(float tempo_ms){
 }
 
 
-char tecla [4][3] = {	//[linhas][teclas]
-								{'1','2', '3'},
-								{'4','5', '6'},
-								{'7','8', '9'},
-								{'*','0', '#'},
-							};
 
-char Keyboard_validation(){
+
+char TecladoMatricial(){
+	//função para realizar a multiplexação pra identificar a tecla pressionada
+	char teclasMatricial [4][3] =	{	//[linhas][colunas]
+										{'1','2', '3'},
+										{'4','5', '6'},
+										{'7','8', '9'},
+										{'*','0', '#'},
+									};
+	char tecla_pressionada = ' ';
 	
+	//início do algoritmo para varrer o teclado
 	for (int linha = 0; linha<4; linha++){				//percorre todas as linhas
 		PORTD &= ~(1 << linha);							//coloca o pino referente à linha em LOW
-		for (int outras = 0; outras<4; outras++){		//percorre novamente todas as linhas
+		for (int outras = 0; outras < 4; outras++){		//percorre novamente todas as linhas
 			if(outras!= linha){							//verifica se outras é diferente de linha, se for
-				PORTD |= (1<<outras);					//coloca as outras portas em HIGH
+				PORTD |= (1 << outras);					//coloca as outras portas em HIGH
 			}
 		}
 		//delay_ms(10);
 		for (int colunas = 1; colunas <=3; colunas++){			//percorre todas as colunas
 			if(!((PINC & (1 << colunas)) >> colunas)){			//se a coluna em questão for LOW, então significa que foi pressionada
-				
-				//LCD_control(LCD_CLR, CNFG);
-				
-				enviaChar(tecla[linha][colunas-1]);
+				tecla_pressionada =  (teclasMatricial[linha][colunas-1]); //armazena a tecla pressionada
 				while(!((PINC & (1 << colunas)) >> colunas));	//debounce simples
 				//delay_ms(5);
 				break;
-				
 			}
 		}
-		
 	}
 	delay_lcd();
-	
+	return tecla_pressionada;
 }
+
+char TecladoTelefonico(){
+	
+	char teclaAtual = TecladoMatricial();
+	char nApertos = 0;
+	char caracterPressionado;	//utilizado para armazenar e retornar o caractere correspondente ao que foi pressionado
+	char nDec; //utilizado para pegar o equivalente em decimal
+	
+	//matriz com as teclas de telefone com apenas 3 letras por número
+	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
+										{'2', 'A', 'B', 'C'},	//linha 0
+										{'3', 'D', 'E', 'F'},	//linha 1
+										{'4', 'G', 'H', 'I'},	//linha 2
+										{'5', 'J', 'K', 'L'},	//linha 3
+										{'6', 'M', 'N', 'O'},	//linha 4
+										{'8', 'A', 'B', 'C'},	//linha 5
+									};	//fim de teclasTelefone_3L
+									
+	//matriz com as teclas de telefone com 4 letras por número
+	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
+										{'7', 'P', 'Q', 'R', 'S'}, //linha 0
+										{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
+									}; //fim de teclasTelefone_4L
+	
+	if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
+	{
+	}
+	
+	
+	
+
+									
+}//fim de TecladoTelefonico()
+
 
 int main(void)
 {
@@ -205,7 +238,24 @@ int main(void)
     /* Replace with your application code */
     while (1) 
     {
-		Keyboard_validation();
+		//TecladoMatricial();
+		/*
+		char tecla = TecladoMatricial();
+		if(tecla != ' '){
+			enviaChar(tecla);
+		}*/
+		
+		char teclaAtual = TecladoMatricial();
+		if(teclaAtual != ' '){
+			if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
+			{
+				enviaChar('d');
+			}
+			else
+			enviaChar(teclaAtual);
+		}
+		
+		
     }
 }
 
