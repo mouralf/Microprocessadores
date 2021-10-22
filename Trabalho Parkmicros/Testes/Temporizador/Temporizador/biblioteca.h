@@ -1,4 +1,8 @@
+#include <avr/io.h>
+#include <math.h>
+
 // Biblioteca poggers
+/******************************************** SEÇÃO 1 - DEFINIÇÕES E PROTÓTIPOS *************************************/
 
 /************************************ Delay ************************************/
 void delay_ms(float tempo_ms);
@@ -132,7 +136,10 @@ char const placas_idosos_PNE[3][7] = {
 int comparaString(char* str1, char* str2);
 int validaPlaca(char* placa);
 
-// ******************************************************* FUNÇÕES ********************************************************************************
+/************************ CONFIGURAÇÕES GERAIS ***************************/
+void PartsConfig();
+
+// ******************************************************* SEÇÃO 2 - FUNÇÕES ********************************************************************************
 // ------------------------------------- Função do Delay --------------------------
 void delay_ms(float tempo_ms){
 	/*Função que recebe o tempo em ms como parâmetro e proporciona um delay correspondente ao tempo solicitado*/
@@ -635,4 +642,13 @@ int validaPlaca(char* str){  //retorna 0 se a placa é inválida, e 1 se a placa é
 		return 2;							//retorna 2 se for caso especial, ex. idoso
 	}
 	return 1;									//retorna 1 se a placa for válida
+}
+
+
+// ------------------------------- Funções de inicialização ou configurações gerais
+void PartsConfig(){
+	//função responsável por configurar os periféricos e garantir a inicialização correta e de uma forma rápida
+	LCD_init();
+	Keyboard_config();
+	Buttons_config();
 }
