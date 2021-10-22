@@ -1,6 +1,23 @@
 #include <avr/io.h>
 #include <math.h>
 
+void delay_ms(float tempo_ms){
+	/*Função que recebe o tempo em ms como parâmetro e proporciona um delay correspondente ao tempo solicitado*/
+	TCCR0A = 0x2;		//modo CTC para o timer 0
+	TCCR0B = 0x5;		//PRESCALER de 1024
+	TCNT0 = 0;			//Zera timer
+	
+	//Sendo a frequência do timer de 16 MHz e um prescaler de 1024 temos: 16 MHz/1024 = 15625
+	//Desse modo, o tempo do timer é dado por 1/15625 = 64 us
+	//Assim, o número de contagens é dado por tempo_ms/64 * 1000
+	unsigned char n_contagem = round(tempo_ms/64*1000);		//número de contagens arredondado
+	OCR0A = n_contagem;										//Valor de comparação 3 contagens (1,66 ms)
+	
+	TIFR0 = (1 << 1);										//limpa flag de comparacao A
+	while((TIFR0 & (1 << 1)) == 0);
+}
+
+
 //-------------------------------------------- Definições do LCD --------------------------------------------
 //define os pinos de enable e registrer select
 #define RS PB0
@@ -47,7 +64,8 @@ void LCD_control(unsigned char c, unsigned char control_type){
 	if(control_type == 1){
 		PORTB |= (1<<RS);
 	}
-	else{ if(control_type == 0){
+	else{ 
+		if(control_type == 0){
 		PORTB &= ~(1<<RS);
 	}
 }
@@ -58,7 +76,7 @@ PORTD |= (c & 0xF0);				//Envia o primeiro nibble
 PORTB |= (1<<EN);					//seta EN como 1
 PORTB &= ~(1<<EN);					//seta EN como 0
 
-delay_lcd();
+delay_ms(10);
 
 c = c<<4;							//desloca 4 bits para a esquerda
 PORTD &= 0x0F; 						//1111 0000
@@ -67,7 +85,7 @@ PORTD |= (c & 0xF0); 				//Envia o segundo nibble
 PORTB |= (1<<EN);					//seta EN como 1
 PORTB &= ~(1<<EN);	 				//seta EN como 0
 
-delay_lcd();
+delay_ms(10);
 }
 
 
@@ -75,7 +93,7 @@ delay_lcd();
 void LCD_init(){
 	DDRB |= 0x03;								// Define os pinos PB0 e PB1 como output
 	DDRD |= 0xF0;								// Define os pinos PD4, PD5, PD6 e PD7 como output
-	delay_lcd();
+	delay_ms(20);
 	LCD_control(LCD_HOME, CNFG);				//TESTANDO
 	LCD_control(LCD_SET, CNFG); 				//function set
 	LCD_control(LCD_DSP_CTR, CNFG); 			//display control
@@ -100,10 +118,7 @@ void enviaInt(int c){
 	LCD_control(c+48, 1); //soma 48 para ser o numero em char da tabela ascii
 }
 
-void delay(){
-	unsigned char c;
-	for (c = 0; c<150; c++);
-}
+
 
 // -------------------------------- Definições pro teclado --------------------------
 //definições para as linhas
@@ -137,21 +152,6 @@ void Keyboard_config(){
 }
 
 
-void delay_ms(float tempo_ms){
-	/*Função que recebe o tempo em ms como parâmetro e proporciona um delay correspondente ao tempo solicitado*/
-	TCCR0A = 0x2;		//modo CTC para o timer 0
-	TCCR0B = 0x5;		//PRESCALER de 1024
-	TCNT0 = 0;			//Zera timer
-	
-	//Sendo a frequência do timer de 16 MHz e um prescaler de 1024 temos: 16 MHz/1024 = 15625
-	//Desse modo, o tempo do timer é dado por 1/15625 = 64 us
-	//Assim, o número de contagens é dado por tempo_ms/64 * 1000
-	unsigned char n_contagem = round(tempo_ms/64*1000);		//número de contagens arredondado
-	OCR0A = n_contagem;										//Valor de comparação 3 contagens (1,66 ms)
-	
-	TIFR0 = (1 << 1);										//limpa flag de comparacao A
-	while((TIFR0 & (1 << 1)) == 0);
-}
 
 
 
@@ -180,103 +180,122 @@ char TecladoMatricial(){
 				tecla_pressionada =  (teclasMatricial[linha][colunas-1]); //armazena a tecla pressionada
 				while(!((PINC & (1 << colunas)) >> colunas));	//debounce simples
 				//delay_ms(5);
-				teclaAnterior = tecla_pressionada;
 				break;
 			}
 		}
 	}
-	delay_lcd();
+	delay_ms(10);
+
 	return tecla_pressionada;
 }
-/*
-char TecladoTelefonico(){
-	int intervaloCliques = 0;
-	
-	
-	
-	char nApertos = 0;
-	char caracterPressionado;	//utilizado para armazenar e retornar o caractere correspondente ao que foi pressionado
-	char linhaM = 0, colunaM = 0; //utilizados para percorrer as matrizes das teclas
-									
-	//matriz com as teclas de telefone com 4 letras por número
-	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
-										{'7', 'P', 'Q', 'R', 'S'}, //linha 0
-										{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
-									}; //fim de teclasTelefone_4L
-	
-	
-	if (teclaAtual == '7')		//se a tecla em questão tiver 4 letras percorre a matriz teclasTelefone_4L 
-	{			
-		
-			//chama o timer que verifica se o intervalo de tempo foi excedido
-			while (intervaloCliques < INTERVALOMAX)
-			{
-				nApertos++;
-				if (nApertos == 4)	//zera o nApertos caso ele atinja o valor de 4, pois passa do limite da matriz
-				{
-					nApertos == 0;
-				}
-					
-				caracterPressionado = teclasTelefone_4L[linhaM][nApertos];
-				break;
-			} //fecha o while do intervalo de cliques
-			
-		
-	}	//fecha o if teclaAtual == 7
-	
-	return caracterPressionado;
-									
-}//fim de TecladoTelefonico()
-*/
+
 
 int main(void)
 {
 	//LCD
 	DDRB = 0x03;
 	DDRD = 0xF0;
-	delay_lcd();
+	delay_ms(10);
 	
 	LCD_init();
-	delay_lcd();
+	delay_ms(10);
 	
+	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
+		{'2', 'A', 'B', 'C'},	//linha 0
+		{'3', 'D', 'E', 'F'},	//linha 1
+		{'4', 'G', 'H', 'I'},	//linha 2
+		{'5', 'J', 'K', 'L'},	//linha 3
+		{'6', 'M', 'N', 'O'},	//linha 4
+		{'8', 'T', 'U', 'V'},	//linha 5
+	};	//fim de teclasTelefone_3L
+		
+		
+	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
+		{'7', 'P', 'Q', 'R', 'S'}, //linha 0
+		{'9', 'W', 'X', 'Y', 'Z'}, //linha 1
+	}; //fim de teclasTelefone_4L
+	
+	char nContagens = 0;
+	char linhaM;
+	char caracter;
 	
 	Keyboard_config();
 	char teclaAnterior = '/';
     /* Replace with your application code */
     while (1) 
     {
-		//TecladoMatricial();
-		/*
-		char tecla = TecladoMatricial();
-		if(tecla != ' '){
-			enviaChar(tecla);
-		}*/
-		
-	/*	char teclaAtual = TecladoMatricial();
+	
+		char teclaAtual = TecladoMatricial();
+	
 		if(teclaAtual != ' '){
-			if (teclaAtual == '7' || teclaAtual == '9')
+			if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
 			{
-				enviaChar('4');
-			}
-			else
-			enviaChar(teclaAtual);
-		}
-		*/
+				enviaChar(teclaAtual);
+			}//fecha o if tecla atual é 1, 0, #, *
+			
+			else{ //se não for 1, 0, # ou *
+				
+				if(teclaAtual == teclaAnterior){ //se a tecla pressionada for igual à pressionada anteriormente
+					nContagens ++;	//incrementa o número de contagens
+					switch (teclaAtual){	//altera a linha da matriz conforme o número
+						case '2':
+							linhaM = 0;
+							break;
+						case '3':
+							linhaM = 1;
+							break;
+						case '4':
+							linhaM = 2;
+							break;
+						case '5':
+							linhaM = 3;
+							break;
+						case '6':
+							linhaM = 4;
+							break;
+						case '7':
+							linhaM = 0;
+							break;
+						case '8':
+							linhaM = 5;
+							break;
+						case '9':			//se a tecla pressionada for 9, vai pra segunda linha da matriz
+							linhaM = 1;
+							break;
+					}
+					
+					if (teclaAtual == '7' || teclaAtual == '9')	//se a tecla for 7 ou 9, percorre a matriz de 4 letras
+					{
+						if (nContagens == 5){	//se atingir o limite do tamanho da matriz zera o contador
+							nContagens = 0;
+						}
+						caracter = teclasTelefone_4L[linhaM][nContagens];
+					}	//fecha o if que verifica se a tecla é 7 ou 9
+					
+					else{ //se a tecla for 2,3,4,5,6, ou 8
+						if (nContagens == 4){	//se atingir o limite do tamanho da matriz zera o contador
+							nContagens = 0;
+						}
+						caracter = teclasTelefone_3L[linhaM][nContagens];
+					}
+					
+					enviaChar(caracter);
+					
+				} //fecha o if teclaAtual == teclaAnterior
+				else{
+					nContagens = 0;
+					teclaAnterior = teclaAtual;
+					enviaChar(teclaAtual);
+					
+				} //else teclaAtual == teclaAnterior
+				
+			} //else tecla atual é 1, 0, #, *
+		
+		} //teclaAtual != ' '
+		
+	} //while 
 	
-	
-	char teclaAtual = TecladoMatricial();
-	
-	if(teclaAtual != ' '){
-		if(teclaAtual == teclaAnterior){
-			enviaChar('i');
-		}
-		else{
-			teclaAnterior = teclaAtual;
-			enviaChar('d');
-		}
-	}
-		}
-}
+}//main
 
 
 
