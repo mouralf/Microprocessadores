@@ -74,12 +74,12 @@ float Buttons_validation(){
 					
 				}
 
-void escreve_moedas(){
+int escreve_moedas(){
 	//função para escrever no lcd quando o usuário terminar de inserir o dinheiro 
 					
-	float val = 0;													// valor recebido para cada moeda inserida, iniciado com valor zero para ser somada
-	int contagem = 0;												// contagem para informar após um tempo sem apertar um botão o dinheiro total 
-																	//inserido
+	float val = 0;												// valor recebido para cada moeda inserida, iniciado com valor zero para ser somada
+	int contagem = 0;											// contagem para informar após um tempo sem apertar um botão o dinheiro total 
+																//inserido
 					
 	while(1){
 						
@@ -117,16 +117,17 @@ void escreve_moedas(){
 						
 	}
 					
-					
+	return val;				
 }
 
 int main(void){	
 	
 			Buttons_config();
+			float dinheiro;
 					
 			while(1){
 						
-						escreve_moedas();
+					dinheiro = escreve_moedas();
 						
 					}
 					
