@@ -1,10 +1,3 @@
-/*
- * TecladoMatricial_Teste.c
- *
- * Created: 19/10/2021 12:45:56
- * Author : luiz-
- */ 
-
 #include <avr/io.h>
 #include <math.h>
 
@@ -14,15 +7,15 @@
 #define EN PB1
 
 //variaveis para controle do LCD (valor pro RS)
-#define CNFG 0													//para configurar o display
-#define DADO 1													//para envio de dados
+#define CNFG 0										//para configurar o display
+#define DADO 1										//para envio de dados
 
 //definições para inicializar o LCD :)
 #define LCD_4BIT_MODE 0x02							// Modo 4-bits
-#define LCD_SET 0x28										//dois nibbles: 0010 1000 -> function set
-#define LCD_DSP_CTR 0x0C 								//dois nibbles: 0000 1100 -> display control
+#define LCD_SET 0x28								//dois nibbles: 0010 1000 -> function set
+#define LCD_DSP_CTR 0x0C 							//dois nibbles: 0000 1100 -> display control
 #define LCD_ENT_MODE 0x06 							//dois nibbles: 0000 0110 -> entry mode
-#define LCD_CLR 0x01										//dois nibbles: 0000 0001 -> display clear
+#define LCD_CLR 0x01								//dois nibbles: 0000 0001 -> display clear
 
 
 
@@ -160,27 +153,32 @@ void delay_ms(float tempo_ms){
 	while((TIFR0 & (1 << 1)) == 0);
 }
 
-void Keyboard_validation(){
-	unsigned char count = 0;
-	unsigned char teclaAntes = 0, teclaAtual;
+
+char tecla [4][3] = {	//[linhas][teclas]
+								{'1','2', '3'},
+								{'4','5', '6'},
+								{'7','8', '9'},
+								{'*','0', '#'},
+							};
+
+char Keyboard_validation(){
 	
-	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
-		PORTD &= ~(1 << LINHA);							//coloca o pino referente à LINHA em LOW
-		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){		//percorre novamente todas as linhas
-			if(OUTRAS!= LINHA){							//verifica se OUTRAS é diferente de LINHA, se for
-				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
+	for (int linha = 0; linha<4; linha++){				//percorre todas as linhas
+		PORTD &= ~(1 << linha);							//coloca o pino referente à linha em LOW
+		for (int outras = 0; outras<4; outras++){		//percorre novamente todas as linhas
+			if(outras!= linha){							//verifica se outras é diferente de linha, se for
+				PORTD |= (1<<outras);					//coloca as outras portas em HIGH
 			}
 		}
 		//delay_ms(10);
-		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){			//percorre todas as colunas
-			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){			//se a coluna em questão for LOW, então significa que foi pressionada
+		for (int colunas = 1; colunas <=3; colunas++){			//percorre todas as colunas
+			if(!((PINC & (1 << colunas)) >> colunas)){			//se a coluna em questão for LOW, então significa que foi pressionada
 				
 				//LCD_control(LCD_CLR, CNFG);
-			
-				enviaInt(LINHA);
-				enviaInt(COLUNAS);
-				while(!((PINC & (1 << COLUNAS)) >> COLUNAS));	//debounce simples
-				delay_ms(10);
+				
+				enviaChar(tecla[linha][colunas-1]);
+				while(!((PINC & (1 << colunas)) >> colunas));	//debounce simples
+				//delay_ms(5);
 				break;
 				
 			}
