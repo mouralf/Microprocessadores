@@ -3,29 +3,29 @@ Teclado.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         0000000c  00800100  00000298  0000030c  2**0
+  0 .data         0000000c  00800100  00000522  00000596  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000298  00000000  00000000  00000074  2**1
+  1 .text         00000522  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000318  2**0
+  2 .comment      00000030  00000000  00000000  000005a2  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000348  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000005d4  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000070  00000000  00000000  00000388  2**0
+  4 .debug_aranges 00000070  00000000  00000000  00000614  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000994  00000000  00000000  000003f8  2**0
+  5 .debug_info   000009d2  00000000  00000000  00000684  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000006fa  00000000  00000000  00000d8c  2**0
+  6 .debug_abbrev 00000746  00000000  00000000  00001056  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000492  00000000  00000000  00001486  2**0
+  7 .debug_line   00000480  00000000  00000000  0000179c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000ec  00000000  00000000  00001918  2**2
+  8 .debug_frame  000000f4  00000000  00000000  00001c1c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000041a  00000000  00000000  00001a04  2**0
+  9 .debug_str    00000433  00000000  00000000  00001d10  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000022e  00000000  00000000  00001e1e  2**0
+ 10 .debug_loc    00000254  00000000  00000000  00002143  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000060  00000000  00000000  0000204c  2**0
+ 11 .debug_ranges 00000060  00000000  00000000  00002397  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -70,16 +70,16 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e8 e9       	ldi	r30, 0x98	; 152
-  7c:	f2 e0       	ldi	r31, 0x02	; 2
+  7a:	e2 e2       	ldi	r30, 0x22	; 34
+  7c:	f5 e0       	ldi	r31, 0x05	; 5
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
   84:	ac 30       	cpi	r26, 0x0C	; 12
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
-  8a:	0e 94 3b 01 	call	0x276	; 0x276 <main>
-  8e:	0c 94 4a 01 	jmp	0x294	; 0x294 <_exit>
+  8a:	0e 94 46 01 	call	0x28c	; 0x28c <main>
+  8e:	0c 94 8f 02 	jmp	0x51e	; 0x51e <_exit>
 
 00000092 <__bad_interrupt>:
   92:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -241,207 +241,550 @@ void Keyboard_config(){
  196:	88 b9       	out	0x08, r24	; 8
  198:	08 95       	ret
 
-0000019a <delay_1ms>:
+0000019a <delay_ms>:
 }
 
 
-void delay_1ms(){
-	TCCR0A = 0x2;        //modo CTC para o timer 0
- 19a:	82 e0       	ldi	r24, 0x02	; 2
- 19c:	84 bd       	out	0x24, r24	; 36
-	TCCR0B = 0x4;		//clock/256
- 19e:	94 e0       	ldi	r25, 0x04	; 4
- 1a0:	95 bd       	out	0x25, r25	; 37
-	TCNT0 = 0;            //Zera timer
- 1a2:	16 bc       	out	0x26, r1	; 38
-	OCR0A = 3;        //Valor de comparação 63 contagens (1 ms)
- 1a4:	93 e0       	ldi	r25, 0x03	; 3
- 1a6:	97 bd       	out	0x27, r25	; 39
+void delay_ms(float tempo_ms){
+ 19a:	cf 93       	push	r28
+	/*Função que recebe o tempo em ms como parâmetro e proporciona um delay correspondente ao tempo solicitado*/
+	TCCR0A = 0x2;		//modo CTC para o timer 0
+ 19c:	c2 e0       	ldi	r28, 0x02	; 2
+ 19e:	c4 bd       	out	0x24, r28	; 36
+	TCCR0B = 0x5;		//PRESCALER de 1024
+ 1a0:	25 e0       	ldi	r18, 0x05	; 5
+ 1a2:	25 bd       	out	0x25, r18	; 37
+	TCNT0 = 0;			//Zera timer
+ 1a4:	16 bc       	out	0x26, r1	; 38
 	
-	TIFR0 = (1 << 1); //limpa flag de comparacao A
- 1a8:	85 bb       	out	0x15, r24	; 21
+	//Sendo a frequência do timer de 16 MHz e um prescaler de 1024 temos: 16 MHz/1024 = 15625
+	//Desse modo, o tempo do timer é dado por 1/15625 = 64 us
+	//Assim, o número de contagens é dado por tempo_ms/64 * 1000
+	unsigned char n_contagem = round(tempo_ms/64*1000);		//número de contagens arredondado
+ 1a6:	20 e0       	ldi	r18, 0x00	; 0
+ 1a8:	30 e0       	ldi	r19, 0x00	; 0
+ 1aa:	40 e8       	ldi	r20, 0x80	; 128
+ 1ac:	5c e3       	ldi	r21, 0x3C	; 60
+ 1ae:	0e 94 ad 01 	call	0x35a	; 0x35a <__mulsf3>
+ 1b2:	20 e0       	ldi	r18, 0x00	; 0
+ 1b4:	30 e0       	ldi	r19, 0x00	; 0
+ 1b6:	4a e7       	ldi	r20, 0x7A	; 122
+ 1b8:	54 e4       	ldi	r21, 0x44	; 68
+ 1ba:	0e 94 ad 01 	call	0x35a	; 0x35a <__mulsf3>
+ 1be:	0e 94 1a 02 	call	0x434	; 0x434 <round>
+ 1c2:	0e 94 55 01 	call	0x2aa	; 0x2aa <__fixunssfsi>
+	OCR0A = n_contagem;										//Valor de comparação 3 contagens (1,66 ms)
+ 1c6:	67 bd       	out	0x27, r22	; 39
+	
+	TIFR0 = (1 << 1);										//limpa flag de comparacao A
+ 1c8:	c5 bb       	out	0x15, r28	; 21
 	while((TIFR0 & (1 << 1)) == 0);
- 1aa:	a9 9b       	sbis	0x15, 1	; 21
- 1ac:	fe cf       	rjmp	.-4      	; 0x1aa <delay_1ms+0x10>
+ 1ca:	a9 9b       	sbis	0x15, 1	; 21
+ 1cc:	fe cf       	rjmp	.-4      	; 0x1ca <delay_ms+0x30>
 }
- 1ae:	08 95       	ret
+ 1ce:	cf 91       	pop	r28
+ 1d0:	08 95       	ret
 
-000001b0 <Keyboard_validation>:
+000001d2 <Keyboard_validation>:
 
 void Keyboard_validation(){	
- 1b0:	0f 93       	push	r16
- 1b2:	1f 93       	push	r17
- 1b4:	cf 93       	push	r28
- 1b6:	df 93       	push	r29
-	unsigned char count = 0;
+ 1d2:	0f 93       	push	r16
+ 1d4:	1f 93       	push	r17
+ 1d6:	cf 93       	push	r28
+ 1d8:	df 93       	push	r29
+	//unsigned char count = 0;
 	
 	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
- 1b8:	00 e0       	ldi	r16, 0x00	; 0
- 1ba:	10 e0       	ldi	r17, 0x00	; 0
- 1bc:	53 c0       	rjmp	.+166    	; 0x264 <Keyboard_validation+0xb4>
+ 1da:	c0 e0       	ldi	r28, 0x00	; 0
+ 1dc:	d0 e0       	ldi	r29, 0x00	; 0
+ 1de:	4d c0       	rjmp	.+154    	; 0x27a <Keyboard_validation+0xa8>
 		PORTD &= ~(1 << LINHA);							//coloca o pino referente à LINHA em LOW
- 1be:	2b b1       	in	r18, 0x0b	; 11
- 1c0:	81 e0       	ldi	r24, 0x01	; 1
- 1c2:	90 e0       	ldi	r25, 0x00	; 0
- 1c4:	00 2e       	mov	r0, r16
- 1c6:	02 c0       	rjmp	.+4      	; 0x1cc <Keyboard_validation+0x1c>
- 1c8:	88 0f       	add	r24, r24
- 1ca:	99 1f       	adc	r25, r25
- 1cc:	0a 94       	dec	r0
- 1ce:	e2 f7       	brpl	.-8      	; 0x1c8 <Keyboard_validation+0x18>
- 1d0:	80 95       	com	r24
- 1d2:	82 23       	and	r24, r18
- 1d4:	8b b9       	out	0x0b, r24	; 11
-		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){		//percorre novamente todas as linhas
- 1d6:	20 e0       	ldi	r18, 0x00	; 0
- 1d8:	30 e0       	ldi	r19, 0x00	; 0
- 1da:	10 c0       	rjmp	.+32     	; 0x1fc <Keyboard_validation+0x4c>
-			if(OUTRAS!= LINHA){							//verifica se OUTRAS é diferente de LINHA, se for
- 1dc:	02 17       	cp	r16, r18
- 1de:	13 07       	cpc	r17, r19
- 1e0:	59 f0       	breq	.+22     	; 0x1f8 <Keyboard_validation+0x48>
-				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
- 1e2:	4b b1       	in	r20, 0x0b	; 11
- 1e4:	81 e0       	ldi	r24, 0x01	; 1
- 1e6:	90 e0       	ldi	r25, 0x00	; 0
- 1e8:	02 2e       	mov	r0, r18
- 1ea:	02 c0       	rjmp	.+4      	; 0x1f0 <Keyboard_validation+0x40>
- 1ec:	88 0f       	add	r24, r24
- 1ee:	99 1f       	adc	r25, r25
- 1f0:	0a 94       	dec	r0
- 1f2:	e2 f7       	brpl	.-8      	; 0x1ec <Keyboard_validation+0x3c>
- 1f4:	84 2b       	or	r24, r20
+ 1e0:	2b b1       	in	r18, 0x0b	; 11
+ 1e2:	81 e0       	ldi	r24, 0x01	; 1
+ 1e4:	90 e0       	ldi	r25, 0x00	; 0
+ 1e6:	0c 2e       	mov	r0, r28
+ 1e8:	02 c0       	rjmp	.+4      	; 0x1ee <Keyboard_validation+0x1c>
+ 1ea:	88 0f       	add	r24, r24
+ 1ec:	99 1f       	adc	r25, r25
+ 1ee:	0a 94       	dec	r0
+ 1f0:	e2 f7       	brpl	.-8      	; 0x1ea <Keyboard_validation+0x18>
+ 1f2:	80 95       	com	r24
+ 1f4:	82 23       	and	r24, r18
  1f6:	8b b9       	out	0x0b, r24	; 11
+		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){		//percorre novamente todas as linhas
+ 1f8:	20 e0       	ldi	r18, 0x00	; 0
+ 1fa:	30 e0       	ldi	r19, 0x00	; 0
+ 1fc:	10 c0       	rjmp	.+32     	; 0x21e <Keyboard_validation+0x4c>
+			if(OUTRAS!= LINHA){							//verifica se OUTRAS é diferente de LINHA, se for
+ 1fe:	c2 17       	cp	r28, r18
+ 200:	d3 07       	cpc	r29, r19
+ 202:	59 f0       	breq	.+22     	; 0x21a <Keyboard_validation+0x48>
+				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
+ 204:	4b b1       	in	r20, 0x0b	; 11
+ 206:	81 e0       	ldi	r24, 0x01	; 1
+ 208:	90 e0       	ldi	r25, 0x00	; 0
+ 20a:	02 2e       	mov	r0, r18
+ 20c:	02 c0       	rjmp	.+4      	; 0x212 <Keyboard_validation+0x40>
+ 20e:	88 0f       	add	r24, r24
+ 210:	99 1f       	adc	r25, r25
+ 212:	0a 94       	dec	r0
+ 214:	e2 f7       	brpl	.-8      	; 0x20e <Keyboard_validation+0x3c>
+ 216:	84 2b       	or	r24, r20
+ 218:	8b b9       	out	0x0b, r24	; 11
 void Keyboard_validation(){	
-	unsigned char count = 0;
+	//unsigned char count = 0;
 	
 	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
 		PORTD &= ~(1 << LINHA);							//coloca o pino referente à LINHA em LOW
 		for (int OUTRAS = 0; OUTRAS<4; OUTRAS++){		//percorre novamente todas as linhas
- 1f8:	2f 5f       	subi	r18, 0xFF	; 255
- 1fa:	3f 4f       	sbci	r19, 0xFF	; 255
- 1fc:	24 30       	cpi	r18, 0x04	; 4
- 1fe:	31 05       	cpc	r19, r1
- 200:	6c f3       	brlt	.-38     	; 0x1dc <Keyboard_validation+0x2c>
- 202:	c1 e0       	ldi	r28, 0x01	; 1
- 204:	d0 e0       	ldi	r29, 0x00	; 0
- 206:	29 c0       	rjmp	.+82     	; 0x25a <Keyboard_validation+0xaa>
+ 21a:	2f 5f       	subi	r18, 0xFF	; 255
+ 21c:	3f 4f       	sbci	r19, 0xFF	; 255
+ 21e:	24 30       	cpi	r18, 0x04	; 4
+ 220:	31 05       	cpc	r19, r1
+ 222:	6c f3       	brlt	.-38     	; 0x1fe <Keyboard_validation+0x2c>
+ 224:	01 e0       	ldi	r16, 0x01	; 1
+ 226:	10 e0       	ldi	r17, 0x00	; 0
+ 228:	24 c0       	rjmp	.+72     	; 0x272 <Keyboard_validation+0xa0>
 				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
 			}
 		}
 		
 		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){	//percorre todas as colunas
 			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){	//se a coluna em questão for LOW
- 208:	46 b1       	in	r20, 0x06	; 6
- 20a:	81 e0       	ldi	r24, 0x01	; 1
- 20c:	90 e0       	ldi	r25, 0x00	; 0
- 20e:	9c 01       	movw	r18, r24
- 210:	0c 2e       	mov	r0, r28
- 212:	02 c0       	rjmp	.+4      	; 0x218 <Keyboard_validation+0x68>
- 214:	22 0f       	add	r18, r18
- 216:	33 1f       	adc	r19, r19
- 218:	0a 94       	dec	r0
- 21a:	e2 f7       	brpl	.-8      	; 0x214 <Keyboard_validation+0x64>
- 21c:	84 2f       	mov	r24, r20
- 21e:	90 e0       	ldi	r25, 0x00	; 0
- 220:	82 23       	and	r24, r18
- 222:	93 23       	and	r25, r19
- 224:	0c 2e       	mov	r0, r28
- 226:	02 c0       	rjmp	.+4      	; 0x22c <Keyboard_validation+0x7c>
- 228:	95 95       	asr	r25
- 22a:	87 95       	ror	r24
- 22c:	0a 94       	dec	r0
- 22e:	e2 f7       	brpl	.-8      	; 0x228 <Keyboard_validation+0x78>
- 230:	89 2b       	or	r24, r25
- 232:	19 f0       	breq	.+6      	; 0x23a <Keyboard_validation+0x8a>
- 234:	11 c0       	rjmp	.+34     	; 0x258 <Keyboard_validation+0xa8>
-				for (count = 0; count <= 250; count++);
- 236:	8f 5f       	subi	r24, 0xFF	; 255
- 238:	01 c0       	rjmp	.+2      	; 0x23c <Keyboard_validation+0x8c>
- 23a:	80 e0       	ldi	r24, 0x00	; 0
- 23c:	8b 3f       	cpi	r24, 0xFB	; 251
- 23e:	d8 f3       	brcs	.-10     	; 0x236 <Keyboard_validation+0x86>
-				delay_1ms();
- 240:	0e 94 cd 00 	call	0x19a	; 0x19a <delay_1ms>
-				delay_1ms();
- 244:	0e 94 cd 00 	call	0x19a	; 0x19a <delay_1ms>
-				delay_1ms();
- 248:	0e 94 cd 00 	call	0x19a	; 0x19a <delay_1ms>
+ 22a:	46 b1       	in	r20, 0x06	; 6
+ 22c:	81 e0       	ldi	r24, 0x01	; 1
+ 22e:	90 e0       	ldi	r25, 0x00	; 0
+ 230:	9c 01       	movw	r18, r24
+ 232:	00 2e       	mov	r0, r16
+ 234:	02 c0       	rjmp	.+4      	; 0x23a <Keyboard_validation+0x68>
+ 236:	22 0f       	add	r18, r18
+ 238:	33 1f       	adc	r19, r19
+ 23a:	0a 94       	dec	r0
+ 23c:	e2 f7       	brpl	.-8      	; 0x236 <Keyboard_validation+0x64>
+ 23e:	84 2f       	mov	r24, r20
+ 240:	90 e0       	ldi	r25, 0x00	; 0
+ 242:	82 23       	and	r24, r18
+ 244:	93 23       	and	r25, r19
+ 246:	00 2e       	mov	r0, r16
+ 248:	02 c0       	rjmp	.+4      	; 0x24e <Keyboard_validation+0x7c>
+ 24a:	95 95       	asr	r25
+ 24c:	87 95       	ror	r24
+ 24e:	0a 94       	dec	r0
+ 250:	e2 f7       	brpl	.-8      	; 0x24a <Keyboard_validation+0x78>
+ 252:	89 2b       	or	r24, r25
+ 254:	61 f4       	brne	.+24     	; 0x26e <Keyboard_validation+0x9c>
+				delay_ms(5);
+ 256:	60 e0       	ldi	r22, 0x00	; 0
+ 258:	70 e0       	ldi	r23, 0x00	; 0
+ 25a:	80 ea       	ldi	r24, 0xA0	; 160
+ 25c:	90 e4       	ldi	r25, 0x40	; 64
+ 25e:	0e 94 cd 00 	call	0x19a	; 0x19a <delay_ms>
 				enviaInt(LINHA);
- 24c:	c8 01       	movw	r24, r16
- 24e:	0e 94 a9 00 	call	0x152	; 0x152 <enviaInt>
+ 262:	ce 01       	movw	r24, r28
+ 264:	0e 94 a9 00 	call	0x152	; 0x152 <enviaInt>
 				enviaInt(COLUNAS);
- 252:	ce 01       	movw	r24, r28
- 254:	0e 94 a9 00 	call	0x152	; 0x152 <enviaInt>
+ 268:	c8 01       	movw	r24, r16
+ 26a:	0e 94 a9 00 	call	0x152	; 0x152 <enviaInt>
 			if(OUTRAS!= LINHA){							//verifica se OUTRAS é diferente de LINHA, se for
 				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
 			}
 		}
 		
 		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){	//percorre todas as colunas
- 258:	21 96       	adiw	r28, 0x01	; 1
- 25a:	c4 30       	cpi	r28, 0x04	; 4
- 25c:	d1 05       	cpc	r29, r1
- 25e:	a4 f2       	brlt	.-88     	; 0x208 <Keyboard_validation+0x58>
+ 26e:	0f 5f       	subi	r16, 0xFF	; 255
+ 270:	1f 4f       	sbci	r17, 0xFF	; 255
+ 272:	04 30       	cpi	r16, 0x04	; 4
+ 274:	11 05       	cpc	r17, r1
+ 276:	cc f2       	brlt	.-78     	; 0x22a <Keyboard_validation+0x58>
 }
 
 void Keyboard_validation(){	
-	unsigned char count = 0;
+	//unsigned char count = 0;
 	
 	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
- 260:	0f 5f       	subi	r16, 0xFF	; 255
- 262:	1f 4f       	sbci	r17, 0xFF	; 255
- 264:	04 30       	cpi	r16, 0x04	; 4
- 266:	11 05       	cpc	r17, r1
- 268:	0c f4       	brge	.+2      	; 0x26c <Keyboard_validation+0xbc>
- 26a:	a9 cf       	rjmp	.-174    	; 0x1be <Keyboard_validation+0xe>
+ 278:	21 96       	adiw	r28, 0x01	; 1
+ 27a:	c4 30       	cpi	r28, 0x04	; 4
+ 27c:	d1 05       	cpc	r29, r1
+ 27e:	0c f4       	brge	.+2      	; 0x282 <Keyboard_validation+0xb0>
+ 280:	af cf       	rjmp	.-162    	; 0x1e0 <Keyboard_validation+0xe>
 		}
 		*/
 	}
 	delay_lcd();
 	
 }
- 26c:	df 91       	pop	r29
- 26e:	cf 91       	pop	r28
- 270:	1f 91       	pop	r17
- 272:	0f 91       	pop	r16
- 274:	08 95       	ret
+ 282:	df 91       	pop	r29
+ 284:	cf 91       	pop	r28
+ 286:	1f 91       	pop	r17
+ 288:	0f 91       	pop	r16
+ 28a:	08 95       	ret
 
-00000276 <main>:
+0000028c <main>:
 
 int main(void)
 {
 	//LCD
 	DDRB = 0x03;
- 276:	83 e0       	ldi	r24, 0x03	; 3
- 278:	84 b9       	out	0x04, r24	; 4
+ 28c:	83 e0       	ldi	r24, 0x03	; 3
+ 28e:	84 b9       	out	0x04, r24	; 4
 	DDRD = 0xF0;
- 27a:	80 ef       	ldi	r24, 0xF0	; 240
- 27c:	8a b9       	out	0x0a, r24	; 10
+ 290:	80 ef       	ldi	r24, 0xF0	; 240
+ 292:	8a b9       	out	0x0a, r24	; 10
 	delay_lcd();
 	
 	LCD_init();
- 27e:	0e 94 73 00 	call	0xe6	; 0xe6 <LCD_init>
+ 294:	0e 94 73 00 	call	0xe6	; 0xe6 <LCD_init>
 	delay_lcd();
 	
 	
 	Keyboard_config();
- 282:	0e 94 ae 00 	call	0x15c	; 0x15c <Keyboard_config>
+ 298:	0e 94 ae 00 	call	0x15c	; 0x15c <Keyboard_config>
 	enviaString("Socorro :)");
- 286:	80 e0       	ldi	r24, 0x00	; 0
- 288:	91 e0       	ldi	r25, 0x01	; 1
- 28a:	0e 94 92 00 	call	0x124	; 0x124 <enviaString>
+ 29c:	80 e0       	ldi	r24, 0x00	; 0
+ 29e:	91 e0       	ldi	r25, 0x01	; 1
+ 2a0:	0e 94 92 00 	call	0x124	; 0x124 <enviaString>
 	
 	//PORTC = 0xFF;
     /* Replace with your application code */
     while (1) 
     {
 		Keyboard_validation();
- 28e:	0e 94 d8 00 	call	0x1b0	; 0x1b0 <Keyboard_validation>
- 292:	fd cf       	rjmp	.-6      	; 0x28e <main+0x18>
+ 2a4:	0e 94 e9 00 	call	0x1d2	; 0x1d2 <Keyboard_validation>
+ 2a8:	fd cf       	rjmp	.-6      	; 0x2a4 <main+0x18>
 
-00000294 <_exit>:
- 294:	f8 94       	cli
+000002aa <__fixunssfsi>:
+ 2aa:	0e 94 8c 01 	call	0x318	; 0x318 <__fp_splitA>
+ 2ae:	88 f0       	brcs	.+34     	; 0x2d2 <__fixunssfsi+0x28>
+ 2b0:	9f 57       	subi	r25, 0x7F	; 127
+ 2b2:	98 f0       	brcs	.+38     	; 0x2da <__fixunssfsi+0x30>
+ 2b4:	b9 2f       	mov	r27, r25
+ 2b6:	99 27       	eor	r25, r25
+ 2b8:	b7 51       	subi	r27, 0x17	; 23
+ 2ba:	b0 f0       	brcs	.+44     	; 0x2e8 <__fixunssfsi+0x3e>
+ 2bc:	e1 f0       	breq	.+56     	; 0x2f6 <__fixunssfsi+0x4c>
+ 2be:	66 0f       	add	r22, r22
+ 2c0:	77 1f       	adc	r23, r23
+ 2c2:	88 1f       	adc	r24, r24
+ 2c4:	99 1f       	adc	r25, r25
+ 2c6:	1a f0       	brmi	.+6      	; 0x2ce <__fixunssfsi+0x24>
+ 2c8:	ba 95       	dec	r27
+ 2ca:	c9 f7       	brne	.-14     	; 0x2be <__fixunssfsi+0x14>
+ 2cc:	14 c0       	rjmp	.+40     	; 0x2f6 <__fixunssfsi+0x4c>
+ 2ce:	b1 30       	cpi	r27, 0x01	; 1
+ 2d0:	91 f0       	breq	.+36     	; 0x2f6 <__fixunssfsi+0x4c>
+ 2d2:	0e 94 a6 01 	call	0x34c	; 0x34c <__fp_zero>
+ 2d6:	b1 e0       	ldi	r27, 0x01	; 1
+ 2d8:	08 95       	ret
+ 2da:	0c 94 a6 01 	jmp	0x34c	; 0x34c <__fp_zero>
+ 2de:	67 2f       	mov	r22, r23
+ 2e0:	78 2f       	mov	r23, r24
+ 2e2:	88 27       	eor	r24, r24
+ 2e4:	b8 5f       	subi	r27, 0xF8	; 248
+ 2e6:	39 f0       	breq	.+14     	; 0x2f6 <__fixunssfsi+0x4c>
+ 2e8:	b9 3f       	cpi	r27, 0xF9	; 249
+ 2ea:	cc f3       	brlt	.-14     	; 0x2de <__fixunssfsi+0x34>
+ 2ec:	86 95       	lsr	r24
+ 2ee:	77 95       	ror	r23
+ 2f0:	67 95       	ror	r22
+ 2f2:	b3 95       	inc	r27
+ 2f4:	d9 f7       	brne	.-10     	; 0x2ec <__fixunssfsi+0x42>
+ 2f6:	3e f4       	brtc	.+14     	; 0x306 <__fixunssfsi+0x5c>
+ 2f8:	90 95       	com	r25
+ 2fa:	80 95       	com	r24
+ 2fc:	70 95       	com	r23
+ 2fe:	61 95       	neg	r22
+ 300:	7f 4f       	sbci	r23, 0xFF	; 255
+ 302:	8f 4f       	sbci	r24, 0xFF	; 255
+ 304:	9f 4f       	sbci	r25, 0xFF	; 255
+ 306:	08 95       	ret
 
-00000296 <__stop_program>:
- 296:	ff cf       	rjmp	.-2      	; 0x296 <__stop_program>
+00000308 <__fp_split3>:
+ 308:	57 fd       	sbrc	r21, 7
+ 30a:	90 58       	subi	r25, 0x80	; 128
+ 30c:	44 0f       	add	r20, r20
+ 30e:	55 1f       	adc	r21, r21
+ 310:	59 f0       	breq	.+22     	; 0x328 <__fp_splitA+0x10>
+ 312:	5f 3f       	cpi	r21, 0xFF	; 255
+ 314:	71 f0       	breq	.+28     	; 0x332 <__fp_splitA+0x1a>
+ 316:	47 95       	ror	r20
+
+00000318 <__fp_splitA>:
+ 318:	88 0f       	add	r24, r24
+ 31a:	97 fb       	bst	r25, 7
+ 31c:	99 1f       	adc	r25, r25
+ 31e:	61 f0       	breq	.+24     	; 0x338 <__fp_splitA+0x20>
+ 320:	9f 3f       	cpi	r25, 0xFF	; 255
+ 322:	79 f0       	breq	.+30     	; 0x342 <__fp_splitA+0x2a>
+ 324:	87 95       	ror	r24
+ 326:	08 95       	ret
+ 328:	12 16       	cp	r1, r18
+ 32a:	13 06       	cpc	r1, r19
+ 32c:	14 06       	cpc	r1, r20
+ 32e:	55 1f       	adc	r21, r21
+ 330:	f2 cf       	rjmp	.-28     	; 0x316 <__fp_split3+0xe>
+ 332:	46 95       	lsr	r20
+ 334:	f1 df       	rcall	.-30     	; 0x318 <__fp_splitA>
+ 336:	08 c0       	rjmp	.+16     	; 0x348 <__fp_splitA+0x30>
+ 338:	16 16       	cp	r1, r22
+ 33a:	17 06       	cpc	r1, r23
+ 33c:	18 06       	cpc	r1, r24
+ 33e:	99 1f       	adc	r25, r25
+ 340:	f1 cf       	rjmp	.-30     	; 0x324 <__fp_splitA+0xc>
+ 342:	86 95       	lsr	r24
+ 344:	71 05       	cpc	r23, r1
+ 346:	61 05       	cpc	r22, r1
+ 348:	08 94       	sec
+ 34a:	08 95       	ret
+
+0000034c <__fp_zero>:
+ 34c:	e8 94       	clt
+
+0000034e <__fp_szero>:
+ 34e:	bb 27       	eor	r27, r27
+ 350:	66 27       	eor	r22, r22
+ 352:	77 27       	eor	r23, r23
+ 354:	cb 01       	movw	r24, r22
+ 356:	97 f9       	bld	r25, 7
+ 358:	08 95       	ret
+
+0000035a <__mulsf3>:
+ 35a:	0e 94 c0 01 	call	0x380	; 0x380 <__mulsf3x>
+ 35e:	0c 94 7e 02 	jmp	0x4fc	; 0x4fc <__fp_round>
+ 362:	0e 94 70 02 	call	0x4e0	; 0x4e0 <__fp_pscA>
+ 366:	38 f0       	brcs	.+14     	; 0x376 <__mulsf3+0x1c>
+ 368:	0e 94 77 02 	call	0x4ee	; 0x4ee <__fp_pscB>
+ 36c:	20 f0       	brcs	.+8      	; 0x376 <__mulsf3+0x1c>
+ 36e:	95 23       	and	r25, r21
+ 370:	11 f0       	breq	.+4      	; 0x376 <__mulsf3+0x1c>
+ 372:	0c 94 3e 02 	jmp	0x47c	; 0x47c <__fp_inf>
+ 376:	0c 94 6d 02 	jmp	0x4da	; 0x4da <__fp_nan>
+ 37a:	11 24       	eor	r1, r1
+ 37c:	0c 94 a7 01 	jmp	0x34e	; 0x34e <__fp_szero>
+
+00000380 <__mulsf3x>:
+ 380:	0e 94 84 01 	call	0x308	; 0x308 <__fp_split3>
+ 384:	70 f3       	brcs	.-36     	; 0x362 <__mulsf3+0x8>
+
+00000386 <__mulsf3_pse>:
+ 386:	95 9f       	mul	r25, r21
+ 388:	c1 f3       	breq	.-16     	; 0x37a <__mulsf3+0x20>
+ 38a:	95 0f       	add	r25, r21
+ 38c:	50 e0       	ldi	r21, 0x00	; 0
+ 38e:	55 1f       	adc	r21, r21
+ 390:	62 9f       	mul	r22, r18
+ 392:	f0 01       	movw	r30, r0
+ 394:	72 9f       	mul	r23, r18
+ 396:	bb 27       	eor	r27, r27
+ 398:	f0 0d       	add	r31, r0
+ 39a:	b1 1d       	adc	r27, r1
+ 39c:	63 9f       	mul	r22, r19
+ 39e:	aa 27       	eor	r26, r26
+ 3a0:	f0 0d       	add	r31, r0
+ 3a2:	b1 1d       	adc	r27, r1
+ 3a4:	aa 1f       	adc	r26, r26
+ 3a6:	64 9f       	mul	r22, r20
+ 3a8:	66 27       	eor	r22, r22
+ 3aa:	b0 0d       	add	r27, r0
+ 3ac:	a1 1d       	adc	r26, r1
+ 3ae:	66 1f       	adc	r22, r22
+ 3b0:	82 9f       	mul	r24, r18
+ 3b2:	22 27       	eor	r18, r18
+ 3b4:	b0 0d       	add	r27, r0
+ 3b6:	a1 1d       	adc	r26, r1
+ 3b8:	62 1f       	adc	r22, r18
+ 3ba:	73 9f       	mul	r23, r19
+ 3bc:	b0 0d       	add	r27, r0
+ 3be:	a1 1d       	adc	r26, r1
+ 3c0:	62 1f       	adc	r22, r18
+ 3c2:	83 9f       	mul	r24, r19
+ 3c4:	a0 0d       	add	r26, r0
+ 3c6:	61 1d       	adc	r22, r1
+ 3c8:	22 1f       	adc	r18, r18
+ 3ca:	74 9f       	mul	r23, r20
+ 3cc:	33 27       	eor	r19, r19
+ 3ce:	a0 0d       	add	r26, r0
+ 3d0:	61 1d       	adc	r22, r1
+ 3d2:	23 1f       	adc	r18, r19
+ 3d4:	84 9f       	mul	r24, r20
+ 3d6:	60 0d       	add	r22, r0
+ 3d8:	21 1d       	adc	r18, r1
+ 3da:	82 2f       	mov	r24, r18
+ 3dc:	76 2f       	mov	r23, r22
+ 3de:	6a 2f       	mov	r22, r26
+ 3e0:	11 24       	eor	r1, r1
+ 3e2:	9f 57       	subi	r25, 0x7F	; 127
+ 3e4:	50 40       	sbci	r21, 0x00	; 0
+ 3e6:	9a f0       	brmi	.+38     	; 0x40e <__EEPROM_REGION_LENGTH__+0xe>
+ 3e8:	f1 f0       	breq	.+60     	; 0x426 <__EEPROM_REGION_LENGTH__+0x26>
+ 3ea:	88 23       	and	r24, r24
+ 3ec:	4a f0       	brmi	.+18     	; 0x400 <__EEPROM_REGION_LENGTH__>
+ 3ee:	ee 0f       	add	r30, r30
+ 3f0:	ff 1f       	adc	r31, r31
+ 3f2:	bb 1f       	adc	r27, r27
+ 3f4:	66 1f       	adc	r22, r22
+ 3f6:	77 1f       	adc	r23, r23
+ 3f8:	88 1f       	adc	r24, r24
+ 3fa:	91 50       	subi	r25, 0x01	; 1
+ 3fc:	50 40       	sbci	r21, 0x00	; 0
+ 3fe:	a9 f7       	brne	.-22     	; 0x3ea <__mulsf3_pse+0x64>
+ 400:	9e 3f       	cpi	r25, 0xFE	; 254
+ 402:	51 05       	cpc	r21, r1
+ 404:	80 f0       	brcs	.+32     	; 0x426 <__EEPROM_REGION_LENGTH__+0x26>
+ 406:	0c 94 3e 02 	jmp	0x47c	; 0x47c <__fp_inf>
+ 40a:	0c 94 a7 01 	jmp	0x34e	; 0x34e <__fp_szero>
+ 40e:	5f 3f       	cpi	r21, 0xFF	; 255
+ 410:	e4 f3       	brlt	.-8      	; 0x40a <__EEPROM_REGION_LENGTH__+0xa>
+ 412:	98 3e       	cpi	r25, 0xE8	; 232
+ 414:	d4 f3       	brlt	.-12     	; 0x40a <__EEPROM_REGION_LENGTH__+0xa>
+ 416:	86 95       	lsr	r24
+ 418:	77 95       	ror	r23
+ 41a:	67 95       	ror	r22
+ 41c:	b7 95       	ror	r27
+ 41e:	f7 95       	ror	r31
+ 420:	e7 95       	ror	r30
+ 422:	9f 5f       	subi	r25, 0xFF	; 255
+ 424:	c1 f7       	brne	.-16     	; 0x416 <__EEPROM_REGION_LENGTH__+0x16>
+ 426:	fe 2b       	or	r31, r30
+ 428:	88 0f       	add	r24, r24
+ 42a:	91 1d       	adc	r25, r1
+ 42c:	96 95       	lsr	r25
+ 42e:	87 95       	ror	r24
+ 430:	97 f9       	bld	r25, 7
+ 432:	08 95       	ret
+
+00000434 <round>:
+ 434:	0e 94 8c 01 	call	0x318	; 0x318 <__fp_splitA>
+ 438:	e8 f0       	brcs	.+58     	; 0x474 <round+0x40>
+ 43a:	9e 37       	cpi	r25, 0x7E	; 126
+ 43c:	e8 f0       	brcs	.+58     	; 0x478 <round+0x44>
+ 43e:	96 39       	cpi	r25, 0x96	; 150
+ 440:	b8 f4       	brcc	.+46     	; 0x470 <round+0x3c>
+ 442:	9e 38       	cpi	r25, 0x8E	; 142
+ 444:	48 f4       	brcc	.+18     	; 0x458 <round+0x24>
+ 446:	67 2f       	mov	r22, r23
+ 448:	78 2f       	mov	r23, r24
+ 44a:	88 27       	eor	r24, r24
+ 44c:	98 5f       	subi	r25, 0xF8	; 248
+ 44e:	f9 cf       	rjmp	.-14     	; 0x442 <round+0xe>
+ 450:	86 95       	lsr	r24
+ 452:	77 95       	ror	r23
+ 454:	67 95       	ror	r22
+ 456:	93 95       	inc	r25
+ 458:	95 39       	cpi	r25, 0x95	; 149
+ 45a:	d0 f3       	brcs	.-12     	; 0x450 <round+0x1c>
+ 45c:	b6 2f       	mov	r27, r22
+ 45e:	b1 70       	andi	r27, 0x01	; 1
+ 460:	6b 0f       	add	r22, r27
+ 462:	71 1d       	adc	r23, r1
+ 464:	81 1d       	adc	r24, r1
+ 466:	20 f4       	brcc	.+8      	; 0x470 <round+0x3c>
+ 468:	87 95       	ror	r24
+ 46a:	77 95       	ror	r23
+ 46c:	67 95       	ror	r22
+ 46e:	93 95       	inc	r25
+ 470:	0c 94 44 02 	jmp	0x488	; 0x488 <__fp_mintl>
+ 474:	0c 94 5f 02 	jmp	0x4be	; 0x4be <__fp_mpack>
+ 478:	0c 94 a7 01 	jmp	0x34e	; 0x34e <__fp_szero>
+
+0000047c <__fp_inf>:
+ 47c:	97 f9       	bld	r25, 7
+ 47e:	9f 67       	ori	r25, 0x7F	; 127
+ 480:	80 e8       	ldi	r24, 0x80	; 128
+ 482:	70 e0       	ldi	r23, 0x00	; 0
+ 484:	60 e0       	ldi	r22, 0x00	; 0
+ 486:	08 95       	ret
+
+00000488 <__fp_mintl>:
+ 488:	88 23       	and	r24, r24
+ 48a:	71 f4       	brne	.+28     	; 0x4a8 <__fp_mintl+0x20>
+ 48c:	77 23       	and	r23, r23
+ 48e:	21 f0       	breq	.+8      	; 0x498 <__fp_mintl+0x10>
+ 490:	98 50       	subi	r25, 0x08	; 8
+ 492:	87 2b       	or	r24, r23
+ 494:	76 2f       	mov	r23, r22
+ 496:	07 c0       	rjmp	.+14     	; 0x4a6 <__fp_mintl+0x1e>
+ 498:	66 23       	and	r22, r22
+ 49a:	11 f4       	brne	.+4      	; 0x4a0 <__fp_mintl+0x18>
+ 49c:	99 27       	eor	r25, r25
+ 49e:	0d c0       	rjmp	.+26     	; 0x4ba <__fp_mintl+0x32>
+ 4a0:	90 51       	subi	r25, 0x10	; 16
+ 4a2:	86 2b       	or	r24, r22
+ 4a4:	70 e0       	ldi	r23, 0x00	; 0
+ 4a6:	60 e0       	ldi	r22, 0x00	; 0
+ 4a8:	2a f0       	brmi	.+10     	; 0x4b4 <__fp_mintl+0x2c>
+ 4aa:	9a 95       	dec	r25
+ 4ac:	66 0f       	add	r22, r22
+ 4ae:	77 1f       	adc	r23, r23
+ 4b0:	88 1f       	adc	r24, r24
+ 4b2:	da f7       	brpl	.-10     	; 0x4aa <__fp_mintl+0x22>
+ 4b4:	88 0f       	add	r24, r24
+ 4b6:	96 95       	lsr	r25
+ 4b8:	87 95       	ror	r24
+ 4ba:	97 f9       	bld	r25, 7
+ 4bc:	08 95       	ret
+
+000004be <__fp_mpack>:
+ 4be:	9f 3f       	cpi	r25, 0xFF	; 255
+ 4c0:	31 f0       	breq	.+12     	; 0x4ce <__fp_mpack_finite+0xc>
+
+000004c2 <__fp_mpack_finite>:
+ 4c2:	91 50       	subi	r25, 0x01	; 1
+ 4c4:	20 f4       	brcc	.+8      	; 0x4ce <__fp_mpack_finite+0xc>
+ 4c6:	87 95       	ror	r24
+ 4c8:	77 95       	ror	r23
+ 4ca:	67 95       	ror	r22
+ 4cc:	b7 95       	ror	r27
+ 4ce:	88 0f       	add	r24, r24
+ 4d0:	91 1d       	adc	r25, r1
+ 4d2:	96 95       	lsr	r25
+ 4d4:	87 95       	ror	r24
+ 4d6:	97 f9       	bld	r25, 7
+ 4d8:	08 95       	ret
+
+000004da <__fp_nan>:
+ 4da:	9f ef       	ldi	r25, 0xFF	; 255
+ 4dc:	80 ec       	ldi	r24, 0xC0	; 192
+ 4de:	08 95       	ret
+
+000004e0 <__fp_pscA>:
+ 4e0:	00 24       	eor	r0, r0
+ 4e2:	0a 94       	dec	r0
+ 4e4:	16 16       	cp	r1, r22
+ 4e6:	17 06       	cpc	r1, r23
+ 4e8:	18 06       	cpc	r1, r24
+ 4ea:	09 06       	cpc	r0, r25
+ 4ec:	08 95       	ret
+
+000004ee <__fp_pscB>:
+ 4ee:	00 24       	eor	r0, r0
+ 4f0:	0a 94       	dec	r0
+ 4f2:	12 16       	cp	r1, r18
+ 4f4:	13 06       	cpc	r1, r19
+ 4f6:	14 06       	cpc	r1, r20
+ 4f8:	05 06       	cpc	r0, r21
+ 4fa:	08 95       	ret
+
+000004fc <__fp_round>:
+ 4fc:	09 2e       	mov	r0, r25
+ 4fe:	03 94       	inc	r0
+ 500:	00 0c       	add	r0, r0
+ 502:	11 f4       	brne	.+4      	; 0x508 <__fp_round+0xc>
+ 504:	88 23       	and	r24, r24
+ 506:	52 f0       	brmi	.+20     	; 0x51c <__fp_round+0x20>
+ 508:	bb 0f       	add	r27, r27
+ 50a:	40 f4       	brcc	.+16     	; 0x51c <__fp_round+0x20>
+ 50c:	bf 2b       	or	r27, r31
+ 50e:	11 f4       	brne	.+4      	; 0x514 <__fp_round+0x18>
+ 510:	60 ff       	sbrs	r22, 0
+ 512:	04 c0       	rjmp	.+8      	; 0x51c <__fp_round+0x20>
+ 514:	6f 5f       	subi	r22, 0xFF	; 255
+ 516:	7f 4f       	sbci	r23, 0xFF	; 255
+ 518:	8f 4f       	sbci	r24, 0xFF	; 255
+ 51a:	9f 4f       	sbci	r25, 0xFF	; 255
+ 51c:	08 95       	ret
+
+0000051e <_exit>:
+ 51e:	f8 94       	cli
+
+00000520 <__stop_program>:
+ 520:	ff cf       	rjmp	.-2      	; 0x520 <__stop_program>

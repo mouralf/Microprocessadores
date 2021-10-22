@@ -124,7 +124,7 @@ void delay(){
 #define COLUNA2 PC2	//A2
 #define COLUNA3 PC3	//A3
 
-#define BOUNCE 10
+#define BOUNCE 7
 void Keyboard_config(){
 	//configura as linhas como saída
 	DDRD |= (1 << DDD0); //set PD0 as OUTPUT
@@ -160,8 +160,9 @@ void delay_ms(float tempo_ms){
 	while((TIFR0 & (1 << 1)) == 0);
 }
 
-void Keyboard_validation(){	
-	//unsigned char count = 0;
+void Keyboard_validation(){
+	unsigned char count = 0;
+	unsigned char teclaAntes = 0, teclaAtual;
 	
 	for (int LINHA = 0; LINHA<4; LINHA++){				//percorre todas as linhas
 		PORTD &= ~(1 << LINHA);							//coloca o pino referente à LINHA em LOW
@@ -170,52 +171,21 @@ void Keyboard_validation(){
 				PORTD |= (1<<OUTRAS);					//coloca as outras portas em HIGH
 			}
 		}
-		
+		delay_ms(10);
 		for (int COLUNAS = 1; COLUNAS <=3; COLUNAS++){	//percorre todas as colunas
-			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){	//se a coluna em questão for LOW
-				delay_ms(5);
+			if(!((PINC & (1 << COLUNAS)) >> COLUNAS)){	//se a coluna em questão for LOW, então significa que foi pressionada
+				
+				//LCD_control(LCD_CLR, CNFG);
+			
 				enviaInt(LINHA);
 				enviaInt(COLUNAS);
+				while(!((PINC & (1 << COLUNAS)) >> COLUNAS));	//bounce simples
+				delay_ms(10);
+				break;
+				
 			}
 		}
-	
-	/*
-	//coloca as linhas em estado LOW (exceto a LINHA1)
-	PORTD |=	(1 << LINHA1);		//PD0 = 1
-	PORTD |=	(1 << LINHA2);		//PD1 = 1
-	PORTD |=	(1 << LINHA3);		//PD2 = 1
-	PORTD &= ~ (1 << LINHA4);		//PD3 = 0	
-	//enviaChar('L');
-	//enviaInt(1);
-	
-	if(!((PINC &  (1 <<  COLUNA1)) >> COLUNA1)){
-		enviaChar('*');
-	}
-	
-	if(!((PINC &  (1 <<  COLUNA2)) >> COLUNA2)){
-		enviaInt(0);
-	}
-	
-	if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
-		enviaChar('#');
-	}
-	
-
-		if(!((PINC &  (1 <<  COLUNA1)) >> COLUNA1)){
-			enviaInt(LINHA);
-			enviaChar('*');
-		}
 		
-		if(!((PINC &  (1 <<  COLUNA2)) >> COLUNA2)){
-			enviaInt(LINHA);
-			enviaInt(0);
-		}
-		
-		if(!((PINC &  (1 <<  COLUNA3)) >> COLUNA3)){
-			enviaInt(LINHA);
-			enviaChar('#');
-		}
-		*/
 	}
 	delay_lcd();
 	
@@ -233,7 +203,7 @@ int main(void)
 	
 	
 	Keyboard_config();
-	enviaString("Socorro :)");
+	//enviaString("Socorro :)");
 	
 	//PORTC = 0xFF;
     /* Replace with your application code */
