@@ -164,7 +164,7 @@ char TecladoMatricial(){
 										{'7','8', '9'},
 										{'*','0', '#'},
 									};
-	char tecla_pressionada = ' ';
+	char tecla_pressionada = ' ', teclaAnterior;
 	
 	//início do algoritmo para varrer o teclado
 	for (int linha = 0; linha<4; linha++){				//percorre todas as linhas
@@ -180,6 +180,7 @@ char TecladoMatricial(){
 				tecla_pressionada =  (teclasMatricial[linha][colunas-1]); //armazena a tecla pressionada
 				while(!((PINC & (1 << colunas)) >> colunas));	//debounce simples
 				//delay_ms(5);
+				teclaAnterior = tecla_pressionada;
 				break;
 			}
 		}
@@ -187,25 +188,15 @@ char TecladoMatricial(){
 	delay_lcd();
 	return tecla_pressionada;
 }
-
+/*
 char TecladoTelefonico(){
 	int intervaloCliques = 0;
 	
-	char teclaAtual = TecladoMatricial();
-	char teclaAnterior = teclaAtual;
+	
+	
 	char nApertos = 0;
 	char caracterPressionado;	//utilizado para armazenar e retornar o caractere correspondente ao que foi pressionado
 	char linhaM = 0, colunaM = 0; //utilizados para percorrer as matrizes das teclas
-	
-	//matriz com as teclas de telefone com apenas 3 letras por número
-	char teclasTelefone_3L [8][4] = { //[linhas][colunas]
-										{'2', 'A', 'B', 'C'},	//linha 0
-										{'3', 'D', 'E', 'F'},	//linha 1
-										{'4', 'G', 'H', 'I'},	//linha 2
-										{'5', 'J', 'K', 'L'},	//linha 3
-										{'6', 'M', 'N', 'O'},	//linha 4
-										{'8', 'A', 'B', 'C'},	//linha 5
-									};	//fim de teclasTelefone_3L
 									
 	//matriz com as teclas de telefone com 4 letras por número
 	char teclasTelefone_4L [2][5] = { //[linhas][colunas]
@@ -214,50 +205,29 @@ char TecladoTelefonico(){
 									}; //fim de teclasTelefone_4L
 	
 	
-	//se a tecla apertada não tiver letras, retorna direto o caracter correspondente
-	if (teclaAtual == '1' || teclaAtual == '0' || teclaAtual == '*' || teclaAtual == '#')
-	{
-		caracterPressionado = teclaAtual;
-	} //fecha o if que verifica se a tecla pressionada foi 1, 0, * ou #
-	
-	else //se a tecla pressionada não for 1, 0, * ou #
-	{	
-		if (teclaAtual == '7' || teclaAtual == '9')		//se a tecla em questão tiver 4 letras percorre a matriz teclasTelefone_4L 
-		{
-			if (teclaAtual == 9)						//se a tecla pressionada for a 9, altera a linha para 1. Se não for, já está setado em 0
+	if (teclaAtual == '7')		//se a tecla em questão tiver 4 letras percorre a matriz teclasTelefone_4L 
+	{			
+		
+			//chama o timer que verifica se o intervalo de tempo foi excedido
+			while (intervaloCliques < INTERVALOMAX)
 			{
-				linhaM = 1;	//correspondente à segunda linha da matriz teclasTelefone_4L
-			}//fecha o if que define a linha da matriz caso a tecla seja 9
-			
-			
-			//verifica se a tecla pressionada novamente é igual à tecla pressionada anteriormente
-			if (teclaAtual == teclaAnterior)
-			{
-				//chama o timer que verifica se o intervalo de tempo foi excedido
-				while (intervaloCliques < INTERVALOMAX)
+				nApertos++;
+				if (nApertos == 4)	//zera o nApertos caso ele atinja o valor de 4, pois passa do limite da matriz
 				{
-					nApertos++;
-					if (nApertos == 4)	//zera o nApertos caso ele atinja o valor de 4, pois passa do limite da matriz
-					{
-						nApertos == 0;
-					}
+					nApertos == 0;
+				}
 					
-					caracterPressionado = teclasTelefone_4L[linhaM][nApertos];
-					break;
-				} //fecha o while do intervalo de cliques
-			} //fecha o if que verifica se a tecla atual é igual à anterior
+				caracterPressionado = teclasTelefone_4L[linhaM][nApertos];
+				break;
+			} //fecha o while do intervalo de cliques
 			
-			
-		}	//fecha o if que verifica se a tecla é 7 ou 9
-	}
+		
+	}	//fecha o if teclaAtual == 7
 	
-	
-	
-	
-
+	return caracterPressionado;
 									
 }//fim de TecladoTelefonico()
-
+*/
 
 int main(void)
 {
@@ -271,7 +241,7 @@ int main(void)
 	
 	
 	Keyboard_config();
-
+	char teclaAnterior = '/';
     /* Replace with your application code */
     while (1) 
     {
@@ -282,7 +252,7 @@ int main(void)
 			enviaChar(tecla);
 		}*/
 		
-		char teclaAtual = TecladoMatricial();
+	/*	char teclaAtual = TecladoMatricial();
 		if(teclaAtual != ' '){
 			if (teclaAtual == '7' || teclaAtual == '9')
 			{
@@ -291,9 +261,21 @@ int main(void)
 			else
 			enviaChar(teclaAtual);
 		}
-		
-		
-    }
+		*/
+	
+	
+	char teclaAtual = TecladoMatricial();
+	
+	if(teclaAtual != ' '){
+		if(teclaAtual == teclaAnterior){
+			enviaChar('i');
+		}
+		else{
+			teclaAnterior = teclaAtual;
+			enviaChar('d');
+		}
+	}
+		}
 }
 
 
