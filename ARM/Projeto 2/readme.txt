@@ -1,0 +1,1 @@
+Só move pra pasta de funções quando tiver funcionando :)
