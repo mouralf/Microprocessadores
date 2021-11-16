@@ -1,0 +1,12 @@
+- Escreve no LCD
+- Botão de troca informação LCD
+- Leitura dos pedais (LUIZ)
+- Velocidade instantanea
+- Velocidade média
+- Quilometragem
+- Monitoramento da temperatura (PEDRO)
+- Monitoramento da umidade 
+- Condições críticas
+
+
+------- OPÇÃO B --------
