@@ -1,5 +1,5 @@
-- Escreve no LCD
-- Botão de troca informação LCD
+- Escreve no LCD (LUIZ)
+- Botão de troca informação LCD (LUIZ)
 - Leitura dos pedais (LUIZ)
 - Velocidade instantanea
 - Velocidade média

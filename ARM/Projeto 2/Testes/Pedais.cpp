@@ -10,20 +10,23 @@ Ticker timerPedais; //interrupção que será chamada repetidamente pra ler os p
 
 //função que será chamada a cada 0.5 s pra verificar o estado dos pedais
 void LeituraPedais(){
+    
     //verifica se o freio foi pressionado
     if (btnFreio.read()){
         ledInjecao = ledInjecao - 0.5; //decrementa o duty cycle em 50%
     }
+
     //se não estiver pressionado, verifica se o acelerador foi pressionado
     else if (btnAcelerador.read()){
         ledInjecao = ledInjecao + 0.1; //incrementa o duty cycle
     }
-    //se nenhum tiver sido pressionado
-    else{
+    
+    else{   //se nenhum tiver sido pressionado
         ledInjecao = ledInjecao - 0.1;
         //espera 1s
         wait(0.5f); //como a funçao é chamada a cada 0.5 s, então se não tiver nada pressionado espera 0.5 s
     }
+    
     printf("\nDuty cycle injecao: %f \n", ledInjecao);
 
     //impede que o duty cycle fique negativo
