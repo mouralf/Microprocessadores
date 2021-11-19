@@ -144,7 +144,7 @@ float hodometro(int velocidade_media, float quilometragem, int exibicao){ 			// 
 
     if(exibicao == 0){                              //exibe a quilometragem no LCD se estiver no exibicaoice especifico
         lcd.cls();
-        lcd.printf("Quilomet.: %d km/h ", quilometragem);   
+        lcd.printf("Quilom.: %d km/h ", quilometragem);   
 		printf("Quilometragem: %d km", quilometragem);
     }
 
