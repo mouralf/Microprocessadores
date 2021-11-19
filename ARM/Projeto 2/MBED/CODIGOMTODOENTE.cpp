@@ -31,9 +31,9 @@ int temp_umid(int exibicao){                    //função para verificar e prin
             if(exibicao == 3) {  
                 lcd.cls();
                 lcd.locate(3, 3);
-                lcd.printf("Temperatura: %.2f C", temp);
+                lcd.printf("Temp.: %.2f C", temp);
             }
-            lcd.locate(3, 13);
+            lcd.locate(3, 13);                  //coloca o cursor na segunda linha
             lcd.printf("Motor Critico");
             cont_crit++;                        //aumenta o contador de tempo em que o motor esta critico
         }
@@ -41,17 +41,17 @@ int temp_umid(int exibicao){                    //função para verificar e prin
             if(exibicao == 3) {  
                 lcd.cls();
                 lcd.locate(3, 3);
-                lcd.printf("Temperatura: %.2f C", temp);
+                lcd.printf("Temp.: %.2f C", temp);
             }
-            lcd.locate(3, 13);
+            lcd.locate(3, 13);                  //coloca o cursor na segunda linha
             lcd.printf("Motor Aquecido");
         }
     }
     else{                                       //caso não esteja muito quente, apenas mostra a temperatura no LCD
         if(exibicao == 3) {  
             lcd.cls();
-            lcd.locate(3, 3);
-            lcd.printf("Temperatura: %.2f C", temp);
+            lcd.locate(3, 3);                 
+            lcd.printf("Temp.: %.2f C", temp);
         }
     }
 
@@ -61,7 +61,7 @@ int temp_umid(int exibicao){                    //função para verificar e prin
             if(exibicao == 4){
                 lcd.cls();
                 lcd.locate(3, 3);
-                lcd.printf("Umidade: %.2f %%", umidade);
+                lcd.printf("Umidade: %.2f%", umidade);
             }
             lcd.locate(3, 13);                  
             lcd.printf("Umidade critica"); 
@@ -71,7 +71,7 @@ int temp_umid(int exibicao){                    //função para verificar e prin
             if(exibicao == 4){
                 lcd.cls();
                 lcd.locate(3, 3);
-                lcd.printf("Umidade: %.2f %%", umidade);
+                lcd.printf("Umidade: %.2f%", umidade);
             }
             lcd.locate(3, 13);
             lcd.printf("Umidade baixa");
@@ -100,9 +100,7 @@ int temp_umid(int exibicao){                    //função para verificar e prin
 void ExibeVelocInst(int velInsta){      //função para printar a velocidade instantanea 
     if(exibicao == 1){                                //SE TIVER A FUNÇÃO DE PRINTAR FORA DESTA, APAGAR O IF 
         lcd.cls();
-        lcd.printf("Velocidade:");
-        lcd.locate(3, 13);              //coloca o cursor na segunda linha
-        lcd.printf("%d km/h ", velInsta);
+        lcd.printf("Vinst: %d km/h", velInsta);
         printf("Velocidade: %d km/h ", velInsta);
     }
 }
@@ -115,9 +113,7 @@ int velocidadeMedia(int vel1, int vel2, int exibicao){ //função para calcular 
     if(exibicao == 2){                                  //SE TIVER A FUNÇÃO DE PRINTAR FORA DESTA, APAGAR O IF 
         lcd.cls();
         lcd.locate(3, 3);
-        lcd.printf("Velocidade Media:");
-        lcd.locate(3, 12);              //coloca o cursor na segunda linha
-        lcd.printf("%d km/h ", velMedia);
+        lcd.printf("Vmed: %d km/h ", velMedia);
         printf("Velocidade: %d km/h ", velMedia);
     }
     return velMedia;
@@ -132,9 +128,7 @@ int velMediaViagem(int velAtual, int velTotal, int exibicao){  //função para c
 
     if(exibicao == 5){                          //printa a velocidade media total da viagem até o momento 
         lcd.cls();                                 //TALVEZ TIRAR ISSO DEPOIS
-        lcd.printf("Vel. Med. Tot. :");
-        lcd.locate(3, 12);              //coloca o cursor na segunda linha
-        lcd.printf("%d km/h ", velMediaAtual);
+        lcd.printf("Vtot: %d km/h ", velMediaAtual);
         printf("Velocidade Media Total: %d km/h ", velMediaAtual);
     }
         
@@ -150,9 +144,7 @@ float hodometro(int velocidade_media, float quilometragem, int exibicao){ 			// 
 
     if(exibicao == 0){                              //exibe a quilometragem no LCD se estiver no exibicaoice especifico
         lcd.cls();
-        lcd.printf("Quilometragem:");
-        lcd.locate(3, 12);              //coloca o cursor na segunda linha
-        lcd.printf("%d km/h ", quilometragem);   
+        lcd.printf("Quilomet.: %d km/h ", quilometragem);   
 		printf("Quilometragem: %d km", quilometragem);
     }
 

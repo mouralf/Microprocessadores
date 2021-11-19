@@ -10,7 +10,6 @@ void LimiteVelocidade(int distTrecho){  //recebe como parâmetro a distância do
             ledInjecao = 0.8;           //limita a ficar em 0.8 (80 km/h)
 }
 
-
 /*============================== Função principal ==============*/
 
 
