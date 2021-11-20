@@ -44,7 +44,7 @@ void LimiteDC(){ //função que limita o duty cycle a ficar entre 0 e 1
 }
 
 void VerificaPedais(){
-    if((btnFreio.read() == 0) && (btnAcelerador.read() == 0))   //se nenhum pedal estiver pressionado
+    if(!(btnFreio.read()) && !(btnAcelerador.read()))   //se nenhum pedal estiver pressionado
         ledInjecao = ledInjecao - 0.1;  //decrementa o pwm
     
     printf("\nDuty cycle injecao livre: %.2f \n", ledInjecao.read());
