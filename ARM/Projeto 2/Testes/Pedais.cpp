@@ -18,7 +18,9 @@ void LeituraPedais(){                   //função que será chamada a cada 0.5 
     else if (btnAcelerador.read()){     //se não estiver pressionado, verifica se o acelerador foi pressionado
         ledInjecao = ledInjecao + 0.1;  //incrementa o duty cycle
     }
- 
+    
+    LimiteDC();
+
     printf("\nDuty cycle injecao pressionado: %.2f \n", ledInjecao.read());
     
 }
@@ -40,6 +42,7 @@ void VerificaPedais(){
     if(!(btnFreio.read()) && !(btnAcelerador.read()))   //se nenhum pedal estiver pressionado
         ledInjecao = ledInjecao - 0.1;  //decrementa o pwm
     
+    LimiteDC();
     printf("\nDuty cycle injecao livre: %.2f \n", ledInjecao.read());
 
 }
