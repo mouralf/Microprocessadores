@@ -18,14 +18,7 @@ void LeituraPedais(){                   //função que será chamada a cada 0.5 
     else if (btnAcelerador.read()){     //se não estiver pressionado, verifica se o acelerador foi pressionado
         ledInjecao = ledInjecao + 0.1;  //incrementa o duty cycle
     }
-    
-    else{                               //se nenhum tiver sido pressionado
-        ledInjecao = ledInjecao - 0.1;
-        //espera 1s
-        pedaisLivres.attach(callback(&LeituraPedais), 0.5f);                     //como a funçao LeituraPedais é chamada a cada 0.5 s, então se não tiver nada pressionado chama novamente a função depois de 0.5s
-    }
-    
-    
+ 
     printf("\nDuty cycle injecao pressionado: %.2f \n", ledInjecao.read());
     
 }
@@ -57,7 +50,7 @@ void VerificaPedais(){
 int main() {
     ledInjecao.period_ms(20);                   //define o período do PWM do led de injeção como 20 ms 
     
-    timerPedais.attach(&LeituraPedais, 0.5f);   //chama a função que le o estado dos pedais a cada 0.5s
-    pedaisLivres.attach(&VerificaPedais, 1.0f);
+    timerPedais.attach(&LeituraPedais, 0.5f);   //chama a função que le o estado dos pedais a cada 0.5 s
+    pedaisLivres.attach(&VerificaPedais, 3.0f); //chama a função que verifica se nenhum pedal foi pressionado a cada 1 s
     wait_ms(osWaitForever);
 }
