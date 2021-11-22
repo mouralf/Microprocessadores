@@ -30,7 +30,7 @@ Timer tempoIdaVolta;    //timer criado para marcar o tempo de viagem
 Timer tempoVolta;
 int marcadores[3] = {0, 0, 0};  //utilizado para marcar os pontos dos marcadores
 char statusViagem = 0;  //utilizado para saber se está em ida ou volta e pra iniciar ou finalizar a ida ou volta
-
+int posicaoFinal;
 
 
 void BotaoFuncao(){ //função utilizada para indicar o que deve ser exibido no display (velocidade, quilometragem, umidade)
@@ -72,7 +72,7 @@ void BotaoSelec(){        //função utilizada para algumas configurações
             ControleViagem();
             break;
         
-        case 6:                                 //se tiver sendo exibida a opçao de marcador 
+        case 6:                 //se tiver sendo exibida a opçao de marcador 
             SetaMarcadores();
             break;
     }
@@ -105,7 +105,7 @@ void ControleViagem(){
 }
 
 void SetaMarcadores(){
-    if(statusViagem == 1 && exibicao == 6){  //se estiver na viagem de ida
+    if(statusViagem == 1){  //se estiver na viagem de ida
          for (int i = 0; i<3; i++){
                     if(marcadores[i] == 0) //se o marcador atual estiver em 0
                         marcadores[i] = quilometragem - posicaoInicial;    //marca a distancia percorrida no momento, por ex. 2200
@@ -125,7 +125,7 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
     }
 
      if(statusViagem == 2){  //se estiver no trajeto de volta
-        posicaoVolta = posicaoFinal - (quilometragem - posicaoFinal); //por exemplo, 2400
+        posicaoVolta = posicaoFinal - (quilometragem - posicaoFinal); //por exemplo, 2400 se quilometragem = 2600 e posicao final = 2500
 
         for(int i = 3; i = 0; i--){                 //itera sobre os últimos marcadores pra definir o mais próximo
             if(posicaoVolta > marcadores[i]){       //verifica se a posiçao atual do carro é maior do que a posiçao do marcador
@@ -138,10 +138,16 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
         distProxMarcador = posicaoVolta - proximoMarcador;  //a distancia do marcador vai ser a posição atual - a posição do proximo marcador
         distMarcadorAnterior = posicaoVolta - marcadorAnterior;  //a distancia do marcador anterior pega a posiçao atual - a posiçao do marcador anterior
 
-        if(distProxMarcador <= 200 || distMarcadorAnterior <= 200){ //se a distancia do marcador estiver a menos que 200 m
+        if(distProxMarcador <= 200){ //se a distancia do marcador estiver a menos que 200 m
             ledAlerta = 1;  //acende o LED amarelo pra indicar que está próximo
             lcd.cls();  //limpa o LCD
             lcd.printf("Marcador a %dm", distProxMarcador); //exibe no display a distancia do marcador
+        }
+
+        if(distMarcadorAnterior <= 200){
+            ledAlerta = 1;
+            lcd.cls();  //limpa o LCD
+            lcd.printf("Marcador a %dm", distMarcadorAnterior); //exibe no display a distancia do marcador
         }
 
         if(distProxMarcador <= 100 || distMarcadorAnterior <= 100){   //se a distancia do marcador for menor que 100 m
