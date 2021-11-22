@@ -169,8 +169,8 @@ int main() {
     timer_500ms.attach(&timer500ms, 0.5f);      //chama a funcao para executar as funcoes a cada 500 ms
     timer_40ms.attach(&timer40ms, 0.04f);        //chama a funcao para executar as funcoes a cada 40 ms
     
-    btnFuncao.fall(&BotaoFuncao);   //chama a função de mudar o que vai ser exibido no display ao pressionar o botão
-    btnFuncao.fall(&BotaoSelec);   //chama a função de selecionar alguma configuraçaõ ao pressionar o botão
+    btnFuncao.fall(&BtnFncPressed);   //chama a função de mudar o que vai ser exibido no display ao pressionar o botão
+    btnSelec.fall(&BtnSelecPressed);   //chama a função de selecionar alguma configuraçaõ ao pressionar o botão
 
     //chama a cada 500 ms a função de ControleMarcadores if(exibicao == 6)
 

@@ -14,8 +14,8 @@ Ticker pedaisLivres;           //interrupção que será chamada quando não tiv
 C12832 lcd(SPI_MOSI, SPI_SCK, SPI_MISO, p8, p11);
 int exibicao = 0;       //variavel para controlar a exibicao no LCD
 
-InterruptIn botFunc(p10);
-InterruptIn botSelec(p11);
+InterruptIn btnFuncao(p10);
+InterruptIn btnSelec(p11);
 
 
 /********* TEMPERATURA E UMIDADE *************/
@@ -107,7 +107,7 @@ void hodometro(float velocidade_media){ 			// acumula distancia total e calcula 
     }
 } 
 /**************************************************** EXIBICAO DE VELOCIDADE *********************************************************/
-void ExibeVelocInst(int exibicao){      //função para printar a velocidade instantanea 
+void ExibeVelocInst(){      //função para printar a velocidade instantanea 
     if(exibicao == 1){                                //SE TIVER A FUNÇÃO DE PRINTAR FORA DESTA, APAGAR O IF 
         lcd.cls();
         lcd.locate(3, 3);              //coloca o cursor na segunda linha
@@ -115,7 +115,7 @@ void ExibeVelocInst(int exibicao){      //função para printar a velocidade ins
     }
 }
 
-float velocidadeMedia(int exibicao){ //função para calcular e printar a velocidade média
+float velocidadeMedia(){ //função para calcular e printar a velocidade média
     static float velMedia;
     static float vel1, vel2 = 0, i = 0;
 
@@ -143,7 +143,7 @@ void buzzer(){                  //funcao do buzzer
 }
 
 
-int temp_umid(int exibicao){                    //função para verificar e printar a temperatura
+int temp_umid(){                    //função para verificar e printar a temperatura
     float temp = sht31.readTemperature();       //lê a temperatura atual do motor
     float umidade = sht31.readHumidity();       //lê a umidade atual do motor 
     int crit = 0;                               //variavel para controlar se o carro deverá parar ou nao por causas criticas
@@ -387,20 +387,20 @@ int main() {
     timer_40ms.attach(&timer40ms, 0.04f);        //chama a funcao para executar as funcoes a cada 40 ms
     
     btnFuncao.fall(&BtnFncPressed);   //chama a função de mudar o que vai ser exibido no display ao pressionar o botão
-    btnFuncao.fall(&BtnSelecPressed);   //chama a função de selecionar alguma configuraçaõ ao pressionar o botão
+    btnSelec.fall(&BtnSelecPressed);   //chama a função de selecionar alguma configuraçaõ ao pressionar o botão
 
     while(1){
         
        
         if(timer500 == 1){              //a cada 0,5 seg as funcoes são chamadas
-            ExibeVelocInst(exibicao);   //funcao para a velocidade constante
-            velMedia = velocidadeMedia(exibicao);  //funcao para a velocidade media
+            ExibeVelocInst();   //funcao para a velocidade constante
+            velMedia = velocidadeMedia();  //funcao para a velocidade media
             hodometro(velMedia); //funcao para a quilometragem          
             timer500 = 0;               //reseta a variavel q permite a execução das funções acima
         }
         
         if(timer40 == 1){               //a cada 40 ms as funcoes sao chamadas
-            crit = temp_umid(exibicao); //funcao para a temperatura e umidade
+            crit = temp_umid(); //funcao para a temperatura e umidade
             
             if(exibicao == 6){
                 ControleMarcadores();   //chama a funçao para controle de marcadores
