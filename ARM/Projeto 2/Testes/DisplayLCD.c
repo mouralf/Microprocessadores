@@ -2,28 +2,56 @@
 #include "C12832.h"
 
 C12832 lcd(SPI_MOSI, SPI_SCK, SPI_MISO, p8, p11);   //configuração do display
-int quilometragem = 400;
+
 
 /*======================= Exibição no display LCD ==============*/
 //botão para selecionar a função desejada 
 InterruptIn btnFuncao(p10); //declarado como interrupção pra ser chamado sempre que pressionado
 //botão para selecionar ou zerar valores
-InterruptIn btnConfig(p11);
+InterruptIn btnSelec(p11);
 //função utilizada para indicar o que deve ser exibido no display (velocidade, quilometragem, umidade)
 
+//variáveis de controle
 char exibicao; //será incrementado para realizar o controle do que será exibido
-
 int statusViagem = 0;
+
+
+//variáveis só pra demonstração
+int quilometragem = 400;
 int posicao = 800;
+float ledInjecao = 0.3;
+int velMedia = 70;
+
+
 
 void BtnSelecPressed(){        //função utilizada para algumas configurações
+    lcd.cls();          //limpa o display
+    lcd.locate(3,3);    //coloca na posição inicial
     switch (exibicao){          //se tiver sendo exibindo a quilometragem
-        case 0:
+        case 0: //quilometragem
             quilometragem = 0;  //zera a quilometragem
+            lcd.printf("Quilometragem: %d", quilometragem);
             break;
         
-        case 5:                 //se tiver sendo exibido a opçao de alterar status da viagem
-            statusViagem++;
+        case 1: //vel. instantanea
+            lcd.printf("Vinst: %.2f km/h", ledInjecao*100);
+            break;
+        
+        case 2: //vel. media
+            lcd.printf("Vmed: %d km/h", velMedia);
+            break;
+
+        case 3: //temperatura
+            lcd.printf("Temperatura: 30 C");
+            break;
+        
+        case 4: //umidade
+            lcd.printf("Umidade: 10");
+            break;
+        
+        case 5: //status da viagem
+            statusViagem++; // 1 ->inicio da ida; 2 = fim da ida e inicio da volta; 3 = fim da volta
+            
             lcd.printf("Status: %d", statusViagem);
             
             if(statusViagem >= 3){
@@ -31,7 +59,7 @@ void BtnSelecPressed(){        //função utilizada para algumas configurações
             }
             break;
         
-        case 6:                 //se tiver sendo exibida a opçao de marcador 
+        case 6: //marcadores
             lcd.printf("Marcado em %d", posicao);
             break;
             
@@ -41,11 +69,11 @@ void BtnSelecPressed(){        //função utilizada para algumas configurações
    
 }
 
-void BtnFncPressed(){ //função utilizada para indicar o que deve ser exibido no display (velocidade, quilometragem, umidade)
-    lcd.cls();
-    lcd.locate(3,3);
+void BtnFncPressed(){ //função utilizada para indicar o que deve ser exibido no display 
+    lcd.cls();          //limpa o display
+    lcd.locate(3,3);    //coloca na posição inicial
     
-    exibicao++;
+    exibicao++;         //incrementa a variavel de controle
     
     if(exibicao >= 7){
         exibicao = 0;  //zera exibicao pra não passar das opções disponíveis
@@ -62,51 +90,38 @@ void BtnFncPressed(){ //função utilizada para indicar o que deve ser exibido n
     */
 
     switch(exibicao){
-        case 0:
+        case 0: //quilometragem
             lcd.printf("Quilometragem");
-            printf("Quilometragem");
             break;
 
-        case 1:
+        case 1: //velocidade inst.
             lcd.printf("Velocidade inst.");
-            printf("Velocidade inst.");
             break;
 
-        case 2:
+        case 2: //vel. media
             lcd.printf("Velocidade media");
-            printf("Velocidade media");
             break;
 
-
-        case 3:
+        case 3: //temperatura
             lcd.printf("Temperatura");
-            printf("Temperatura");
             break;
 
-
-        case 4:
+        case 4: //umidade
              lcd.printf("Umidade");
-             printf("Umidade");
             break;
 
-
-        case 5:
+        case 5: //status da viagem
             lcd.printf("Status viagem");
-            printf("Alterar status viagem");
             break;
 
-        case 6:
+        case 6: //marcadores
             lcd.printf("Marcadores");
-            printf("Marcadores");
             break;
         
         default:
             exibicao = 0;
 
     }
-
-
-    
    
 }
 
@@ -120,7 +135,7 @@ int main() {
     lcd.printf("Quilometragem");
     
         btnFuncao.fall(&BtnSelecPressed);   //interrupção chamada sempre que o botão pra selecionar função for pressionado
-        btnConfig.fall(&BtnFncPressed);  //interrupção chamada para zerar a quilometragem
+        btnSelec.fall(&BtnFncPressed);  //interrupção chamada para zerar a quilometragem
     
     wait_ms(osWaitForever);
 }

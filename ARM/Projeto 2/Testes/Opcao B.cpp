@@ -80,35 +80,54 @@ void BotaoSelec(){        //função utilizada para algumas configurações
 }
 
 void ControleViagem(){
-     statusViagem++;       //incrementa o status da viagem
+    static int distanciaIda = 0;
+    int velMedViagem;
+
+    statusViagem++;       //incrementa o status da viagem
+
+    lcd.cls();
+    lcd.locate(3,3);
+
+    if(statusViagem == 0){
+        lcd.printf("Iniciar ida");
+    }
 
     if(statusViagem == 1){  //início da ida
+        lcd.printf("Finalizar ida");
         posicaoInicial = quilometragem;    //pega a quilometragem atual, por ex. x = 1000
         tempoIdaVolta.start();              //inicia a contagem pra saber o tempo de percurso de ida e volta
     }
 
     if(statusViagem == 2){  //finaliza a ida e dá inicio à volta
+        lcd.printf("Finalizar volta");
         tempoVolta.start(); //inicia o timer da viagem de volta
         posicaoFinal = quilometragem; //marca a posição final do trajeto, por ex. x = 2500
         distanciaIda = posicaoFinal - posicaoInicial;    //a distancia da ida vai ser a posiçao final - inicial, por ex. x = 1500
     }   
 
     if(statusViagem == 3){  //finaliza a volta
+        lcd.printf("Volta finalizada!");
         tempoIdaVolta.stop();   //para o timer da viagem total
         tempoVolta.stop();      //para o timer da viagem de volta
         velMedViagem = ((distanciaIda*2)/tempoIdaVolta.read())*3600; //multiplica por 2 a distancia de ida para ter a distancia total e divide pelo tempo total do percurso
         lcd.cls();  //limpa o display
+        lcd.locate(3,3);
         lcd.printf("Vmed: %f km/h", velMedViagem);  //exibe a velocidade media da viagem
         lcd.locate(3,13);   //coloca na segunda linha
         lcd.printf("D: %dm t: %dh",distanciaIda*2, tempoIdaVolta/3600); //exibe a distancia percorrida e o tempo gasto
     }
+
+    if(statusViagem >=3 )
+        statusViagem = 0;   //reseta o status para ida
 }
+
 
 void SetaMarcadores(){
     if(statusViagem == 1){  //se estiver na viagem de ida
          for (int i = 0; i<3; i++){
                     if(marcadores[i] == 0) //se o marcador atual estiver em 0
                         marcadores[i] = quilometragem - posicaoInicial;    //marca a distancia percorrida no momento, por ex. 2200
+                        lcd.printf("Marcado em %d m", marcadores[i]);
                         break;  //sai do for pra não preencher todos os marcadores 
                     }
     }   
@@ -119,8 +138,13 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
     static int proximoMarcador, marcadorAnterior;
     static int distMarcadorAnterior, distProxMarcador;
 
+    if(statusViagem == 0){
+        lcd.printf("Marcadores");
+
+    }
     if(statusViagem == 1){  //se estiver na viagem de ida
         lcd.cls();
+        lcd.locate(3,3);
         lcd.printf("Pressione para marcar");
     }
 
@@ -141,12 +165,14 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
         if(distProxMarcador <= 200){ //se a distancia do marcador estiver a menos que 200 m
             ledAlerta = 1;  //acende o LED amarelo pra indicar que está próximo
             lcd.cls();  //limpa o LCD
+            lcd.locate(3,3);
             lcd.printf("Marcador a %dm", distProxMarcador); //exibe no display a distancia do marcador
         }
 
         if(distMarcadorAnterior <= 200){
             ledAlerta = 1;
             lcd.cls();  //limpa o LCD
+            lcd.locate(3,3);
             lcd.printf("Marcador a %dm", distMarcadorAnterior); //exibe no display a distancia do marcador
         }
 
@@ -162,6 +188,7 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
 int main() {
     float velMedia = 0, quilometragem = 0;
     int crit = 0;
+    int ledAlerta = 0;
     
     ledInjecao.period_ms(20);                   //define o período do PWM do led de injeção como 20 ms 
     timerPedais.attach(&LeituraPedais, 0.5f);   //chama a função que le o estado dos pedais a cada 0.5 s

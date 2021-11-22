@@ -8,7 +8,9 @@ DigitalIn btnFreio(p12);        //define o botão conectado ao pino 13 (Freio) c
 PwmOut ledInjecao(p23);         //define o pino 23 como saída PWM
 
 Ticker timerPedais;             //interrupção que será chamada repetidamente pra ler os pedais
-Ticker pedaisLivres;           //interrupção que será chamada quando não tiver nenhum pedal sido pressionado
+Ticker timer1s;           //interrupção que será chamada quando não tiver nenhum pedal sido pressionado
+
+float velMedia = 0;
 
 /********* PAINEL DO CARRO (BOTOES E DISPLAY LCD) *************/
 C12832 lcd(SPI_MOSI, SPI_SCK, SPI_MISO, p8, p11);
@@ -33,7 +35,8 @@ int quilometragem = 0;
 
 /********* FUNCIONAMENTO GERAL DO SISTEMA *************/
 Ticker timer_40ms;              //interrupt com timer de 40 ms
-Ticker timer_500ms;             //interrupt com timer de 0,5seg
+Ticker timer_10ms;
+
 
 int timer40 = 0;        //variavel para controlar as funcoes q sao ativadas a cada 40 ms
 int timer500 = 0;       //variavel para controlar funcoes q sao ativadas a cada 0,5s
@@ -46,15 +49,20 @@ int timer500 = 0;       //variavel para controlar funcoes q sao ativadas a cada 
 
 
 /**************************************************** CONTROLE DOS TIMERS *********************************************************/
-void timer40ms(){
-    timer40 = 1;        //a cada 40 ms permite a execucao de algumas funcoes
-}
 
-void timer500ms(){
-    timer500 = 1;       //a cada 0,5 seg permite a execucao de algumas funcoes
-}
+
 
 /**************************************************** CONTROLE DE VELOCIDADE *********************************************************/
+
+void hodometro(){ 			// acumula distancia total e calcula distancia da velocidade media 
+                                    // em cada período para adicionar na quilometragem
+    float distancia;			// calcula distância percorrida através da velocidade média
+    
+    distancia = (velMedia*1000)/3600; 		//converte velocidade media de Km/h para metros/segundo
+    quilometragem = quilometragem + distancia;			// adiciona quilometragem total 
+    
+} 
+
 void LimiteDC(){ //função que limita o duty cycle a ficar entre 0 e 1
     //impede que o duty cycle fique negativo
     if(ledInjecao <= 0){
@@ -75,6 +83,7 @@ void LeituraPedais(){                   //função que será chamada a cada 0.5 
 
     else if (btnAcelerador.read()){     //se não estiver pressionado, verifica se o acelerador foi pressionado
         ledInjecao = ledInjecao + 0.1;  //incrementa o duty cycle
+        hodometro();    //atualiza a quilometragem
     }
  
     LimiteDC(); //funcao para limitar o duty cycle
@@ -82,58 +91,17 @@ void LeituraPedais(){                   //função que será chamada a cada 0.5 
     //printf("\nDuty cycle injecao pressionado: %.2f \n", ledInjecao.read());
 }
 
-void VerificaPedais(){
-    if(!(btnFreio.read()) && !(btnAcelerador.read())){   //se nenhum pedal estiver pressionado
-        ledInjecao = ledInjecao - 0.1;  //decrementa o pwm
-        //printf("\nDuty cycle injecao livre: %.2f \n", ledInjecao.read());
-        
-    }
-    
-    LimiteDC(); //funcao para limitar o duty cycle
-}
 
-void hodometro(float velocidade_media){ 			// acumula distancia total e calcula distancia da velocidade media 
-
-                                    // em cada período para adicionar na quilometragem
-    float distancia;			// calcula distância percorrida através da velocidade média
-    
-    distancia = (velocidade_media*0.5)/3600; 		//converte velocidade media de Km/h para metros/segundo
-    quilometragem = quilometragem + distancia;			// adiciona quilometragem total 
-
-    if(exibicao == 0){                              //exibe a quilometragem no LCD se estiver no exibicaoice especifico
-        lcd.cls();
-        lcd.locate(3, 3);              //coloca o cursor na segunda linha
-        lcd.printf("Quilometragem: %.2f km", quilometragem);   
-    }
-} 
 /**************************************************** EXIBICAO DE VELOCIDADE *********************************************************/
-void ExibeVelocInst(){      //função para printar a velocidade instantanea 
-    if(exibicao == 1){                                //SE TIVER A FUNÇÃO DE PRINTAR FORA DESTA, APAGAR O IF 
-        lcd.cls();
-        lcd.locate(3, 3);              //coloca o cursor na segunda linha
-        lcd.printf("Vel. Inst.: %.2f km/h", (ledInjecao.read())*100);
-    }
-}
 
-float velocidadeMedia(){ //função para calcular e printar a velocidade média
-    static float velMedia;
-    static float vel1, vel2 = 0, i = 0;
 
-    vel1 = vel2;                //armazena a ultima velocidade instantanea
-    vel2 = ledInjecao.read();   //armazena a velocidade instantanea atual
-    i++;                        //incrementa o contador i, para alterar a velocidade media a cada 1 seg
-    
-    if(i == 2){
-        velMedia = ((vel1+vel2)/2)*100;                   //calcula a velocidade média das ultimas 2 velocidades instantaneas calculadas
-        i = 0;    
-    }
-    
-    if(exibicao == 2){                  //funcao para printar a velocidade média, de acordo com a variavel exibicao
-        lcd.cls();
-        lcd.locate(3, 3);
-        lcd.printf("Vel. Media: %.2f km/h", velMedia);
-    }
-    return velMedia;
+void CalcVelMedia(){ //função para calcular e printar a velocidade média
+    static float velAtual = 0, velAnterior;
+
+    velAnterior = velAtual;                //armazena a ultima velocidade instantanea
+    velAtual = ledInjecao.read();   //armazena a velocidade instantanea atual
+   
+   velMedia = ((velAnterior+velAtual)/2)*100;
 }
 
 /**************************************************** TEMPERATURA E UMIDADE *********************************************************/
@@ -245,39 +213,75 @@ int temp_umid(){                    //função para verificar e printar a temper
 void ControleViagem(){
     static int distanciaIda = 0;
     int velMedViagem;
+    static int i = 0;
 
-    statusViagem++;       //incrementa o status da viagem
+    lcd.cls();
+    lcd.locate(3,3);
+
+    if(statusViagem == 0){
+        lcd.printf("Iniciar ida");
+    }
 
     if(statusViagem == 1){  //início da ida
+        lcd.printf("Finalizar ida");
         posicaoInicial = quilometragem;    //pega a quilometragem atual, por ex. x = 1000
         tempoIdaVolta.start();              //inicia a contagem pra saber o tempo de percurso de ida e volta
+        
+        for (i; i<3; i++){
+                    if(marcadores[i] != 0) {//se tiver algum marcados que não esteja em 0
+                        lcd.printf("Marcado em %d m", marcadores[i]);
+                        break;  //sai do for pra não preencher todos os marcadores 
+                    }
+                    else
+                        i = 0;
+         }
     }
 
     if(statusViagem == 2){  //finaliza a ida e dá inicio à volta
+        lcd.printf("Finalizar volta");
         tempoVolta.start(); //inicia o timer da viagem de volta
         posicaoFinal = quilometragem; //marca a posição final do trajeto, por ex. x = 2500
         distanciaIda = posicaoFinal - posicaoInicial;    //a distancia da ida vai ser a posiçao final - inicial, por ex. x = 1500
+
+        
+        if(quilometragem == (posicaoInicial+ distanciaIda*2)){  //se tiver dado o percurso de volta completo
+            statusViagem = 3;
+        }
     }   
 
     if(statusViagem == 3){  //finaliza a volta
+        lcd.printf("Volta finalizada!");
         tempoIdaVolta.stop();   //para o timer da viagem total
         tempoVolta.stop();      //para o timer da viagem de volta
         velMedViagem = ((distanciaIda*2)/tempoIdaVolta.read())*3600; //multiplica por 2 a distancia de ida para ter a distancia total e divide pelo tempo total do percurso
         lcd.cls();  //limpa o display
+        lcd.locate(3,3);
         lcd.printf("Vmed: %f km/h", velMedViagem);  //exibe a velocidade media da viagem
         lcd.locate(3,13);   //coloca na segunda linha
         lcd.printf("D: %dm t: %dh",distanciaIda*2, tempoIdaVolta/3600); //exibe a distancia percorrida e o tempo gasto
     }
+
+
+    if(statusViagem >=3 )
+        statusViagem = 0;   //reseta o status para ida
 }
 
 void SetaMarcadores(){
     int i;
+    if(statusViagem == 0){
+        for(i = 0; i < 3; i++){
+            marcadores[i] = 0;  //zera os marcadores
+        }
+    }
+
     if(statusViagem == 1){  //se estiver na viagem de ida
          for (i = 0; i<3; i++){
-                    if(marcadores[i] == 0) //se o marcador atual estiver em 0
+                    if(marcadores[i] == 0) {//se o marcador atual estiver em 0
                         marcadores[i] = quilometragem - posicaoInicial;    //marca a distancia percorrida no momento, por ex. 2200
+                        lcd.printf("Marcado em %d m", marcadores[i]);
                         break;  //sai do for pra não preencher todos os marcadores 
                     }
+         }
     }   
 }
 
@@ -287,16 +291,19 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
     static int proximoMarcador, marcadorAnterior;
     static int distMarcadorAnterior, distProxMarcador;
     int i;
+    
+    lcd.cls();
+    lcd.locate(3,3);
 
-    if(statusViagem == 1){  //se estiver na viagem de ida
-        lcd.cls();
-        lcd.printf("Pressione para marcar");
+    if(statusViagem == 0){
+        lcd.printf("Marcadores");
+
     }
 
      if(statusViagem == 2){  //se estiver no trajeto de volta
         posicaoVolta = posicaoFinal - (quilometragem - posicaoFinal); //por exemplo, 2400 se quilometragem = 2600 e posicao final = 2500
 
-        for(i = 3; i>0; i--){                 //itera sobre os últimos marcadores pra definir o mais próximo
+        for(i = 3; i > 0; i--){                 //itera sobre os últimos marcadores pra definir o mais próximo
             if(posicaoVolta > marcadores[i]){       //verifica se a posiçao atual do carro é maior do que a posiçao do marcador
                 marcadorAnterior = proximoMarcador; //pega a posiçao do ultimo marcador, por ex. 2200
                 proximoMarcador = marcadores[i];    //se for, o marcador mais próximo corresponde àquele índice, por ex. 1600.
@@ -310,12 +317,14 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
         if(distProxMarcador <= 200){ //se a distancia do marcador estiver a menos que 200 m
             ledAlerta = 1;  //acende o LED amarelo pra indicar que está próximo
             lcd.cls();  //limpa o LCD
+            lcd.locate(3,3);
             lcd.printf("Marcador a %dm", distProxMarcador); //exibe no display a distancia do marcador
         }
 
         if(distMarcadorAnterior <= 200){
             ledAlerta = 1;
             lcd.cls();  //limpa o LCD
+            lcd.locate(3,3);
             lcd.printf("Marcador a %dm", distMarcadorAnterior); //exibe no display a distancia do marcador
         }
 
@@ -323,6 +332,8 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
             if(ledInjecao >= 0.8)       //se a velocidade passar de 80 km/h
                 ledInjecao = 0.8;   //limita a velocidade a ficar em 80 km/h
         }
+
+
     }
 }
 
@@ -331,26 +342,100 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
 
 
 /**************************************************** FUNCIONALIDADES GERAIS *********************************************************/
+void AtualizaDisplay(){
+    
+    lcd.cls();          //limpa o display
+    lcd.locate(3,3);    //coloca na posição inicial
+    
+     switch(exibicao){
+        case 0: //quilometragem
+            lcd.printf("Quilometragem: %d", quilometragem);
+            break;
 
-void BtnSelecPressed(){        //função utilizada para algumas configurações
-    switch (exibicao){          //se tiver sendo exibindo a quilometragem
-        case 0:
-            quilometragem = 0;  //zera a quilometragem
+        case 1: //velocidade inst.
+            lcd.printf("Vinst: %.2f km/h", (ledInjecao.read())*100);
+            break;
+
+        case 2: //vel. media
+            lcd.printf("Vmed: %.2f", velMedia);
+            break;
+
+        case 3: //temperatura
+            temp_umid();
+            break;
+
+        case 4: //umidade
+            temp_umid();
+            break;
+
+        case 5: //status da viagem
+            ControleViagem();
+            break;
+
+        case 6: //marcadores
+            ControleMarcadores();
             break;
         
-        case 5:                 //se tiver sendo exibido a opçao de alterar status da viagem
+        default:
+            exibicao = 0;
+    }
+}
+
+
+void BtnConfig(){        //função utilizada para algumas configurações
+    lcd.cls();          //limpa o display
+    lcd.locate(3,3);    //coloca na posição inicial
+
+    switch (exibicao){          //se tiver sendo exibindo a quilometragem
+        case 0: //quilometragem
+            quilometragem = 0;  //zera a quilometragem
+            lcd.printf("Quilometragem: %d", quilometragem);
+            break;
+        
+        case 1: //vel. instantanea
+            lcd.printf("Vinst: %.2f km/h", (ledInjecao.read())*100);
+            break;
+        
+        case 2: //vel. media
+            lcd.printf("Vmed: %.2f", velMedia);
+            break;
+
+        case 3: //temperatura
+            temp_umid();
+            break;
+        
+        case 4: //umidade
+            temp_umid();
+            break;
+        
+        case 5: //status da viagem
+            statusViagem++;
+            if(statusViagem >=3 )
+            statusViagem = 0;   //reseta o status para ida
+
             ControleViagem();
             break;
         
-        case 6:                 //se tiver sendo exibida a opçao de marcador 
+        case 6: //marcadores
             SetaMarcadores();
             break;
+            
+        default:
+            lcd.printf("Exibicao: %d", exibicao);
     }
    
 }
 
-void BtnFncPressed(){ //função utilizada para indicar o que deve ser exibido no display (velocidade, quilometragem, umidade)
-    exibicao++;
+
+void SelecionaExibicao(){ //função utilizada para indicar o que deve ser exibido no display 
+    lcd.cls();          //limpa o display
+    lcd.locate(3,3);    //coloca na posição inicial
+    
+    exibicao++;         //incrementa a variavel de controle
+    
+    if(exibicao >= 7){
+        exibicao = 0;  //zera exibicao pra não passar das opções disponíveis
+    }
 
     /*
     exibicao = 0 -> quilometragem
@@ -362,53 +447,43 @@ void BtnFncPressed(){ //função utilizada para indicar o que deve ser exibido n
     exibicao = 6 -> insere marcador com o botao config
     */
 
-
-    if(exibicao == 5){  //inicia/finaliza ida/volta ao pressionar o botao config
-        lcd.cls();
-        lcd.printf("Alterar status viagem");
-    }
-
-    if(exibicao == 7){
-        exibicao = 0;  //zera exibicao pra não passar das opções disponíveis
-    }
+    AtualizaDisplay();
    
+}
+
+void Funcoes1s(){   //chama as funções que devem ser chamadas a cada 1s
+     if(!(btnFreio.read()) && !(btnAcelerador.read())){   //se nenhum pedal estiver pressionado
+        ledInjecao = ledInjecao - 0.1;  //decrementa o pwm
+        //printf("\nDuty cycle injecao livre: %.2f \n", ledInjecao.read());
+    }
+    LimiteDC(); //funcao para limitar o duty cycle
+
+    CalcVelMedia();
+
+    hodometro();
+    
 }
 
 /*========================================================== FUNÇÃO PRINCIPAL =============================================================*/
 
 int main() {
-    float velMedia = 0;
     int crit = 0;
-    
+    ledAlerta = 0;
+
     ledInjecao.period_ms(20);                   //define o período do PWM do led de injeção como 20 ms 
     timerPedais.attach(&LeituraPedais, 0.5f);   //chama a função que le o estado dos pedais a cada 0.5 s
-    pedaisLivres.attach(&VerificaPedais, 1.0f); //chama a função que verifica se nenhum pedal foi pressionado a cada 1 s
-    timer_500ms.attach(&timer500ms, 0.5f);      //chama a funcao para executar as funcoes a cada 500 ms
-    timer_40ms.attach(&timer40ms, 0.04f);        //chama a funcao para executar as funcoes a cada 40 ms
+    timer1s.attach(&Funcoes1s, 1.0f); //chama a função que verifica se nenhum pedal foi pressionado a cada 1 s
+   
+    timer_40ms.attach(&hodometro, 0.04f);        //chama a funcao para executar as funcoes a cada 40 ms
+    timer_10ms.attach(&AtualizaDisplay, 0.01f);       //atualiza o display a cada 10 ms
+   
     
-    btnFuncao.fall(&BtnFncPressed);   //chama a função de mudar o que vai ser exibido no display ao pressionar o botão
-    btnSelec.fall(&BtnSelecPressed);   //chama a função de selecionar alguma configuraçaõ ao pressionar o botão
+    
+    btnFuncao.fall(&SelecionaExibicao);   //chama a função de mudar o que vai ser exibido no display ao pressionar o botão
+    btnSelec.fall(&BtnConfig);   //chama a função de selecionar alguma configuraçaõ ao pressionar o botão
 
     while(1){
         
-       
-        if(timer500 == 1){              //a cada 0,5 seg as funcoes são chamadas
-            ExibeVelocInst();   //funcao para a velocidade constante
-            velMedia = velocidadeMedia();  //funcao para a velocidade media
-            hodometro(velMedia); //funcao para a quilometragem          
-            timer500 = 0;               //reseta a variavel q permite a execução das funções acima
-        }
-        
-        if(timer40 == 1){               //a cada 40 ms as funcoes sao chamadas
-            crit = temp_umid(); //funcao para a temperatura e umidade
-            
-            if(exibicao == 6){
-                ControleMarcadores();   //chama a funçao para controle de marcadores
-            }
-
-            timer40 = 0;                //reseta a variavel q permite a execução das funções acima
-        }
-
 
         if(crit == 1)
             while(1){
