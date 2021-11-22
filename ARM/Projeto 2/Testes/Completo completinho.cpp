@@ -1,3 +1,10 @@
+/*
+Problemas atuais:
+- Pressionar o btn 11 quando tá no status de finalizar a ida ele já finaliza a volta junto
+- Exibição mssg de marcador quando exibicao == 6 e os marcadores não estao setados
+- Primeiro marcador ta pegando em quilometragem = 0
+*/
+
 #include "mbed.h"
 #include "C12832.h"
 #include "Sht31.h"
@@ -226,15 +233,6 @@ void ControleViagem(){
         lcd.printf("Finalizar ida");
         posicaoInicial = quilometragem;    //pega a quilometragem atual, por ex. x = 1000
         tempoIdaVolta.start();              //inicia a contagem pra saber o tempo de percurso de ida e volta
-        
-        for (i; i<3; i++){
-                    if(marcadores[i] != 0) {//se tiver algum marcados que não esteja em 0
-                        lcd.printf("Marcado em %d m", marcadores[i]);
-                        break;  //sai do for pra não preencher todos os marcadores 
-                    }
-                    else
-                        i = 0;
-         }
     }
 
     if(statusViagem == 2){  //finaliza a ida e dá inicio à volta
@@ -249,6 +247,7 @@ void ControleViagem(){
         }
     }   
 
+    //tem que colocar isso aqui no display certinho <<<<
     if(statusViagem == 3){  //finaliza a volta
         lcd.printf("Volta finalizada!");
         tempoIdaVolta.stop();   //para o timer da viagem total
@@ -268,7 +267,7 @@ void ControleViagem(){
 
 void SetaMarcadores(){
     int i;
-    if(statusViagem == 0){
+    if(statusViagem == 3){
         for(i = 0; i < 3; i++){
             marcadores[i] = 0;  //zera os marcadores
         }
@@ -410,6 +409,7 @@ void BtnConfig(){        //função utilizada para algumas configurações
         
         case 5: //status da viagem
             statusViagem++;
+            
             if(statusViagem >=3 )
             statusViagem = 0;   //reseta o status para ida
 
