@@ -262,6 +262,7 @@ void ControleViagem(){      //função chamada quando se pressiona o botão de s
         statusViagem = 0;   //reseta o status para ida
 }
 
+
 void SetaMarcadores(){
     int i;
     if(statusViagem == 3){
@@ -369,12 +370,14 @@ void AtualizaDisplay(){
             break;
 
         case 5: //status da viagem
-             lcd.printf("Status viagem: %d", statusViagem);
-            //ControleViagem();
+            ResetaCursor();
+            //lcd.printf("Status viagem: %d", statusViagem);
+            ControleViagem();
             break;
 
         case 6: //marcadores
-            lcd.printf("Marcadoressss");
+            //lcd.locate(3,3);
+            //lcd.printf("Marcadores");
             //ControleMarcadores();
             break;
         
@@ -411,10 +414,6 @@ void BtnConfig(){        //função utilizada para algumas configurações
         
         case 5: //status da viagem
             statusViagem++;
-            lcd.printf("Status viagem: %d", statusViagem);
-
-        /*
-        
 
             if(statusViagem == 1){                  //se tiver inicio a ida
                 tempoIdaVolta.start();              //inicia a contagem pra saber o tempo de percurso de ida e volta
@@ -423,17 +422,13 @@ void BtnConfig(){        //função utilizada para algumas configurações
             if(statusViagem == 3){  //volta foi finalizada
                 tempoIdaVolta.stop();   //para o timer da viagem total1
             }
-            
-            if(statusViagem >=3 )
-            statusViagem = 0;   //reseta o status para ida
 
             //ControleViagem();
         
-        */
-            if(statusViagem >= 3){
+        
+            if(statusViagem > 3){
                 statusViagem = 0;
             }
-            
             break;
         
         case 6: //marcadores
@@ -467,6 +462,10 @@ void SelecionaExibicao(){ //função utilizada para indicar o que deve ser exibi
     exibicao = 6 -> insere marcador com o botao config
     */
 
+    ResetaCursor();
+    if(exibicao == 6){
+        lcd.printf("Marcadores");
+    }
     //AtualizaDisplay();
    
 }
