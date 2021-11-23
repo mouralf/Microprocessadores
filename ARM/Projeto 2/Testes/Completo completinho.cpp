@@ -115,9 +115,9 @@ void CalcVelMedia(){ //função para calcular e printar a velocidade média
 }
 
 /**************************************************** TEMPERATURA E UMIDADE *********************************************************/
-void buzzer(){                  //funcao do buzzer
+void buzzer(float volume){                  //funcao do buzzer
     speaker.period(1.0/480);    //frequencia de 480Hz
-    speaker = 0.5;              //volume em 0.5
+    speaker = volume;              //volume em 0.5
 }
 
 
@@ -149,7 +149,7 @@ int temp_umid(){                    //função para verificar e printar a temper
             }
             lcd.locate(3, 13);
             lcd.printf("Motor Critico");
-            buzzer();                           //funcao para sinal sonoro quando em estado critico
+            buzzer(0.5);                           //funcao para sinal sonoro quando em estado critico
             cont_crit++;                        //aumenta o contador de tempo em que o motor esta critico
         }
         else{                                   //mostra que o motor está quente
@@ -159,6 +159,7 @@ int temp_umid(){                    //função para verificar e printar a temper
             }
             lcd.locate(3, 13);
             lcd.printf("Motor Aquecido");
+            buzzer(0);
         }
     }
     else{                                       //caso não esteja muito quente, apenas mostra a temperatura no LCD
@@ -166,6 +167,7 @@ int temp_umid(){                    //função para verificar e printar a temper
             ResetaCursor();
             lcd.printf("Temperatura: %.2f C", temp);
         }
+        buzzer(0);
     }
 
     if(cont_umid >= 5){                         //se o contador chegar a 5, ou seja, a agua está a 0,2 seg baixa
@@ -177,7 +179,7 @@ int temp_umid(){                    //função para verificar e printar a temper
             }
             lcd.locate(3, 13);                  
             lcd.printf("Umidade critica"); 
-            buzzer();                           //funcao para sinal sonoro quando em estado critico
+            buzzer(0.5);                           //funcao para sinal sonoro quando em estado critico
             cont_crit++;                        //aumenta o contador de tempo em que a agua esta critico
         }
         else{                                   //mostra que a umidade esta baixa
@@ -187,6 +189,7 @@ int temp_umid(){                    //função para verificar e printar a temper
             }
             lcd.locate(3, 13);
             lcd.printf("Umidade  baixa");
+            buzzer(0);
         }
     }
     else{                                       //caso a umidade esteja normal, apenas mostra a umidade no LCD
@@ -194,6 +197,7 @@ int temp_umid(){                    //função para verificar e printar a temper
             ResetaCursor();
             lcd.printf("Umidade: %.2f %%", umidade);
         }
+        buzzer(0.5);
         
     }
 
@@ -279,7 +283,6 @@ void SetaMarcadores(){
          for (i = 0; i<3; i++){
                     if(marcadores[i] == 0) {//se o marcador atual estiver em 0
                         marcadores[i] = quilometragem - posicaoInicial;    //marca a distancia percorrida no momento, por ex. 2200
-                        lcd.locate(3,13);//bota na segunda linha
                         lcd.printf("Marcado em %d m", marcadores[i]);
                         break;  //sai do for pra não preencher todos os marcadores 
                     }
@@ -293,24 +296,30 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
     static int proximoMarcador, marcadorAnterior;
     static int distMarcadorAnterior, distProxMarcador;
     int i;
+    static int marcadorAtual = 0;
     
      ResetaCursor();
 
-    if(statusViagem == 0 || statusViagem == 2 || statusViagem == 3){
-        lcd.printf("Marcadores");
+     if(marcadores[0] == 0 && statusViagem!= 1){
+         lcd.printf("Marcadores");
+     }
 
-    }
+     if(marcadores[0] == 0 && statusViagem == 1){
+         lcd.printf("Pressione para marcar");
+     }
 
-    if(statusViagem == 1){  //se estiver na ida
-        lcd.printf("Pressione para marcar");
-    }
+     for(i = 0; i<3; i++){
+         if(marcadores[i] != 0 && statusViagem == 1){
+             lcd.printf("Marcado em %d", marcadores[i]);
+             break;
+         }
+     }
 
      if(statusViagem == 2){  //se estiver no trajeto de volta
         posicaoVolta = posicaoFinal - (quilometragem - posicaoFinal); //por exemplo, 2400 se quilometragem = 2600 e posicao final = 2500
 
-        for(i = 3; i > 0; i--){                 //itera sobre os últimos marcadores pra definir o mais próximo
+        for(i; i > 0; i--){                 //itera sobre os últimos marcadores pra definir o mais próximo
             if(posicaoVolta > marcadores[i]){       //verifica se a posiçao atual do carro é maior do que a posiçao do marcador
-                //marcadorAnterior = proximoMarcador;
                 proximoMarcador = marcadores[i];    //se for, o marcador mais próximo corresponde àquele índice, por ex. 1600.
                 break;                              //sai do laço
             }
@@ -320,20 +329,31 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
         distMarcadorAnterior = posicaoVolta - marcadorAnterior;  //a distancia do marcador anterior pega a posiçao atual - a posiçao do marcador anterior
 
         ResetaCursor();
-        lcd.printf("Dist. pin: %d", distProxMarcador);
+        
+        if(distProxMarcador > 200){
+            lcd.printf("Dist. pin: %dm", distProxMarcador);
+        }
+        
 
+        if(distProxMarcador < 0){
+            distProxMarcador = distProxMarcador * (-1); //pega a distancia positiva
+            marcadorAnterior = proximoMarcador;
+        }
 
         if(distProxMarcador <= 200){ //se a distancia do marcador estiver a menos que 200 m
             ledAlerta = 1;  //acende o LED amarelo pra indicar que está próximo
             ResetaCursor();
             lcd.printf("Marcador a %dm", distProxMarcador); //exibe no display a distancia do marcador
-        }
 
-
-        if(distProxMarcador <= 100 || distMarcadorAnterior <= 100){   //se a distancia do marcador for menor que 100 m
+            if(distProxMarcador <= 100){   //se a distancia do marcador for menor que 100 m
             if(ledInjecao >= 0.8)       //se a velocidade passar de 80 km/h
                 ledInjecao = 0.8;   //limita a velocidade a ficar em 80 km/h
         }
+
+        }
+    
+
+        
 
 
     }
@@ -379,7 +399,7 @@ void AtualizaDisplay(){
         case 6: //marcadores
             //lcd.locate(3,3);
             //lcd.printf("Marcadores");
-            //ControleMarcadores();
+            ControleMarcadores();
             break;
         
         default:
@@ -434,7 +454,6 @@ void BtnConfig(){        //função utilizada para algumas configurações
         
         case 6: //marcadores
             SetaMarcadores();
-            //lcd.printf("Marcador em: %d", quilometragem);
             break;
             
         default:
@@ -466,6 +485,10 @@ void SelecionaExibicao(){ //função utilizada para indicar o que deve ser exibi
     ResetaCursor();
     if(exibicao == 6){
         lcd.printf("Marcadores");
+        if(statusViagem == 1){
+            ResetaCursor();
+            lcd.printf("Pressione para marcar");
+        }
     }
     //AtualizaDisplay();
    
