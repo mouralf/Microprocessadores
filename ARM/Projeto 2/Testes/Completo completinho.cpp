@@ -55,8 +55,11 @@ int timer500 = 0;       //variavel para controlar funcoes q sao ativadas a cada 
 /*================================================================== Funções ============================================================*/
 
 
-/**************************************************** CONTROLE DOS TIMERS *********************************************************/
-
+/**************************************************** CONTROLE DO DISPLAY *********************************************************/
+void ResetaCursor(){
+    lcd.cls();
+    lcd.locate(3,3);
+}
 
 
 /**************************************************** CONTROLE DE VELOCIDADE *********************************************************/
@@ -141,8 +144,7 @@ int temp_umid(){                    //função para verificar e printar a temper
         ledAlerta = 1;
         if(temp >= 45){                         //se a temperatura for maior que 45 graus, mostra temperatura critica
             if(exibicao == 3) {  
-                lcd.cls();
-                lcd.locate(3, 3);
+                ResetaCursor();
                 lcd.printf("Temperatura: %.2f C", temp);
             }
             lcd.locate(3, 13);
@@ -152,8 +154,7 @@ int temp_umid(){                    //função para verificar e printar a temper
         }
         else{                                   //mostra que o motor está quente
             if(exibicao == 3) {  
-                lcd.cls();
-                lcd.locate(3, 3);
+                ResetaCursor();
                 lcd.printf("Temperatura: %.2f C", temp);
             }
             lcd.locate(3, 13);
@@ -162,8 +163,7 @@ int temp_umid(){                    //função para verificar e printar a temper
     }
     else{                                       //caso não esteja muito quente, apenas mostra a temperatura no LCD
         if(exibicao == 3) {  
-            lcd.cls();
-            lcd.locate(3, 3);
+            ResetaCursor();
             lcd.printf("Temperatura: %.2f C", temp);
         }
     }
@@ -172,8 +172,7 @@ int temp_umid(){                    //função para verificar e printar a temper
         ledAlerta = 1;
         if(umidade <= 17){                      //se a umidade estiver abaixo de 17%, mostra umidade critica
             if(exibicao == 4){
-                lcd.cls();
-                lcd.locate(3, 3);
+                ResetaCursor();
                 lcd.printf("Umidade: %.2f %%", umidade);
             }
             lcd.locate(3, 13);                  
@@ -183,8 +182,7 @@ int temp_umid(){                    //função para verificar e printar a temper
         }
         else{                                   //mostra que a umidade esta baixa
             if(exibicao == 4){
-                lcd.cls();
-                lcd.locate(3, 3);
+                ResetaCursor();
                 lcd.printf("Umidade: %.2f %%", umidade);
             }
             lcd.locate(3, 13);
@@ -193,8 +191,7 @@ int temp_umid(){                    //função para verificar e printar a temper
     }
     else{                                       //caso a umidade esteja normal, apenas mostra a umidade no LCD
         if(exibicao == 4){
-            lcd.cls();
-            lcd.locate(3, 3);
+            ResetaCursor();
             lcd.printf("Umidade: %.2f %%", umidade);
         }
         
@@ -217,27 +214,29 @@ int temp_umid(){                    //função para verificar e printar a temper
 /**************************************************** OPÇÃO B *********************************************************/
 
 
-void ControleViagem(){
+void ControleViagem(){      //função chamada quando se pressiona o botão de selec na exibicao == 5 ou pra atualizar o display a cada 500 ms
     static int distanciaIda = 0;
     int velMedViagem;
     static int i = 0;
-
-    lcd.cls();
-    lcd.locate(3,3);
+    
+    
 
     if(statusViagem == 0){
+        ResetaCursor();
         lcd.printf("Iniciar ida");
-    }
-
-    if(statusViagem == 1){  //início da ida
-        lcd.printf("Finalizar ida");
         posicaoInicial = quilometragem;    //pega a quilometragem atual, por ex. x = 1000
-        tempoIdaVolta.start();              //inicia a contagem pra saber o tempo de percurso de ida e volta
+    }
+    
+    if(statusViagem == 1){  //início da ida
+        ResetaCursor();
+        lcd.printf("Finalizar ida");  
+                
     }
 
     if(statusViagem == 2){  //finaliza a ida e dá inicio à volta
+        ResetaCursor();
         lcd.printf("Finalizar volta");
-        tempoVolta.start(); //inicia o timer da viagem de volta
+
         posicaoFinal = quilometragem; //marca a posição final do trajeto, por ex. x = 2500
         distanciaIda = posicaoFinal - posicaoInicial;    //a distancia da ida vai ser a posiçao final - inicial, por ex. x = 1500
 
@@ -249,17 +248,15 @@ void ControleViagem(){
 
     //tem que colocar isso aqui no display certinho <<<<
     if(statusViagem == 3){  //finaliza a volta
+        ResetaCursor();
         lcd.printf("Volta finalizada!");
-        tempoIdaVolta.stop();   //para o timer da viagem total
-        tempoVolta.stop();      //para o timer da viagem de volta
+        tempoIdaVolta.stop();      //para o timer da viagem de ida e volta
         velMedViagem = ((distanciaIda*2)/tempoIdaVolta.read())*3600; //multiplica por 2 a distancia de ida para ter a distancia total e divide pelo tempo total do percurso
-        lcd.cls();  //limpa o display
-        lcd.locate(3,3);
+        ResetaCursor();
         lcd.printf("Vmed: %f km/h", velMedViagem);  //exibe a velocidade media da viagem
         lcd.locate(3,13);   //coloca na segunda linha
         lcd.printf("D: %dm t: %dh",distanciaIda*2, tempoIdaVolta/3600); //exibe a distancia percorrida e o tempo gasto
     }
-
 
     if(statusViagem >=3 )
         statusViagem = 0;   //reseta o status para ida
@@ -277,6 +274,7 @@ void SetaMarcadores(){
          for (i = 0; i<3; i++){
                     if(marcadores[i] == 0) {//se o marcador atual estiver em 0
                         marcadores[i] = quilometragem - posicaoInicial;    //marca a distancia percorrida no momento, por ex. 2200
+                        lcd.locate(3,13);//bota na segunda linha
                         lcd.printf("Marcado em %d m", marcadores[i]);
                         break;  //sai do for pra não preencher todos os marcadores 
                     }
@@ -285,18 +283,21 @@ void SetaMarcadores(){
 }
 
 
-void ControleMarcadores(){  //função que realiza calculos referentes aos marcadores e exibiçoes pertinentes
+void ControleMarcadores(){  //função que realiza calculos referentes aos marcadores e exibiçoes pertinentes. Chamada a cada 500 ms
     int posicaoVolta;
     static int proximoMarcador, marcadorAnterior;
     static int distMarcadorAnterior, distProxMarcador;
     int i;
     
-    lcd.cls();
-    lcd.locate(3,3);
+     ResetaCursor();
 
     if(statusViagem == 0){
         lcd.printf("Marcadores");
 
+    }
+
+    if(statusViagem == 1){  //se estiver na ida
+        lcd.printf("Pressione para marcar");
     }
 
      if(statusViagem == 2){  //se estiver no trajeto de volta
@@ -306,6 +307,8 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
             if(posicaoVolta > marcadores[i]){       //verifica se a posiçao atual do carro é maior do que a posiçao do marcador
                 marcadorAnterior = proximoMarcador; //pega a posiçao do ultimo marcador, por ex. 2200
                 proximoMarcador = marcadores[i];    //se for, o marcador mais próximo corresponde àquele índice, por ex. 1600.
+                ResetaCursor();
+                lcd.printf("Proximo marcador: %d", proximoMarcador);
                 break;                              //sai do laço
             }
         }
@@ -315,15 +318,13 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
 
         if(distProxMarcador <= 200){ //se a distancia do marcador estiver a menos que 200 m
             ledAlerta = 1;  //acende o LED amarelo pra indicar que está próximo
-            lcd.cls();  //limpa o LCD
-            lcd.locate(3,3);
+            ResetaCursor();
             lcd.printf("Marcador a %dm", distProxMarcador); //exibe no display a distancia do marcador
         }
 
         if(distMarcadorAnterior <= 200){
             ledAlerta = 1;
-            lcd.cls();  //limpa o LCD
-            lcd.locate(3,3);
+            ResetaCursor();
             lcd.printf("Marcador a %dm", distMarcadorAnterior); //exibe no display a distancia do marcador
         }
 
@@ -343,19 +344,19 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
 /**************************************************** FUNCIONALIDADES GERAIS *********************************************************/
 void AtualizaDisplay(){
     
-    lcd.cls();          //limpa o display
-    lcd.locate(3,3);    //coloca na posição inicial
-    
      switch(exibicao){
         case 0: //quilometragem
+            ResetaCursor();
             lcd.printf("Quilometragem: %d", quilometragem);
             break;
 
         case 1: //velocidade inst.
+            ResetaCursor();
             lcd.printf("Vinst: %.2f km/h", (ledInjecao.read())*100);
             break;
 
         case 2: //vel. media
+            ResetaCursor();
             lcd.printf("Vmed: %.2f", velMedia);
             break;
 
@@ -368,11 +369,13 @@ void AtualizaDisplay(){
             break;
 
         case 5: //status da viagem
-            ControleViagem();
+             lcd.printf("Status viagem: %d", statusViagem);
+            //ControleViagem();
             break;
 
         case 6: //marcadores
-            ControleMarcadores();
+            lcd.printf("Marcadoressss");
+            //ControleMarcadores();
             break;
         
         default:
@@ -382,8 +385,7 @@ void AtualizaDisplay(){
 
 
 void BtnConfig(){        //função utilizada para algumas configurações
-    lcd.cls();          //limpa o display
-    lcd.locate(3,3);    //coloca na posição inicial
+    ResetaCursor();
 
     switch (exibicao){          //se tiver sendo exibindo a quilometragem
         case 0: //quilometragem
@@ -409,15 +411,34 @@ void BtnConfig(){        //função utilizada para algumas configurações
         
         case 5: //status da viagem
             statusViagem++;
+            lcd.printf("Status viagem: %d", statusViagem);
+
+        /*
+        
+
+            if(statusViagem == 1){                  //se tiver inicio a ida
+                tempoIdaVolta.start();              //inicia a contagem pra saber o tempo de percurso de ida e volta
+            }
+
+            if(statusViagem == 3){  //volta foi finalizada
+                tempoIdaVolta.stop();   //para o timer da viagem total1
+            }
             
             if(statusViagem >=3 )
             statusViagem = 0;   //reseta o status para ida
 
-            ControleViagem();
+            //ControleViagem();
+        
+        */
+            if(statusViagem >= 3){
+                statusViagem = 0;
+            }
+            
             break;
         
         case 6: //marcadores
-            SetaMarcadores();
+            //SetaMarcadores();
+            lcd.printf("Marcador em: %d", quilometragem);
             break;
             
         default:
@@ -428,8 +449,7 @@ void BtnConfig(){        //função utilizada para algumas configurações
 
 
 void SelecionaExibicao(){ //função utilizada para indicar o que deve ser exibido no display 
-    lcd.cls();          //limpa o display
-    lcd.locate(3,3);    //coloca na posição inicial
+    ResetaCursor();
     
     exibicao++;         //incrementa a variavel de controle
     
@@ -447,7 +467,7 @@ void SelecionaExibicao(){ //função utilizada para indicar o que deve ser exibi
     exibicao = 6 -> insere marcador com o botao config
     */
 
-    AtualizaDisplay();
+    //AtualizaDisplay();
    
 }
 
