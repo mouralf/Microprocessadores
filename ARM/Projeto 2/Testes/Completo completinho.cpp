@@ -239,7 +239,6 @@ void ControleViagem(){      //função chamada quando se pressiona o botão de s
 
         posicaoFinal = quilometragem; //marca a posição final do trajeto, por ex. x = 2500
         distanciaIda = posicaoFinal - posicaoInicial;    //a distancia da ida vai ser a posiçao final - inicial, por ex. x = 1500
-
         
         if(quilometragem == (posicaoInicial+ distanciaIda*2)){  //se tiver dado o percurso de volta completo
             statusViagem = 3;
@@ -271,6 +270,11 @@ void SetaMarcadores(){
         }
     }
 
+    if(statusViagem == 0){
+        ResetaCursor();
+        lcd.printf("Inicie a ida!");
+    }
+
     if(statusViagem == 1){  //se estiver na viagem de ida
          for (i = 0; i<3; i++){
                     if(marcadores[i] == 0) {//se o marcador atual estiver em 0
@@ -292,7 +296,7 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
     
      ResetaCursor();
 
-    if(statusViagem == 0){
+    if(statusViagem == 0 || statusViagem == 2 || statusViagem == 3){
         lcd.printf("Marcadores");
 
     }
@@ -306,10 +310,8 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
 
         for(i = 3; i > 0; i--){                 //itera sobre os últimos marcadores pra definir o mais próximo
             if(posicaoVolta > marcadores[i]){       //verifica se a posiçao atual do carro é maior do que a posiçao do marcador
-                marcadorAnterior = proximoMarcador; //pega a posiçao do ultimo marcador, por ex. 2200
+                //marcadorAnterior = proximoMarcador;
                 proximoMarcador = marcadores[i];    //se for, o marcador mais próximo corresponde àquele índice, por ex. 1600.
-                ResetaCursor();
-                lcd.printf("Proximo marcador: %d", proximoMarcador);
                 break;                              //sai do laço
             }
         }
@@ -317,17 +319,16 @@ void ControleMarcadores(){  //função que realiza calculos referentes aos marca
         distProxMarcador = posicaoVolta - proximoMarcador;  //a distancia do marcador vai ser a posição atual - a posição do proximo marcador
         distMarcadorAnterior = posicaoVolta - marcadorAnterior;  //a distancia do marcador anterior pega a posiçao atual - a posiçao do marcador anterior
 
+        ResetaCursor();
+        lcd.printf("Dist. pin: %d", distProxMarcador);
+
+
         if(distProxMarcador <= 200){ //se a distancia do marcador estiver a menos que 200 m
             ledAlerta = 1;  //acende o LED amarelo pra indicar que está próximo
             ResetaCursor();
             lcd.printf("Marcador a %dm", distProxMarcador); //exibe no display a distancia do marcador
         }
 
-        if(distMarcadorAnterior <= 200){
-            ledAlerta = 1;
-            ResetaCursor();
-            lcd.printf("Marcador a %dm", distMarcadorAnterior); //exibe no display a distancia do marcador
-        }
 
         if(distProxMarcador <= 100 || distMarcadorAnterior <= 100){   //se a distancia do marcador for menor que 100 m
             if(ledInjecao >= 0.8)       //se a velocidade passar de 80 km/h
@@ -432,8 +433,8 @@ void BtnConfig(){        //função utilizada para algumas configurações
             break;
         
         case 6: //marcadores
-            //SetaMarcadores();
-            lcd.printf("Marcador em: %d", quilometragem);
+            SetaMarcadores();
+            //lcd.printf("Marcador em: %d", quilometragem);
             break;
             
         default:
